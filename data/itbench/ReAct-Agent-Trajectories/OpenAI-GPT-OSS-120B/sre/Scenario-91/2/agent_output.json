@@ -1,0 +1,59 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": true,
+      "reasoning": "Frontend pods suffered high CPU throttling (≈32%), degrading their ability to serve traffic.",
+      "evidence": "31 occurrences of CPUThrottlingHigh alert on container frontend in pod frontend-675fd7b5c5-ssc7t."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Ingress proxy reported elevated error rate because its upstream frontend was throttled.",
+      "evidence": "RequestErrorRate alert for service frontend-proxy (warning) fired during the incident."
+    },
+    {
+      "name": "otel-demo/Service/fraud-detection",
+      "contributing_factor": false,
+      "reasoning": "Fraud‑detection service showed request errors likely caused by downstream calls to the throttled frontend.",
+      "evidence": "RequestErrorRate alert for service fraud-detection (warning) fired concurrently."
+    },
+    {
+      "name": "otel-demo/Pod/frontend-675fd7b5c5-ssc7t",
+      "contributing_factor": false,
+      "reasoning": "Specific pod where CPU throttling was observed; impact manifested in dependent services.",
+      "evidence": "CPUThrottlingHigh alert targeting this pod; pod status shows Running but with throttling metric."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/frontend",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "CPU throttling >30% on frontend container",
+      "effect": "frontend-proxy error rate rose above 0, triggering RequestErrorRate alert"
+    },
+    {
+      "source": "otel-demo/Deployment/frontend",
+      "target": "otel-demo/Service/fraud-detection",
+      "condition": "CPU throttling >30% on frontend container",
+      "effect": "fraud-detection experienced increased request errors, triggering RequestErrorRate alert"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Indicates that the container's CPU was throttled >30%, reducing available compute for the workload.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate of calls in the named service exceeded zero, signalling failures in request handling.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Info‑level alert inhibition; does not indicate a failure and is not a cause.",
+      "explained": true
+    }
+  ]
+}

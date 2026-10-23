@@ -1,0 +1,72 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Pod/frontend-675fd7b5c5-jlpzp",
+      "contributing_factor": true,
+      "reasoning": "Pod experienced high CPU throttling leading to latency spikes.",
+      "evidence": "CPUThrottlingHigh alert firing; metric container_cpu_cfs_throttled_periods_total shows large counts (e.g., 5202) for this pod."
+    },
+    {
+      "name": "otel-demo/Pod/checkout-5dccddf8bb-vh65b",
+      "contributing_factor": true,
+      "reasoning": "Checkout pod also showed elevated CPU throttling, contributing to error rate.",
+      "evidence": "CPUThrottlingHigh alert firing; metric data for checkout pod contains non‑zero throttled periods."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Service latency increased because its backing pod was throttled.",
+      "evidence": "RequestLatency alert on frontend-proxy and RequestErrorRate alert; downstream of throttled pod."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend returned many errors due to upstream latency from throttled pods.",
+      "evidence": "RequestErrorRate alert on frontend; correlated with pod throttling."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout service error rate rose as its pod suffered CPU throttling.",
+      "evidence": "RequestErrorRate alert on checkout; pod throttling observed."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Pod/frontend-675fd7b5c5-jlpzp",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "CPU throttling caused high request latency on the pod",
+      "effect": "Latency alert on frontend-proxy and downstream error rate spikes"
+    },
+    {
+      "source": "otel-demo/Pod/checkout-5dccddf8bb-vh65b",
+      "target": "otel-demo/Service/checkout",
+      "condition": "CPU throttling reduced processing capacity",
+      "effect": "RequestErrorRate alert on checkout"
+    },
+    {
+      "source": "otel-demo/Service/frontend-proxy",
+      "target": "otel-demo/Service/frontend",
+      "condition": "High latency from proxy propagated to frontend calls",
+      "effect": "RequestErrorRate alert on frontend"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Indicates one or more pods exceed acceptable CPU throttling percentage, often due to node CPU pressure or low CPU limits.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate above zero for the listed services, likely a symptom of upstream latency or throttling.",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency above 1500ms for frontend-proxy, caused by throttled backend pod.",
+      "explained": true
+    }
+  ]
+}
+

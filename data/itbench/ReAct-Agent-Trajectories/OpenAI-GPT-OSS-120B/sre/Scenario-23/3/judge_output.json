@@ -1,0 +1,249 @@
+{
+  "metadata": {
+    "scenario": "Scenario-23",
+    "run": 3,
+    "duration_seconds": 0,
+    "inference_count": 96,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "checkout-deployment-1"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "otel-demo/Deployment/checkout",
+            "matches_gt": true,
+            "matched_to": "checkout-deployment-1"
+          }
+        ],
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0,
+        "justification": "The Ground Truth has one root cause entity: 'checkout-deployment-1'. The model predicted one root cause entity, 'otel-demo/Deployment/checkout', which normalizes to 'checkout-deployment-1'. Therefore, there is one true positive, zero false positives, and zero false negatives."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0.0,
+        "justification": "The model correctly identified 'checkout-deployment-1' as the root cause. However, the model's reasoning ('replica count from 1 to 0') is semantically different from the ground truth condition ('updated to point to an invalid image - incorrect architecture'). Therefore, the reasoning score for this entity is 0. The average score is 0.",
+        "details": [
+          {
+            "predicted_entity": "otel-demo/Deployment/checkout",
+            "gt_entity": "checkout-deployment-1",
+            "predicted_reasoning": "The checkout deployment was observed to change its replica count from 1 to 0 during the incident window, effectively removing the checkout service.",
+            "gt_condition": "checkout deployment updated to point to an invalid image - incorrect architecture",
+            "score": 0
+          }
+        ]
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components. The GT path contracts to a single 'Checkout Service Component'. The model path includes the 'Checkout Service Component' followed by 10 other downstream service components that were not in the GT path. With a TP (LCS) of 1, a model path length of 11, and a GT path length of 1, the precision and recall are calculated accordingly.",
+        "details": {
+          "normalization_map": {
+            "otel-demo/Deployment/checkout": "checkout-deployment-1",
+            "otel-demo/Service/checkout": "checkout-service-1",
+            "otel-demo/Pod/checkout-5dccddf8bb-xq5bq": "checkout-pod-1"
+          },
+          "semantic_components": {
+            "Checkout Service Component": [
+              "checkout-deployment-1",
+              "checkout-pod-1",
+              "checkout-service-1"
+            ],
+            "Frontend Service Component": [
+              "otel-demo/Service/frontend"
+            ],
+            "Frontend-Proxy Service Component": [
+              "otel-demo/Service/frontend-proxy"
+            ],
+            "Recommendation Service Component": [
+              "otel-demo/Service/recommendation"
+            ],
+            "Fraud-Detection Service Component": [
+              "otel-demo/Service/fraud-detection"
+            ],
+            "Quote Service Component": [
+              "otel-demo/Service/quote"
+            ],
+            "Accounting Service Component": [
+              "otel-demo/Service/accounting"
+            ],
+            "Shipping Service Component": [
+              "otel-demo/Service/shipping"
+            ],
+            "Payment Service Component": [
+              "otel-demo/Service/payment"
+            ],
+            "Currency Service Component": [
+              "otel-demo/Service/currency"
+            ],
+            "Email Service Component": [
+              "otel-demo/Service/email"
+            ]
+          },
+          "contracted_gt_path": [
+            "Checkout Service Component"
+          ],
+          "contracted_model_path": [
+            "Checkout Service Component",
+            "Frontend Service Component",
+            "Frontend-Proxy Service Component",
+            "Recommendation Service Component",
+            "Fraud-Detection Service Component",
+            "Quote Service Component",
+            "Accounting Service Component",
+            "Shipping Service Component",
+            "Payment Service Component",
+            "Currency Service Component",
+            "Email Service Component"
+          ],
+          "lcs_components": [
+            "Checkout Service Component"
+          ],
+          "true_positives_TP": 1,
+          "model_path_length": 11,
+          "gt_path_length": 1
+        },
+        "precision": 0.09090909090909091,
+        "recall": 1.0,
+        "calculation": 0.16666666666666669
+      },
+      "fault_localization_component_identification": {
+        "calculation": 1,
+        "justification": "The first performance failure in GT.propagations is: 'checkout pod is in ImagePullBackOff error'. Using Priority 4 rule (Default to Target), the first impacted component is the semantic component containing the target 'checkout-pod-1', which is 'Checkout Service Component'. This component was found in the model's contracted path.",
+        "details": {
+          "gt_first_impacted_component": "Checkout Service Component",
+          "effect_used": "checkout pod is in ImagePullBackOff error",
+          "priority_rule_applied": "Priority 4 - Default to Target",
+          "found_in_model_path": true
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": null,
+        "justification": "The model predicted one root cause entity, 'otel-demo/Deployment/checkout'. Since this entity was a correct match for a ground truth root cause, this score is the same as the 'root_cause_reasoning' score, which was 0. No partial credit is calculated.",
+        "details": [
+          {
+            "entity": "otel-demo/Deployment/checkout",
+            "metric1_is_correct": true,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0,
+        "justification": "The model predicted one root cause component ('Checkout Service Component'), which is the same as the single GT root cause component. For precision, the hop distance from the model's component to the GT component is 0, yielding a score of 1/(1+0)=1. Average P = 1/1 = 1. For recall, the hop distance from the GT component to the model's component is 0, yielding a score of 1/(1+0)=1. Average R = 1/1 = 1.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/checkout",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "checkout-deployment-1",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 1,
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0,
+        "justification": "The contracted GT path length is 1. The model predicted one root cause component ('Checkout Service Component'), which is the same as the single GT root cause component. For precision, the hop distance is 0, yielding a score of 1/(1+0/1)=1. Average P = 1/1 = 1. For recall, the hop distance is 0, yielding a score of 1/(1+0/1)=1. Average R = 1/1 = 1.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/checkout",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "checkout-deployment-1",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      }
+    },
+    "incident_id": "Scenario-23",
+    "trial_id": "3"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 1.0,
+    "root_cause_entity_recall": 1.0,
+    "root_cause_entity_f1": 1.0,
+    "root_cause_reasoning": 0.0,
+    "propagation_chain": 0.16666666666666669,
+    "fault_localization_component_identification": 1,
+    "root_cause_reasoning_partial": null,
+    "root_cause_proximity_no_fp_precision": 1.0,
+    "root_cause_proximity_no_fp_recall": 1.0,
+    "root_cause_proximity_no_fp_f1": 1.0,
+    "root_cause_proximity_with_fp_precision": 1.0,
+    "root_cause_proximity_with_fp_recall": 1.0,
+    "root_cause_proximity_with_fp_f1": 1.0,
+    "root_cause_entity_k_precision": 1.0,
+    "root_cause_entity_k_recall": 1.0,
+    "root_cause_entity_k_f1": 1.0,
+    "root_cause_entity_k@1_precision": 1.0,
+    "root_cause_entity_k@1_recall": 1.0,
+    "root_cause_entity_k@1_f1": 1.0,
+    "root_cause_entity_k@2_precision": 1.0,
+    "root_cause_entity_k@2_recall": 1.0,
+    "root_cause_entity_k@2_f1": 1.0,
+    "root_cause_entity_k@3_precision": 1.0,
+    "root_cause_entity_k@3_recall": 1.0,
+    "root_cause_entity_k@3_f1": 1.0,
+    "root_cause_entity_k@4_precision": 1.0,
+    "root_cause_entity_k@4_recall": 1.0,
+    "root_cause_entity_k@4_f1": 1.0,
+    "root_cause_entity_k@5_precision": 1.0,
+    "root_cause_entity_k@5_recall": 1.0,
+    "root_cause_entity_k@5_f1": 1.0
+  }
+}

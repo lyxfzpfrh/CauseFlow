@@ -1,0 +1,82 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "Pods of the ad deployment repeatedly entered BackOff, preventing the ad service from serving requests.",
+      "evidence": "Kubernetes events show 46 BackOff for pod ad-554b849958-l9ft5; alert RequestErrorRate on frontend-proxy spikes."
+    },
+    {
+      "name": "otel-demo/Pod/ad-554b849958-l9ft5",
+      "contributing_factor": false,
+      "reasoning": "This pod is the failing instance of the ad deployment causing the service outage.",
+      "evidence": "BackOff event count 46 for this pod (k8s_events_raw.tsv)."
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "Service could not route traffic because its backing pods were in BackOff.",
+      "evidence": "Deployment failure propagated to service endpoints."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Observed warning RequestErrorRate due to downstream ad-service failures causing proxy errors.",
+      "evidence": "Alert RequestErrorRate (warning) firing for frontend-proxy at 2025-12-15T17:39:55Z."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend receives errors from proxy, leading to degraded user experience.",
+      "evidence": "Propagation chain from ad failure to frontend via proxy; no direct alerts but implied impact."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/ad",
+      "condition": "All pods in Deployment entered BackOff and stopped serving",
+      "effect": "Service endpoint became unavailable"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Proxy could not reach ad service for requests",
+      "effect": "Increased error rate alert on frontend-proxy"
+    },
+    {
+      "source": "otel-demo/Service/frontend-proxy",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Proxy returned errors to frontend clients",
+      "effect": "Frontend experienced degraded responses (symptom)"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Warning that error rate in frontend-proxy exceeds threshold, likely due to downstream ad-service failures.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Info-level inhibition alert, not directly relevant to incident.",
+      "explained": true
+    },
+    {
+      "alert": "Watchdog",
+      "explanation": "Baseline health check alert, always firing; not indicative of issue.",
+      "explained": true
+    },
+    {
+      "alert": "KubeClientCertificateExpiration",
+      "explanation": "Cluster-wide client cert expiring soon; unrelated to otel-demo incident.",
+      "explained": true
+    },
+    {
+      "alert": "PrometheusNotConnectedToAlertmanagers",
+      "explanation": "Prometheus connectivity issue in prometheus namespace; outside otel-demo scope.",
+      "explained": true
+    }
+  ]
+}
+

@@ -1,0 +1,230 @@
+{
+  "metadata": {
+    "scenario": "Scenario-20",
+    "run": 1,
+    "duration_seconds": 0,
+    "inference_count": 62,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "productcatalog-deployment-1"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "otel-demo/Deployment/ad",
+            "matches_gt": false
+          }
+        ],
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The Ground Truth root cause is 'productcatalog-deployment-1'. Its aliases include 'productcatalog-pod-1' and 'productcatalog-service-1'. The model predicted 'otel-demo/Deployment/ad' as the root cause. The name 'ad' does not match the filter 'product-catalog-.*' for any of the GT root cause entities or their aliases. Therefore, there are no correct matches."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0,
+        "justification": "The model did not correctly identify any root cause entities, so the reasoning accuracy score is 0.",
+        "details": {}
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components grouped by application service. The GT path is derived from the sequence of propagations, and the model path is derived from its propagations after normalizing entities. The model path contained many unmapped entities and only correctly identified two components from the GT path, resulting in a low score. With a TP (LCS) of 2, a model path length of 5, and a GT path length of 6, the precision and recall are calculated.",
+        "details": {
+          "normalization_map": {
+            "otel-demo/Service/frontend": "frontend-service-1",
+            "otel-demo/Service/checkout": "checkout-service-1",
+            "otel-demo/Service/recommendation": "recommendation-service-1"
+          },
+          "semantic_components": {
+            "Product Catalog Service Component": [
+              "productcatalog-deployment-1",
+              "productcatalog-pod-1",
+              "productcatalog-service-1"
+            ],
+            "Frontend Service Component": [
+              "frontend-service-1",
+              "frontend-pod-1"
+            ],
+            "Checkout Service Component": [
+              "checkout-service-1",
+              "checkout-pod-1"
+            ],
+            "Recommendation Service Component": [
+              "recommendation-service-1",
+              "recommendation-pod-1"
+            ],
+            "Unmapped": [
+              "otel-demo/Deployment/ad",
+              "otel-demo/Service/ad",
+              "otel-demo/Service/flagd",
+              "otel-demo/Service/frontend-proxy",
+              "otel-demo/Service/fraud-detection",
+              "otel-demo/Service/cart"
+            ]
+          },
+          "contracted_gt_path": [
+            "Product Catalog Service Component",
+            "Frontend Service Component",
+            "Checkout Service Component",
+            "Frontend Service Component",
+            "Recommendation Service Component",
+            "Frontend Service Component"
+          ],
+          "contracted_model_path": [
+            "Unmapped",
+            "Frontend Service Component",
+            "Unmapped",
+            "Recommendation Service Component",
+            "Unmapped"
+          ],
+          "lcs_components": [
+            "Frontend Service Component",
+            "Recommendation Service Component"
+          ],
+          "true_positives_TP": 2,
+          "model_path_length": 5,
+          "gt_path_length": 6
+        },
+        "precision": 0.4,
+        "recall": 0.3333333333333333,
+        "calculation": 0.3636363636363636
+      },
+      "fault_localization_component_identification": {
+        "calculation": 0,
+        "justification": "The first performance failure in GT.propagations is: 'productcatalog pod is in ImagePullBackOff error'. Using the Priority 1 rule (explicit component name in effect), the first impacted component is the 'Product Catalog Service Component'. This component was not found in the model's contracted path ['Unmapped', 'Frontend Service Component', 'Unmapped', 'Recommendation Service Component', 'Unmapped'].",
+        "details": {
+          "gt_first_impacted_component": "Product Catalog Service Component",
+          "effect_used": "productcatalog pod is in ImagePullBackOff error",
+          "priority_rule_applied": "Priority 1",
+          "found_in_model_path": false
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": 0,
+        "justification": "The model's single predicted root cause entity 'otel-demo/Deployment/ad' did not match a GT root cause. To calculate partial credit, we check if its semantic component ('Unmapped') is on the contracted GT path. The GT path is ['Product Catalog Service Component', 'Frontend Service Component', 'Checkout Service Component', 'Frontend Service Component', 'Recommendation Service Component', 'Frontend Service Component'], which does not contain 'Unmapped'. Therefore, the condition for partial credit is not met, and the score is 0.",
+        "details": [
+          {
+            "entity": "otel-demo/Deployment/ad",
+            "metric1_is_correct": false,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "For Soft Precision, the model's predicted root cause component ('Unmapped') is not on the contracted GT path, so its score is 0. P = 0/1 = 0. For Soft Recall, the GT root cause component ('Product Catalog Service Component') is on the path, but the model did not identify any component on the path as a root cause. The distance to the model's 'Unmapped' component is infinite as it's not on the path, resulting in a score of 0. R = 0/1 = 0. The F1 score is therefore 0.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/ad",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "productcatalog-deployment-1",
+            "is_on_path": true,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 6,
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The logic is the same as for the 'no_fp' metric. Since the model's predicted root cause component ('Unmapped') is not on the contracted GT path, its score is 0, leading to a precision of 0. Similarly, the distance from the GT component to the model's off-path component is infinite, leading to a recall of 0. The F1 score is 0.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/ad",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "productcatalog-deployment-1",
+            "is_on_path": true,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      }
+    },
+    "incident_id": "Scenario-20",
+    "trial_id": "1"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 0.0,
+    "root_cause_entity_recall": 0.0,
+    "root_cause_entity_f1": 0.0,
+    "root_cause_reasoning": 0,
+    "propagation_chain": 0.3636363636363636,
+    "fault_localization_component_identification": 0,
+    "root_cause_reasoning_partial": 0,
+    "root_cause_proximity_no_fp_precision": 0.0,
+    "root_cause_proximity_no_fp_recall": 0.0,
+    "root_cause_proximity_no_fp_f1": 0,
+    "root_cause_proximity_with_fp_precision": 0.0,
+    "root_cause_proximity_with_fp_recall": 0.0,
+    "root_cause_proximity_with_fp_f1": 0,
+    "root_cause_entity_k_precision": 0.0,
+    "root_cause_entity_k_recall": 0.0,
+    "root_cause_entity_k_f1": 0.0,
+    "root_cause_entity_k@1_precision": 0.0,
+    "root_cause_entity_k@1_recall": 0.0,
+    "root_cause_entity_k@1_f1": 0.0,
+    "root_cause_entity_k@2_precision": 0.0,
+    "root_cause_entity_k@2_recall": 0.0,
+    "root_cause_entity_k@2_f1": 0.0,
+    "root_cause_entity_k@3_precision": 0.0,
+    "root_cause_entity_k@3_recall": 0.0,
+    "root_cause_entity_k@3_f1": 0.0,
+    "root_cause_entity_k@4_precision": 0.0,
+    "root_cause_entity_k@4_recall": 0.0,
+    "root_cause_entity_k@4_f1": 0.0,
+    "root_cause_entity_k@5_precision": 0.0,
+    "root_cause_entity_k@5_recall": 0.0,
+    "root_cause_entity_k@5_f1": 0.0
+  }
+}

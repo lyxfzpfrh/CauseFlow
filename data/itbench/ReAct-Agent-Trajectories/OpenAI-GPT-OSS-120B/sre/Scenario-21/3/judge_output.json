@@ -1,0 +1,246 @@
+{
+  "metadata": {
+    "scenario": "Scenario-21",
+    "run": 3,
+    "duration_seconds": 0,
+    "inference_count": 0,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "otel-demo-valkey-memory-stress"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "otel-demo/Pod/valkey-cart-58df56c79c-4cvft",
+            "matches_gt": false
+          },
+          {
+            "entity": "otel-demo/Deployment/valkey-cart",
+            "matches_gt": false
+          }
+        ],
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The Ground Truth root cause is 'otel-demo-valkey-memory-stress'. The model predicted 'otel-demo/Pod/valkey-cart-58df56c79c-4cvft' and 'otel-demo/Deployment/valkey-cart' as root causes. Neither of these match the GT root cause. Therefore, precision, recall, and F1 are all 0."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0,
+        "justification": "The model did not correctly identify any of the ground truth root cause entities. Therefore, the reasoning accuracy score is 0.",
+        "details": {}
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components. The GT path was contracted to 5 components and the model path to 3. The Longest Common Subsequence (LCS) has a length of 3. With a TP of 3, a model path length of 3, and a GT path length of 5, the precision is 1.0 and recall is 0.6.",
+        "details": {
+          "normalization_map": {
+            "otel-demo/Pod/valkey-cart-58df56c79c-4cvft": "valkey-cart-pod-1",
+            "otel-demo/Service/valkey-cart": "valkey-cart-service-1",
+            "otel-demo/Pod/cart-755465879b-4p8d9": "cart-service-1",
+            "otel-demo/Service/frontend": "frontend-service-1"
+          },
+          "semantic_components": {
+            "Chaos Component": [
+              "otel-demo-valkey-memory-stress"
+            ],
+            "Valkey Cart Component": [
+              "valkey-cart-pod-1",
+              "valkey-cart-service-1"
+            ],
+            "Cart Service Component": [
+              "cart-service-1"
+            ],
+            "Frontend Service Component": [
+              "frontend-service-1"
+            ],
+            "Checkout Service Component": [
+              "checkout-service-1"
+            ],
+            "Frontend Proxy Component": [
+              "frontend-proxy-service-1"
+            ]
+          },
+          "contracted_gt_path": [
+            "Chaos Component",
+            "Valkey Cart Component",
+            "Cart Service Component",
+            "Frontend Service Component",
+            "Frontend Proxy Component"
+          ],
+          "contracted_model_path": [
+            "Valkey Cart Component",
+            "Cart Service Component",
+            "Frontend Service Component"
+          ],
+          "lcs_components": [
+            "Valkey Cart Component",
+            "Cart Service Component",
+            "Frontend Service Component"
+          ],
+          "true_positives_TP": 3,
+          "model_path_length": 3,
+          "gt_path_length": 5
+        },
+        "precision": 1.0,
+        "recall": 0.6,
+        "calculation": 0.7499999999999999
+      },
+      "fault_localization_component_identification": {
+        "calculation": 1,
+        "justification": "The first performance failure in GT.propagations is: 'Valkey cart pods experience high memory usage and potential OOM kills'. Using Priority 2 rule (Chaos Target), the first impacted component is the target of the chaos injection, 'valkey-cart-pod-1', which belongs to the 'Valkey Cart Component'. This component was found in the model's contracted path.",
+        "details": {
+          "gt_first_impacted_component": "Valkey Cart Component",
+          "effect_used": "Valkey cart pods experience high memory usage and potential OOM kills",
+          "priority_rule_applied": "Priority 2",
+          "found_in_model_path": true
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": 0.5,
+        "justification": "Entity 'otel-demo/Pod/valkey-cart-58df56c79c-4cvft' did not match the GT root cause. Partial credit is calculated. Its component ('Valkey Cart Component') is 1 hop away from the true root cause component ('Chaos Component'). The model's reasoning ('Pod entered CrashLoopBackOff') correctly describes the symptom ('OOM kills'), so SymptomReasoningCorrectness is 1. The score is (1/(1+1))*1. Entity 'otel-demo/Deployment/valkey-cart' did not map to any component on the GT path, so its score is 0. The max score is taken.",
+        "details": [
+          {
+            "entity": "otel-demo/Pod/valkey-cart-58df56c79c-4cvft",
+            "metric1_is_correct": false,
+            "hop_away": 1,
+            "SymptomReasoningCorrectness": 1,
+            "entity_score": 0.5
+          },
+          {
+            "entity": "otel-demo/Deployment/valkey-cart",
+            "metric1_is_correct": false,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 0.25,
+        "calculation_recall": 0.5,
+        "calculation_f1": 0.3333333333333333,
+        "justification": "Precision: Model predicted 2 root causes. PF_1 ('Valkey Cart Component') is 1 hop away from GT_1 ('Chaos Component'), score=(1/(1+1))=0.5. PF_2 is not on the path, score=0. P = (0.5+0)/2=0.25. Recall: GT has 1 root cause. GT_1 ('Chaos Component') is 1 hop away from the closest predicted component (PF_1), score=(1/(1+1))=0.5. R = 0.5/1=0.5.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Pod/valkey-cart-58df56c79c-4cvft",
+            "is_on_path": true,
+            "hop_away": 1,
+            "entity_score": 0.5
+          },
+          {
+            "entity": "otel-demo/Deployment/valkey-cart",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-valkey-memory-stress",
+            "is_on_path": true,
+            "hop_away": 1,
+            "entity_score": 0.5
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 5,
+        "calculation_precision": 0.4166666666666667,
+        "calculation_recall": 0.8333333333333334,
+        "calculation_f1": 0.5555555555555556,
+        "justification": "gt_path_length=5. Precision: PF_1 ('Valkey Cart Component') is 1 hop away, score=(1/(1+1/5)). PF_2 is not on path, score=0. P = ((1/(1+1/5))+0)/2. Recall: GT_1 ('Chaos Component') is 1 hop away, score=(1/(1+1/5)). R = (1/(1+1/5))/1.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Pod/valkey-cart-58df56c79c-4cvft",
+            "is_on_path": true,
+            "hop_away": 1,
+            "entity_score": 0.8333333333333334
+          },
+          {
+            "entity": "otel-demo/Deployment/valkey-cart",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-valkey-memory-stress",
+            "is_on_path": true,
+            "hop_away": 1,
+            "entity_score": 0.8333333333333334
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      }
+    },
+    "incident_id": "Scenario-21",
+    "trial_id": "3"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 0.0,
+    "root_cause_entity_recall": 0.0,
+    "root_cause_entity_f1": 0,
+    "root_cause_reasoning": 0,
+    "propagation_chain": 0.7499999999999999,
+    "fault_localization_component_identification": 1,
+    "root_cause_reasoning_partial": 0.5,
+    "root_cause_proximity_no_fp_precision": 0.25,
+    "root_cause_proximity_no_fp_recall": 0.5,
+    "root_cause_proximity_no_fp_f1": 0.3333333333333333,
+    "root_cause_proximity_with_fp_precision": 0.4166666666666667,
+    "root_cause_proximity_with_fp_recall": 0.8333333333333334,
+    "root_cause_proximity_with_fp_f1": 0.5555555555555556,
+    "root_cause_entity_k_precision": 0.0,
+    "root_cause_entity_k_recall": 0.0,
+    "root_cause_entity_k_f1": 0.0,
+    "root_cause_entity_k@1_precision": 0.0,
+    "root_cause_entity_k@1_recall": 0.0,
+    "root_cause_entity_k@1_f1": 0.0,
+    "root_cause_entity_k@2_precision": 0.0,
+    "root_cause_entity_k@2_recall": 0.0,
+    "root_cause_entity_k@2_f1": 0.0,
+    "root_cause_entity_k@3_precision": 0.0,
+    "root_cause_entity_k@3_recall": 0.0,
+    "root_cause_entity_k@3_f1": 0.0,
+    "root_cause_entity_k@4_precision": 0.0,
+    "root_cause_entity_k@4_recall": 0.0,
+    "root_cause_entity_k@4_f1": 0.0,
+    "root_cause_entity_k@5_precision": 0.0,
+    "root_cause_entity_k@5_recall": 0.0,
+    "root_cause_entity_k@5_f1": 0.0
+  }
+}

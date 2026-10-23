@@ -1,0 +1,70 @@
+{
+  "entities": [
+    {
+      "name": "default/Node/node-1",
+      "contributing_factor": true,
+      "reasoning": "Node node-1 reported NotReady, preventing pod sandbox creation.",
+      "evidence": "Node Not Ready alert and Warning events FailedCreatePodSandBox for pods in otel-demo namespace"
+    },
+    {
+      "name": "otel-demo/Deployment/checkoutservice",
+      "contributing_factor": false,
+      "reasoning": "Deployment's pods could not start because underlying node was NotReady.",
+      "evidence": "CrashLoopBackOff alert for checkoutservice pod and sandbox failure events"
+    },
+    {
+      "name": "otel-demo/Pod/checkoutservice-5b6c8f6b9f-9x2gq",
+      "contributing_factor": false,
+      "reasoning": "Pod entered CrashLoopBackOff after repeated sandbox creation failures.",
+      "evidence": "KubePodCrashLoopBackOff alert, BackOff warning event, CPUThrottlingHigh and HighMemoryUsage alerts"
+    },
+    {
+      "name": "otel-demo/Deployment/paymentservice",
+      "contributing_factor": false,
+      "reasoning": "Deployment's pods were affected by the same node issue as checkoutservice.",
+      "evidence": "CrashLoopBackOff alert for paymentservice pod and sandbox failure events"
+    },
+    {
+      "name": "otel-demo/Pod/paymentservice-5789c9d9b5-7l9jz",
+      "contributing_factor": false,
+      "reasoning": "Pod entered CrashLoopBackOff due to node sandbox failures.",
+      "evidence": "KubePodCrashLoopBackOff alert and BackOff warning event for this pod"
+    }
+  ],
+  "propagations": [
+    {
+      "source": "default/Node/node-1",
+      "target": "otel-demo/Pod/checkoutservice-5b6c8f6b9f-9x2gq",
+      "condition": "Node NotReady prevented container runtime from creating pod sandbox",
+      "effect": "Pod failed to start and entered CrashLoopBackOff"
+    },
+    {
+      "source": "default/Node/node-1",
+      "target": "otel-demo/Pod/paymentservice-5789c9d9b5-7l9jz",
+      "condition": "Same node issue blocked sandbox creation",
+      "effect": "Pod entered CrashLoopBackOff"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "KubePodCrashLoopBackOff (checkoutservice pod)",
+      "explanation": "Pod repeatedly failed to start due to sandbox creation errors on node-1.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLoopBackOff (paymentservice pod)",
+      "explanation": "Same underlying node sandbox failure caused pod restart loop.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh (checkoutservice pod)",
+      "explanation": "High CPU throttling observed on the pod while it was repeatedly restarting.",
+      "explained": true
+    },
+    {
+      "alert": "HighMemoryUsage (checkoutservice pod)",
+      "explanation": "Memory usage spiked during restart attempts, triggering warning.",
+      "explained": true
+    }
+  ]
+}

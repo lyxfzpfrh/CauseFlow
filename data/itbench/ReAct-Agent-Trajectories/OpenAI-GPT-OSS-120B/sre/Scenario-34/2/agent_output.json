@@ -1,0 +1,93 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Pod/prometheus-kube-prometheus-kubelet",
+      "contributing_factor": true,
+      "reasoning": "CPU throttling alert on this pod indicates node‑level CPU pressure affecting all otel-demo workloads.",
+      "evidence": "CPUThrottlingHigh alert firing; high throttle_pct on many pods (ad 91%, cart 49%)."
+    },
+    {
+      "name": "otel-demo/Pod/otel-collector-564d9c7987-vpmw7",
+      "contributing_factor": false,
+      "reasoning": "Readiness probe failed, making the collector unavailable for telemetry.",
+      "evidence": "Unhealthy event with connection refused; no alerts directly tied to it."
+    },
+    {
+      "name": "otel-demo/Deployment/cart",
+      "contributing_factor": false,
+      "reasoning": "Experiencing Killing events and high request error/latency alerts.",
+      "evidence": "Killing events for cart pods; RequestErrorRate and RequestLatency alerts for cart."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "Shows elevated latency and error alerts downstream of the throttling.",
+      "evidence": "RequestErrorRate and RequestLatency alerts for frontend."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Front‑door service with warning alerts for error rate and latency.",
+      "evidence": "RequestErrorRate and RequestLatency alerts for frontend-proxy; CPU throttle 4% but impacted by kubelet throttling."
+    },
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": false,
+      "reasoning": "Late‑stage service with short‑lived error/latency alerts.",
+      "evidence": "RequestErrorRate and RequestLatency alerts for checkout (duration ~1‑6 min)."
+    },
+    {
+      "name": "otel-demo/Deployment/shipping",
+      "contributing_factor": false,
+      "reasoning": "NoRequestsDetected alert indicates traffic stopped, likely downstream effect.",
+      "evidence": "NoRequestsDetected alert for shipping service."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Pod/prometheus-kube-prometheus-kubelet",
+      "target": "otel-demo/Deployment/cart",
+      "condition": "CPU throttling on kubelet limits CPU for pods",
+      "effect": "Cart pods show Killing events and high request errors/latency."
+    },
+    {
+      "source": "otel-demo/Pod/prometheus-kube-prometheus-kubelet",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "Node‑level CPU pressure",
+      "effect": "Frontend reports increased latency and error rates."
+    },
+    {
+      "source": "otel-demo/Pod/prometheus-kube-prometheus-kubelet",
+      "target": "otel-demo/Deployment/frontend-proxy",
+      "condition": "CPU throttling reduces request handling capacity",
+      "effect": "Frontend‑proxy fires warning alerts for error rate and latency."
+    },
+    {
+      "source": "otel-demo/Pod/prometheus-kube-prometheus-kubelet",
+      "target": "otel-demo/Deployment/checkout",
+      "condition": "Limited CPU causes downstream service slowdown",
+      "effect": "Checkout shows brief spikes in error rate and latency."
+    },
+    {
+      "source": "otel-demo/Pod/prometheus-kube-prometheus-kubelet",
+      "target": "otel-demo/Deployment/shipping",
+      "condition": "CPU starvation stops request processing",
+      "effect": "Shipping generates NoRequestsDetected alert."
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "CPUThrottlingHigh", "explanation": "Kubelet pod CPU throttling reduces compute for all workloads.", "explained": true},
+    {"alert": "RequestErrorRate", "explanation": "Elevated HTTP error rates observed on the listed services.", "explained": true},
+    {"alert": "RequestLatency", "explanation": "Warning latency spikes detected on the listed services.", "explained": true},
+    {"alert": "NoRequestsDetected", "explanation": "Zero traffic observed for the listed services, likely downstream effect.", "explained": true},
+    {"alert": "InfoInhibitor", "explanation": "Informational alert, not related to incident.", "explained": true},
+    {"alert": "Watchdog", "explanation": "System watchdog alert, unrelated to otel-demo namespace.", "explained": true},
+    {"alert": "KubeClientCertificateExpiration", "explanation": "Certificate expiration warning, not causing service disruption.", "explained": true},
+    {"alert": "KubeSchedulerDown", "explanation": "Cluster‑wide scheduler down alert, outside otel-demo scope.", "explained": true},
+    {"alert": "KubeControllerManagerDown", "explanation": "Cluster‑wide controller manager down, outside otel-demo scope.", "explained": true},
+    {"alert": "PrometheusNotConnectedToAlertmanagers", "explanation": "Prometheus connectivity issue, not directly impacting services.", "explained": true},
+    {"alert": "RequestErrorRate", "explanation": "", "explained": false},
+    {"alert": "RequestLatency", "explanation": "", "explained": false}
+  ]
+}
+

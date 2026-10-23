@@ -1,0 +1,86 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": true,
+      "reasoning": "Deployment checkout failed to match desired replica count and its pods stayed non‑ready, triggering replica‑mismatch and pod‑not‑ready alerts.",
+      "evidence": "KubeDeploymentReplicasMismatch and KubePodNotReady alerts firing at 17:55; scaling events show replica changes but pods never become Ready."
+    },
+    {
+      "name": "otel-demo/Pod/checkout-d75b77f99-hgc68",
+      "contributing_factor": false,
+      "reasoning": "Pod remained in non‑ready state, causing the service to have no healthy endpoints.",
+      "evidence": "KubePodNotReady alert for this pod; events show repeated ScalingReplicaSet without Ready transitions."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Service had zero requests because its backing pod was not ready, leading to NoRequestsDetected alerts.",
+      "evidence": "NoRequestsDetected alert for checkout at 17:57; downstream services also show zero traffic."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Frontend‑proxy received errors when calling checkout, raising its RequestErrorRate warning.",
+      "evidence": "RequestErrorRate warning for frontend‑proxy at 17:41 and 17:54; correlation with checkout outage."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend observed high error rate due to upstream checkout failures.",
+      "evidence": "RequestErrorRate warning for frontend at 17:56 with error rate 3.04."
+    },
+    {
+      "name": "otel-demo/Service/recommendation",
+      "contributing_factor": false,
+      "reasoning": "Recommendation service showed error rate spikes likely caused by downstream checkout timeout.",
+      "evidence": "RequestErrorRate warning for recommendation at 17:39."
+    },
+    {
+      "name": "otel-demo/Service/fraud-detection",
+      "contributing_factor": false,
+      "reasoning": "Fraud‑detection reported errors and later zero requests as checkout was unavailable.",
+      "evidence": "RequestErrorRate warning at 17:40 and NoRequestsDetected at 17:58."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Pod/checkout-d75b77f99-hgc68",
+      "condition": "Deployment replicas did not become Ready, pods stayed in Pending/NotReady state",
+      "effect": "Pod remained non‑ready and did not serve traffic"
+    },
+    {
+      "source": "otel-demo/Pod/checkout-d75b77f99-hgc68",
+      "target": "otel-demo/Service/checkout",
+      "condition": "No ready endpoints for the Service",
+      "effect": "Service reported zero requests and triggered NoRequestsDetected"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Upstream checkout calls failed or timed out",
+      "effect": "Frontend‑proxy error rate rose, triggering RequestErrorRate warning"
+    },
+    {
+      "source": "otel-demo/Service/frontend-proxy",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Proxy returned errors to frontend",
+      "effect": "Frontend saw high error rate and warning alert"
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "RequestErrorRate", "explanation": "Error rate above zero for the listed service, indicating upstream failures.", "explained": true},
+    {"alert": "KubeClientCertificateExpiration", "explanation": "Cluster‑wide client cert nearing expiry, unrelated to the service outage.", "explained": true},
+    {"alert": "Watchdog", "explanation": "Always‑firing sanity check, not an incident cause.", "explained": true},
+    {"alert": "InfoInhibitor", "explanation": "Inhibits info alerts, not directly relevant.", "explained": true},
+    {"alert": "PendingPodsDetected", "explanation": "One pod in otel-demo was pending, part of the checkout issue.", "explained": true},
+    {"alert": "KubePodNotReady", "explanation": "Checkout pod stayed non‑ready, root cause of service outage.", "explained": true},
+    {"alert": "KubeDeploymentReplicasMismatch", "explanation": "Checkout deployment did not reach desired replica count, causing pod‑not‑ready.", "explained": true},
+    {"alert": "CPUThrottlingHigh", "explanation": "High CPU throttling for postgresql container, not directly causing checkout failure.", "explained": true},
+    {"alert": "NoRequestsDetected", "explanation": "Service received zero requests, downstream of checkout outage.", "explained": true},
+    {"alert": "KubeSchedulerDown", "explanation": "Scheduler missing from Prometheus, unrelated to checkout issue.", "explained": true},
+    {"alert": "KubeControllerManagerDown", "explanation": "Controller manager missing from Prometheus, unrelated.", "explained": true}
+  ]
+}
+

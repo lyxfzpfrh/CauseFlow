@@ -1,0 +1,58 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": true,
+      "reasoning": "NetworkChaos experiment targeted checkout pod causing IP set failures and request timeouts.",
+      "evidence": "k8s_events_raw.tsv contains NetworkChaos failure for otel-demo/checkout pod; alerts show CPUThrottlingHigh and RequestErrorRate spikes."
+    },
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "High request error rate and latency for ad service indicate it entered CrashLoopBackOff, reducing availability.",
+      "evidence": "alerts show RequestErrorRate and RequestLatency for ad; metrics/service_ad_raw.tsv shows increased latency buckets."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend observed 5xx errors due to downstream checkout and ad services failing.",
+      "evidence": "RequestErrorRate alerts fire for namespace; trace data (otel_traces_raw.tsv) shows errors from downstream calls."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "checkout pods experienced network partition and high CPU throttling",
+      "effect": "frontend received timeouts and returned HTTP 5xx"
+    },
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "ad service latency exceeded thresholds and entered CrashLoopBackOff",
+      "effect": "frontend calls to ad failed, contributing to 5xx responses"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate > threshold in otel-demo services, indicating downstream failures.",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Observed latency > SLA for services, caused by ad and checkout slowness.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Checkout pods throttled CPU, worsening request latency.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "No traffic observed for some services, likely due to upstream failures.",
+      "explained": true
+    }
+  ]
+}

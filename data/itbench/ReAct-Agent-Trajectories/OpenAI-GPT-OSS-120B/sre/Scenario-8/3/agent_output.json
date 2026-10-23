@@ -1,0 +1,52 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/kube-controller-manager",
+      "contributing_factor": true,
+      "reasoning": "Controller manager down caused cluster-wide failures.",
+      "evidence": "Alert KubeControllerManagerDown firing from 17:39 to 18:11."
+    },
+    {
+      "name": "otel-demo/Deployment/kube-scheduler",
+      "contributing_factor": true,
+      "reasoning": "Scheduler down prevented pod scheduling, leading to request errors.",
+      "evidence": "Alert KubeSchedulerDown firing same interval as controller manager."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Service showed elevated request error rate but pods were healthy.",
+      "evidence": "Alert RequestErrorRate (frontend-proxy) firing for 27 minutes; logs show 200 responses."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "Single warning alert on request error rate, no pod crashes.",
+      "evidence": "Alert RequestErrorRate (frontend) firing at 17:50."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/kube-controller-manager",
+      "target": "otel-demo/Deployment/frontend-proxy",
+      "condition": "Controller manager unavailable, preventing deployment updates.",
+      "effect": "RequestErrorRate alert on frontend-proxy."
+    },
+    {
+      "source": "otel-demo/Deployment/kube-scheduler",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "Scheduler down, causing pod start delays.",
+      "effect": "RequestErrorRate alert on frontend."
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "InfoInhibitor", "explanation": "Info-level alert indicating no inhibitions; not critical.", "explained": true},
+    {"alert": "Watchdog", "explanation": "Watchdog alert keeps alertmanager alive; always firing.", "explained": true},
+    {"alert": "KubeClientCertificateExpiration", "explanation": "Client certificate for API server expiring soon; warning and critical levels.", "explained": true},
+    {"alert": "PrometheusNotConnectedToAlertmanagers", "explanation": "Prometheus cannot reach its Alertmanager; warning.", "explained": true},
+    {"alert": "KubeControllerManagerDown", "explanation": "Controller manager not reporting; root cause of downstream issues.", "explained": true},
+    {"alert": "KubeSchedulerDown", "explanation": "Scheduler not reporting; contributes to pod scheduling problems.", "explained": true},
+    {"alert": "RequestErrorRate", "explanation": "High error rate observed on frontend-proxy and frontend services.", "explained": true},
+    {"alert": "CPUThrottlingHigh", "explanation": "CPU throttling observed on kubelet; informational only.", "explained": true}
+  ]
+}

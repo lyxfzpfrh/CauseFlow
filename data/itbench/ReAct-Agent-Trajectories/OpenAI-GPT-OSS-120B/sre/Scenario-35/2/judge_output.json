@@ -1,0 +1,215 @@
+{
+  "metadata": {
+    "scenario": "Scenario-35",
+    "run": 2,
+    "duration_seconds": 0,
+    "inference_count": 0,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "otel-demo-ad-jvm-chaos"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "otel-demo/Deployment/ad",
+            "matches_gt": false
+          }
+        ],
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The Ground Truth root cause is the JVMChaos entity 'otel-demo-ad-jvm-chaos'. The model predicted 'otel-demo/Deployment/ad' as the root cause, which normalizes to 'ad-pod-1'. This does not match the GT root cause. Therefore, precision, recall, and F1 are all 0."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0,
+        "justification": "The model did not correctly identify any of the ground truth root cause entities. Therefore, the reasoning accuracy score is 0.",
+        "details": {}
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components. The GT path is ['Chaos Injection Component', 'Ad Service Component', 'Frontend Service Component', 'Frontend Proxy Component'] and the model path is ['Ad Service Component', 'Frontend Service Component', 'unmapped']. The Longest Common Subsequence is ['Ad Service Component', 'Frontend Service Component'], giving a TP of 2. With a model path length of 3 and GT path length of 4, precision and recall are calculated accordingly.",
+        "details": {
+          "normalization_map": {
+            "otel-demo/Deployment/ad": "ad-pod-1",
+            "otel-demo/Service/ad": "ad-service-1",
+            "otel-demo/Service/frontend": "frontend-service-1",
+            "otel-demo/Service/checkout": "otel-demo/Service/checkout"
+          },
+          "semantic_components": {
+            "Chaos Injection Component": [
+              "otel-demo-ad-jvm-chaos"
+            ],
+            "Ad Service Component": [
+              "ad-pod-1",
+              "ad-service-1"
+            ],
+            "Frontend Service Component": [
+              "frontend-service-1"
+            ],
+            "Frontend Proxy Component": [
+              "frontend-proxy-service-1"
+            ]
+          },
+          "contracted_gt_path": [
+            "Chaos Injection Component",
+            "Ad Service Component",
+            "Frontend Service Component",
+            "Frontend Proxy Component"
+          ],
+          "contracted_model_path": [
+            "Ad Service Component",
+            "Frontend Service Component",
+            "unmapped"
+          ],
+          "lcs_components": [
+            "Ad Service Component",
+            "Frontend Service Component"
+          ],
+          "true_positives_TP": 2,
+          "model_path_length": 3,
+          "gt_path_length": 4
+        },
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "calculation": 0.5714285714285715
+      },
+      "fault_localization_component_identification": {
+        "calculation": 1,
+        "justification": "The first performance failure in GT.propagations is: 'Ad pods experience high heap memory usage and frequent garbage collection'. Using the Priority 2 rule (Chaos Target), the source is a Chaos entity, so the target 'ad-pod-1' is the first impacted entity. This entity belongs to the 'Ad Service Component'. This component was found in the model's contracted path.",
+        "details": {
+          "gt_first_impacted_component": "Ad Service Component",
+          "effect_used": "Ad pods experience high heap memory usage and frequent garbage collection",
+          "priority_rule_applied": "Priority 2",
+          "found_in_model_path": true
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": 0.25,
+        "justification": "The predicted root cause entity 'otel-demo/Deployment/ad' did not match the GT root cause. Partial credit is calculated. The model's focus component ('Ad Service Component') is 1 hop away from the true root cause component ('Chaos Injection Component') on the contracted GT path. The model's reasoning ('JVMChaos experiment on ad caused 100% CPU throttling') correctly identified the chaos experiment but misidentified the resource pressure (CPU instead of heap memory), earning a SymptomReasoningCorrectness of 0.5. The final score is (1/(1+1)) * 0.5.",
+        "details": [
+          {
+            "entity": "otel-demo/Deployment/ad",
+            "metric1_is_correct": false,
+            "hop_away": 1,
+            "SymptomReasoningCorrectness": 0.5,
+            "entity_score": 0.25
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 0.5,
+        "calculation_recall": 0.5,
+        "calculation_f1": 0.5,
+        "justification": "Precision: The model predicted one root cause component ('Ad Service Component'), which is 1 hop away from the GT root cause component ('Chaos Injection Component'). The score is (1/(1+1)) = 0.5. The average is 0.5. Recall: The single GT root cause component ('Chaos Injection Component') is 1 hop away from the predicted component. The score is (1/(1+1)) = 0.5. The average is 0.5. The F1 score is calculated from these P and R values.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/ad",
+            "is_on_path": true,
+            "hop_away": 1,
+            "entity_score": 0.5
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-ad-jvm-chaos",
+            "is_on_path": true,
+            "hop_away": 1,
+            "entity_score": 0.5
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 4,
+        "calculation_precision": 0.8,
+        "calculation_recall": 0.8,
+        "calculation_f1": 0.8000000000000002,
+        "justification": "The contracted GT path length is 4. Precision: The model's predicted component is 1 hop away. The score is (1 / (1 + 1/4)). The average is this score. Recall: The GT component is 1 hop away from the model's prediction. The score is (1 / (1 + 1/4)). The average is this score. Since P and R are equal, F1 is also the same value.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/ad",
+            "is_on_path": true,
+            "hop_away": 1,
+            "entity_score": 0.8
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-ad-jvm-chaos",
+            "is_on_path": true,
+            "hop_away": 1,
+            "entity_score": 0.8
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      }
+    },
+    "incident_id": "Scenario-35",
+    "trial_id": "2"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 0.0,
+    "root_cause_entity_recall": 0.0,
+    "root_cause_entity_f1": 0,
+    "root_cause_reasoning": 0,
+    "propagation_chain": 0.5714285714285715,
+    "fault_localization_component_identification": 1,
+    "root_cause_reasoning_partial": 0.25,
+    "root_cause_proximity_no_fp_precision": 0.5,
+    "root_cause_proximity_no_fp_recall": 0.5,
+    "root_cause_proximity_no_fp_f1": 0.5,
+    "root_cause_proximity_with_fp_precision": 0.8,
+    "root_cause_proximity_with_fp_recall": 0.8,
+    "root_cause_proximity_with_fp_f1": 0.8000000000000002,
+    "root_cause_entity_k_precision": 0.0,
+    "root_cause_entity_k_recall": 0.0,
+    "root_cause_entity_k_f1": 0.0,
+    "root_cause_entity_k@1_precision": 0.0,
+    "root_cause_entity_k@1_recall": 0.0,
+    "root_cause_entity_k@1_f1": 0.0,
+    "root_cause_entity_k@2_precision": 0.0,
+    "root_cause_entity_k@2_recall": 0.0,
+    "root_cause_entity_k@2_f1": 0.0,
+    "root_cause_entity_k@3_precision": 0.0,
+    "root_cause_entity_k@3_recall": 0.0,
+    "root_cause_entity_k@3_f1": 0.0,
+    "root_cause_entity_k@4_precision": 0.0,
+    "root_cause_entity_k@4_recall": 0.0,
+    "root_cause_entity_k@4_f1": 0.0,
+    "root_cause_entity_k@5_precision": 0.0,
+    "root_cause_entity_k@5_recall": 0.0,
+    "root_cause_entity_k@5_f1": 0.0
+  }
+}

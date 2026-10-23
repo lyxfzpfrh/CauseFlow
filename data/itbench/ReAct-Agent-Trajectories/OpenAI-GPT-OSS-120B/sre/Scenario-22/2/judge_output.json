@@ -1,0 +1,222 @@
+{
+  "metadata": {
+    "scenario": "Scenario-22",
+    "run": 2,
+    "duration_seconds": 0,
+    "inference_count": 0,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "otel-demo-ad-memory-stress"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "otel-demo/StressChaos/otel-demo-ad-memory-stress",
+            "matches_gt": true,
+            "matched_to": "otel-demo-ad-memory-stress"
+          }
+        ],
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0,
+        "justification": "The model correctly identified the single ground truth root cause entity 'otel-demo-ad-memory-stress'. There is one GT entity and one predicted entity, which is a match."
+      },
+      "root_cause_reasoning": {
+        "calculation": 1.0,
+        "justification": "The model's reasoning for the correctly identified root cause 'otel-demo/StressChaos/otel-demo-ad-memory-stress' is 'Memory\u2011stress chaos experiment injected OOM pressure into the ad pods, triggering crashes.', which is semantically equivalent to the ground truth condition 'Chaos Mesh stress injecting memory pressure on ad service pods'. This earns a score of 1.",
+        "details": {
+          "otel-demo/StressChaos/otel-demo-ad-memory-stress": {
+            "model_reasoning": "Memory\u2011stress chaos experiment injected OOM pressure into the ad pods, triggering crashes.",
+            "gt_condition": "Chaos Mesh stress injecting memory pressure on ad service pods",
+            "score": 1
+          }
+        }
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components. The GT path is ['Chaos Injection Component', 'Ad Service Component', 'Frontend Service Component', 'Frontend Proxy Component'] and the model path is ['Chaos Injection Component', 'Ad Service Component', 'Frontend Service Component']. The Longest Common Subsequence (LCS) is 3. With a model path length of 3 and a GT path length of 4, precision is 3/3 and recall is 3/4.",
+        "details": {
+          "normalization_map": {
+            "otel-demo/StressChaos/otel-demo-ad-memory-stress": "otel-demo-ad-memory-stress",
+            "otel-demo/Deployment/ad": "ad-service-1",
+            "otel-demo/Service/frontend": "frontend-service-1"
+          },
+          "semantic_components": {
+            "Chaos Injection Component": [
+              "otel-demo-ad-memory-stress"
+            ],
+            "Ad Service Component": [
+              "ad-pod-1",
+              "ad-service-1"
+            ],
+            "Frontend Service Component": [
+              "frontend-service-1"
+            ],
+            "Frontend Proxy Component": [
+              "frontend-proxy-service-1"
+            ]
+          },
+          "contracted_gt_path": [
+            "Chaos Injection Component",
+            "Ad Service Component",
+            "Frontend Service Component",
+            "Frontend Proxy Component"
+          ],
+          "contracted_model_path": [
+            "Chaos Injection Component",
+            "Ad Service Component",
+            "Frontend Service Component"
+          ],
+          "lcs_components": [
+            "Chaos Injection Component",
+            "Ad Service Component",
+            "Frontend Service Component"
+          ],
+          "true_positives_TP": 3,
+          "model_path_length": 3,
+          "gt_path_length": 4
+        },
+        "precision": 1.0,
+        "recall": 0.75,
+        "calculation": 0.8571428571428571
+      },
+      "fault_localization_component_identification": {
+        "calculation": 1,
+        "justification": "The first performance failure in GT.propagations is: 'Ad pods experience high memory usage and potential OOM kills'. The source of this propagation is a Chaos entity. Using the Priority 2 rule (Chaos Target), the first impacted component is the target 'ad-pod-1', which belongs to the 'Ad Service Component'. This component was found in the model's contracted path.",
+        "details": {
+          "gt_first_impacted_component": "Ad Service Component",
+          "effect_used": "Ad pods experience high memory usage and potential OOM kills",
+          "priority_rule_applied": "Priority 2",
+          "found_in_model_path": true
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": null,
+        "justification": "The predicted root cause entity 'otel-demo/StressChaos/otel-demo-ad-memory-stress' was a correct match. Therefore, this score is the same as the Root Cause Reasoning Accuracy score, which is 1.",
+        "details": [
+          {
+            "entity": "otel-demo/StressChaos/otel-demo-ad-memory-stress",
+            "metric1_is_correct": true,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 1
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0,
+        "justification": "The model predicted one root cause component ('Chaos Injection Component') and the GT has one root cause component ('Chaos Injection Component'). For precision, the model's component is 0 hops away from the GT component, yielding a score of 1/(1+0)=1. The average is 1. For recall, the GT component is 0 hops away from the model's component, yielding a score of 1/(1+0)=1. The average is 1.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/StressChaos/otel-demo-ad-memory-stress",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-ad-memory-stress",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 4,
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0,
+        "justification": "The contracted GT path length is 4. The model's predicted root cause component ('Chaos Injection Component') is 0 hops away from the GT root cause component. For precision, the score is 1/(1 + 0/4) = 1. For recall, the score is also 1/(1 + 0/4) = 1. The final F1 score is 1.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/StressChaos/otel-demo-ad-memory-stress",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-ad-memory-stress",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      }
+    },
+    "incident_id": "Scenario-22",
+    "trial_id": "2"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 1.0,
+    "root_cause_entity_recall": 1.0,
+    "root_cause_entity_f1": 1.0,
+    "root_cause_reasoning": 1.0,
+    "propagation_chain": 0.8571428571428571,
+    "fault_localization_component_identification": 1,
+    "root_cause_reasoning_partial": null,
+    "root_cause_proximity_no_fp_precision": 1.0,
+    "root_cause_proximity_no_fp_recall": 1.0,
+    "root_cause_proximity_no_fp_f1": 1.0,
+    "root_cause_proximity_with_fp_precision": 1.0,
+    "root_cause_proximity_with_fp_recall": 1.0,
+    "root_cause_proximity_with_fp_f1": 1.0,
+    "root_cause_entity_k_precision": 1.0,
+    "root_cause_entity_k_recall": 1.0,
+    "root_cause_entity_k_f1": 1.0,
+    "root_cause_entity_k@1_precision": 1.0,
+    "root_cause_entity_k@1_recall": 1.0,
+    "root_cause_entity_k@1_f1": 1.0,
+    "root_cause_entity_k@2_precision": 1.0,
+    "root_cause_entity_k@2_recall": 1.0,
+    "root_cause_entity_k@2_f1": 1.0,
+    "root_cause_entity_k@3_precision": 1.0,
+    "root_cause_entity_k@3_recall": 1.0,
+    "root_cause_entity_k@3_f1": 1.0,
+    "root_cause_entity_k@4_precision": 1.0,
+    "root_cause_entity_k@4_recall": 1.0,
+    "root_cause_entity_k@4_f1": 1.0,
+    "root_cause_entity_k@5_precision": 1.0,
+    "root_cause_entity_k@5_recall": 1.0,
+    "root_cause_entity_k@5_f1": 1.0
+  }
+}

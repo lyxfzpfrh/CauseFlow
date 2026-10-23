@@ -1,0 +1,45 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/StressChaos/otel-demo-ad-memory-stress",
+      "contributing_factor": true,
+      "reasoning": "Memory‑stress chaos experiment injected OOM pressure into the ad pods, triggering crashes.",
+      "evidence": "ChaosMesh events at 2025-12-15 show StressChaos otel-demo-ad-memory-stress failed and forbade new jobs; CrashLoopBackOff alerts fire for otel-demo ad pods during same window."
+    },
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": false,
+      "reasoning": "ad deployment pods entered CrashLoopBackOff as a downstream effect of the memory‑stress experiment.",
+      "evidence": "CrashLoopBackOffPodsDetected alerts (critical) for namespace otel-demo; k8s events show pod restarts for ad deployment."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "frontend observed a surge in request errors because the ad service it calls was unavailable.",
+      "evidence": "RequestErrorRate alerts (36 occurrences) in otel-demo; traces show failed calls from frontend to ad service."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/StressChaos/otel-demo-ad-memory-stress",
+      "target": "otel-demo/Deployment/ad",
+      "condition": "memory stress caused OOM kills leading to CrashLoopBackOff",
+      "effect": "ad pods repeatedly crash and restart, generating CrashLoopBackOff alerts"
+    },
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/frontend",
+      "condition": "ad service endpoints return errors due to pod crashes",
+      "effect": "frontend experiences high request error rate, triggering RequestErrorRate alerts"
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "CrashLoopBackOffPodsDetected", "explanation": "Critical alert indicating pods are stuck in CrashLoopBackOff, here for ad deployment.", "explained": true},
+    {"alert": "KubePodCrashLooping", "explanation": "Pod crash loop detected by kube-state-metrics; corroborates CrashLoopBackOff.", "explained": true},
+    {"alert": "RequestErrorRate", "explanation": "High error rate on HTTP requests, observed on frontend due to downstream ad failures.", "explained": true},
+    {"alert": "CPUThrottlingHigh", "explanation": "CPU throttling spikes on ad pods caused by memory‑stress induced contention.", "explained": true},
+    {"alert": "NoRequestsDetected", "explanation": "Metric indicates lack of requests to a service, likely because ad pods were down.", "explained": true},
+    {"alert": "InfoInhibitor", "explanation": "Info‑level inhibition alert; not directly related to the incident.", "explained": true},
+    {"alert": "Watchdog", "explanation": "Always‑firing watchdog alert; serves to verify alerting pipeline, not incident‑specific.", "explained": true}
+  ]
+}

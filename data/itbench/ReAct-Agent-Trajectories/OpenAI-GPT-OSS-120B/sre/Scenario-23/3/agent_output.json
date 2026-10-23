@@ -1,0 +1,167 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": true,
+      "reasoning": "The checkout deployment was observed to change its replica count from 1 to 0 during the incident window, effectively removing the checkout service.",
+      "evidence": "Spec change analysis shows spec.replicas changed 1→0 at 2025-12-15T17:54:50Z; related alerts include KubeDeploymentReplicasMismatch and KubePodNotReady for checkout pods."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Service had no ready endpoints because its backing deployment scaled to zero, causing downstream errors.",
+      "evidence": "NoRequestsDetected and RequestErrorRate alerts for many services reference missing checkout; service endpoints missing in topology."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend observed a warning RequestErrorRate alert while calling checkout, which was unavailable.",
+      "evidence": "RequestErrorRate alert for service frontend (warning) firing throughout the window."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Proxy forwards traffic to checkout; its RequestErrorRate rose when checkout vanished.",
+      "evidence": "RequestErrorRate alert for frontend-proxy (warning) firing continuously."
+    },
+    {
+      "name": "otel-demo/Service/recommendation",
+      "contributing_factor": false,
+      "reasoning": "Recommendation service depends on checkout for inventory checks; error rate increased after checkout stopped.",
+      "evidence": "RequestErrorRate alert for recommendation (warning) active; NoRequestsDetected for recommendation."
+    },
+    {
+      "name": "otel-demo/Service/fraud-detection",
+      "contributing_factor": false,
+      "reasoning": "Fraud-detection also calls checkout; its RequestErrorRate alert fired.",
+      "evidence": "RequestErrorRate alert for fraud-detection (warning) observed."
+    },
+    {
+      "name": "otel-demo/Service/quote",
+      "contributing_factor": false,
+      "reasoning": "Quote service received no traffic because checkout downstream was down, triggering NoRequestsDetected.",
+      "evidence": "NoRequestsDetected alert for quote (warning) firing."
+    },
+    {
+      "name": "otel-demo/Service/accounting",
+      "contributing_factor": false,
+      "reasoning": "Accounting had no requests due to checkout outage, leading to NoRequestsDetected.",
+      "evidence": "NoRequestsDetected alert for accounting (warning)."
+    },
+    {
+      "name": "otel-demo/Service/shipping",
+      "contributing_factor": false,
+      "reasoning": "Shipping service lost traffic after checkout stopped, raising NoRequestsDetected.",
+      "evidence": "NoRequestsDetected alert for shipping (warning)."
+    },
+    {
+      "name": "otel-demo/Service/payment",
+      "contributing_factor": false,
+      "reasoning": "Payment service showed NoRequestsDetected due to upstream checkout failure.",
+      "evidence": "NoRequestsDetected alert for payment (warning)."
+    },
+    {
+      "name": "otel-demo/Service/currency",
+      "contributing_factor": false,
+      "reasoning": "Currency service experienced no inbound calls after checkout outage.",
+      "evidence": "NoRequestsDetected alert for currency (warning)."
+    },
+    {
+      "name": "otel-demo/Service/email",
+      "contributing_factor": false,
+      "reasoning": "Email service received no requests because checkout was unavailable.",
+      "evidence": "NoRequestsDetected alert for email (warning)."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "The service object itself had no pods, reflected by PendingPodsDetected alerts.",
+      "evidence": "PendingPodsDetected alert (critical) firing for namespace otel-demo."
+    },
+    {
+      "name": "otel-demo/Pod/checkout-5dccddf8bb-xq5bq",
+      "contributing_factor": false,
+      "reasoning": "Checkout pod was not ready and eventually terminated after scaling to zero.",
+      "evidence": "KubePodNotReady and KubeDeploymentReplicasMismatch alerts referencing checkout pods."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/checkout",
+      "condition": "replicas set to 0, no pods created",
+      "effect": "service has zero ready endpoints"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/frontend",
+      "condition": "frontend calls checkout for order processing",
+      "effect": "frontend generated increased error responses (RequestErrorRate warning)"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "proxy forwards client traffic to checkout",
+      "effect": "proxy observed rising error rate alerts"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/recommendation",
+      "condition": "recommendation queries checkout for recommendations",
+      "effect": "recommendation emitted RequestErrorRate and NoRequestsDetected alerts"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/fraud-detection",
+      "condition": "fraud-detection depends on checkout for transaction validation",
+      "effect": "fraud-detection showed warning RequestErrorRate"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/quote",
+      "condition": "quote service upstream calls checkout",
+      "effect": "quote emitted NoRequestsDetected alert"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/accounting",
+      "condition": "accounting relies on checkout for order finalization",
+      "effect": "accounting emitted NoRequestsDetected alert"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/shipping",
+      "condition": "shipping waits for checkout confirmation",
+      "effect": "shipping emitted NoRequestsDetected alert"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/payment",
+      "condition": "payment processes checkout transactions",
+      "effect": "payment emitted NoRequestsDetected alert"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/currency",
+      "condition": "currency service called by checkout for conversion",
+      "effect": "currency emitted NoRequestsDetected alert"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/email",
+      "condition": "email service triggered after checkout order completion",
+      "effect": "email emitted NoRequestsDetected alert"
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "RequestErrorRate", "explanation": "Error rate above zero for the listed service, caused by downstream checkout being unavailable.", "explained": true},
+    {"alert": "NoRequestsDetected", "explanation": "Service received no traffic because upstream checkout had zero endpoints.", "explained": true},
+    {"alert": "PendingPodsDetected", "explanation": "Pods were pending scheduling or creation, observed for checkout after scaling to zero.", "explained": true},
+    {"alert": "KubeDeploymentReplicasMismatch", "explanation": "Deployment replica count (desired vs actual) differed for checkout deployment.", "explained": true},
+    {"alert": "KubePodNotReady", "explanation": "Checkout pod never reached Ready state before being terminated.", "explained": true},
+    {"alert": "InfoInhibitor", "explanation": "Info-level inhibition alert; not directly related to incident.", "explained": true},
+    {"alert": "CPUThrottlingHigh", "explanation": "High CPU throttling observed on some pods; not primary cause.", "explained": true},
+    {"alert": "Watchdog", "explanation": "Always‑firing health‑check alert; ignore for incident analysis.", "explained": true}
+  ]
+}
+

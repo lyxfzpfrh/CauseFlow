@@ -1,0 +1,58 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "Deployment ad exceeded CPU (95%) and memory (88%) limits, leading to pod crashes.",
+      "evidence": "metrics cpu_usage.json (95% CPU) and memory_usage.json (88% memory); event1 PodCrashLoopBackOff"
+    },
+    {
+      "name": "otel-demo/Pod/ad-5f7c9f9b8-abcde",
+      "contributing_factor": false,
+      "reasoning": "Pod entered CrashLoopBackOff as a symptom of its Deployment's resource exhaustion.",
+      "evidence": "event1.json type PodCrashLoopBackOff for this pod"
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend returned HTTP 503 because its upstream ad service was unavailable.",
+      "evidence": "event2.json ServiceUnavailable for frontend; topology shows frontend depends on ad"
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Pod/ad-5f7c9f9b8-abcde",
+      "condition": "CPU/memory limits breached causing pod restart loops",
+      "effect": "Pod entered CrashLoopBackOff"
+    },
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/frontend",
+      "condition": "ad service unavailable due to crashing pods",
+      "effect": "Frontend returned HTTP 503 (ServiceUnavailable)"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "cpu-cpu-usage-high",
+      "explanation": "Fired because Deployment ad CPU usage reached 95% exceeding threshold.",
+      "explained": true
+    },
+    {
+      "alert": "memory-memory-usage-high",
+      "explanation": "Fired because Deployment ad memory usage reached 88% exceeding threshold.",
+      "explained": true
+    },
+    {
+      "alert": "pod-crashloopbackoff",
+      "explanation": "Fired due to pod ad-5f7c9f9b8-abcde repeatedly crashing.",
+      "explained": true
+    },
+    {
+      "alert": "service-unavailable",
+      "explanation": "Fired because Service frontend responded with HTTP 503.",
+      "explained": true
+    }
+  ]
+}

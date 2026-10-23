@@ -1,0 +1,234 @@
+{
+  "metadata": {
+    "scenario": "Scenario-16",
+    "run": 2,
+    "duration_seconds": 0,
+    "inference_count": 0,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "shipping-deployment-1"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "otel-demo/Deployment/postgresql",
+            "matches_gt": false
+          }
+        ],
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The Ground Truth root cause is 'shipping-deployment-1'. Its alias group includes 'shipping-service-1' and 'shipping-pod-1'. The model predicted 'otel-demo/Deployment/postgresql' as the root cause. The name 'postgresql' does not match the filter 'shipping' for any of the GT root cause entities or their aliases. Therefore, there is no match."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0,
+        "justification": "The model did not correctly identify any root cause entities, so the reasoning accuracy score is 0.",
+        "details": {}
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components. The GT path contracts to a single 'Shipping Service Component'. The model proposes a fan-out path from a 'PostgreSQL Component' to various services. The only common component is the 'Shipping Service Component'. With a TP of 1, a model path length of 10, and a GT path length of 1, the precision and recall are calculated accordingly.",
+        "details": {
+          "normalization_map": {
+            "otel-demo/Service/shipping": "shipping-service-1"
+          },
+          "semantic_components": {
+            "Shipping Service Component": [
+              "shipping-deployment-1",
+              "shipping-service-1",
+              "shipping-pod-1"
+            ],
+            "PostgreSQL Component": [
+              "otel-demo/Deployment/postgresql"
+            ],
+            "Frontend Component": [
+              "otel-demo/Service/frontend"
+            ],
+            "Frontend-Proxy Component": [
+              "otel-demo/Service/frontend-proxy"
+            ],
+            "Checkout Component": [
+              "otel-demo/Service/checkout"
+            ],
+            "Quote Component": [
+              "otel-demo/Service/quote"
+            ],
+            "Fraud-Detection Component": [
+              "otel-demo/Service/fraud-detection"
+            ],
+            "Accounting Component": [
+              "otel-demo/Service/accounting"
+            ],
+            "Payment Component": [
+              "otel-demo/Service/payment"
+            ],
+            "Email Component": [
+              "otel-demo/Service/email"
+            ]
+          },
+          "contracted_gt_path": [
+            "Shipping Service Component"
+          ],
+          "contracted_model_path": [
+            "PostgreSQL Component",
+            "Frontend Component",
+            "Frontend-Proxy Component",
+            "Checkout Component",
+            "Shipping Service Component",
+            "Quote Component",
+            "Fraud-Detection Component",
+            "Accounting Component",
+            "Payment Component",
+            "Email Component"
+          ],
+          "lcs_components": [
+            "Shipping Service Component"
+          ],
+          "true_positives_TP": 1,
+          "model_path_length": 10,
+          "gt_path_length": 1
+        },
+        "precision": 0.1,
+        "recall": 1.0,
+        "calculation": 0.18181818181818182
+      },
+      "fault_localization_component_identification": {
+        "calculation": 1,
+        "justification": "The first performance failure in GT.propagations is: 'Shipping service experiences high latency while attempting to connect to invalid port'. Using the Priority 1 rule (explicit component name in effect), the first impacted component is 'Shipping Service Component'. This component was found in the model's contracted path.",
+        "details": {
+          "gt_first_impacted_component": "Shipping Service Component",
+          "effect_used": "Shipping service experiences high latency while attempting to connect to invalid port",
+          "priority_rule_applied": "Priority 1",
+          "found_in_model_path": true
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": null,
+        "justification": "The model's predicted root cause entity 'otel-demo/Deployment/postgresql' did not match the GT root cause. To calculate partial credit, we check if its semantic component ('PostgreSQL Component') is on the contracted GT path ('[\"Shipping Service Component\"]'). It is not. Therefore, the partial credit score is 0.",
+        "details": [
+          {
+            "entity": "otel-demo/Deployment/postgresql",
+            "metric1_is_correct": false,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.5,
+        "calculation_f1": 0.0,
+        "justification": "For Precision, the model's predicted root cause component ('PostgreSQL Component') is not on the contracted GT path, so its score is 0. P = 0. For Recall, the GT root cause component ('Shipping Service Component') is on the path. The closest predicted component is 'PostgreSQL Component', which is 1 hop away in the model's graph. Its score is 1/(1+1) = 0.5. R = 0.5. The F1 score is 0.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/postgresql",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "shipping-deployment-1",
+            "is_on_path": true,
+            "hop_away": 1,
+            "entity_score": 0.5
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 1,
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.5,
+        "calculation_f1": 0.0,
+        "justification": "The gt_path_length is 1. For Precision, the model's predicted root cause component ('PostgreSQL Component') is not on the contracted GT path, so its score is 0. P = 0. For Recall, the GT root cause component ('Shipping Service Component') is on the path. The closest predicted component is 'PostgreSQL Component', which is 1 hop away. Its score is 1/(1 + 1/1) = 0.5. R = 0.5. The F1 score is 0.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/postgresql",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "shipping-deployment-1",
+            "is_on_path": true,
+            "hop_away": 1,
+            "entity_score": 0.5
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      }
+    },
+    "incident_id": "Scenario-16",
+    "trial_id": "2"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 0.0,
+    "root_cause_entity_recall": 0.0,
+    "root_cause_entity_f1": 0,
+    "root_cause_reasoning": 0,
+    "propagation_chain": 0.18181818181818182,
+    "fault_localization_component_identification": 1,
+    "root_cause_reasoning_partial": null,
+    "root_cause_proximity_no_fp_precision": 0.0,
+    "root_cause_proximity_no_fp_recall": 0.5,
+    "root_cause_proximity_no_fp_f1": 0.0,
+    "root_cause_proximity_with_fp_precision": 0.0,
+    "root_cause_proximity_with_fp_recall": 0.5,
+    "root_cause_proximity_with_fp_f1": 0.0,
+    "root_cause_entity_k_precision": 0.0,
+    "root_cause_entity_k_recall": 0.0,
+    "root_cause_entity_k_f1": 0.0,
+    "root_cause_entity_k@1_precision": 0.0,
+    "root_cause_entity_k@1_recall": 0.0,
+    "root_cause_entity_k@1_f1": 0.0,
+    "root_cause_entity_k@2_precision": 0.0,
+    "root_cause_entity_k@2_recall": 0.0,
+    "root_cause_entity_k@2_f1": 0.0,
+    "root_cause_entity_k@3_precision": 0.0,
+    "root_cause_entity_k@3_recall": 0.0,
+    "root_cause_entity_k@3_f1": 0.0,
+    "root_cause_entity_k@4_precision": 0.0,
+    "root_cause_entity_k@4_recall": 0.0,
+    "root_cause_entity_k@4_f1": 0.0,
+    "root_cause_entity_k@5_precision": 0.0,
+    "root_cause_entity_k@5_recall": 0.0,
+    "root_cause_entity_k@5_f1": 0.0
+  }
+}

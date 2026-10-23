@@ -1,0 +1,54 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "ad pods repeatedly OOMKilled causing CrashLoopBackOff.",
+      "evidence": "CrashLoopBackOff alert on ad pods; OOMKilled events in pod status."
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "ad service could not route traffic because its pods were down.",
+      "evidence": "Service endpoints empty after ad pods crash."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "frontend received 5xx errors due to downstream ad service failure.",
+      "evidence": "5xx error rate alert on frontend; traces show failing calls to ad service."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/ad",
+      "condition": "PodCrashLoopBackOff prevents endpoints registration",
+      "effect": "ad service reports no ready endpoints"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "frontend calls ad service which is unavailable",
+      "effect": "frontend returns HTTP 500 leading to 5xx alert"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "ad pods are crashing due to OOM, causing repeated restarts.",
+      "explained": true
+    },
+    {
+      "alert": "ServiceEndpointsEmpty",
+      "explanation": "ad service has no ready endpoints because its pods are down.",
+      "explained": true
+    },
+    {
+      "alert": "HTTP5xxHighRate",
+      "explanation": "frontend returning many 5xx responses due to downstream failure.",
+      "explained": true
+    }
+  ]
+}
+

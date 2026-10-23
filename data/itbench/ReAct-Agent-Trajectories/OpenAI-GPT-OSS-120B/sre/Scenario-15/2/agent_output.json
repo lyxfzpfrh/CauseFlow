@@ -1,0 +1,117 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "Trace analysis shows a new critical path ad → flagd with 100% error rate, indicating ad service failures triggered downstream errors.",
+      "evidence": "trace_error_tree: root_cause_suspect service=ad, error_rate 100%; alert RequestErrorRate warning active during incident."
+    },
+    {
+      "name": "otel-demo/Deployment/fraud-detection",
+      "contributing_factor": true,
+      "reasoning": "Trace analysis shows a new critical path fraud-detection → flagd with 100% error rate, causing errors that propagated to other services.",
+      "evidence": "trace_error_tree: root_cause_suspect service=fraud-detection, error_rate 100%; alert RequestErrorRate warning active."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": true,
+      "reasoning": "High CPU throttling on frontend pods caused request failures and latency spikes, driving several warning alerts.",
+      "evidence": "alert CPUThrottlingHigh info firing; alert RequestErrorRate warning; alert RequestLatency warning."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Frontend-proxy traffic dropped after frontend errors, acting as an intermediate that was impacted downstream.",
+      "evidence": "trace critical path load-generator → frontend-proxy shows error_rate 50%→0% and traffic reduction."
+    },
+    {
+      "name": "otel-demo/Deployment/cart",
+      "contributing_factor": false,
+      "reasoning": "Cart service traffic disappeared after upstream failures, leading to NoRequestsDetected alert.",
+      "evidence": "trace all_paths shows cart disappeared; alert NoRequestsDetected warning."
+    },
+    {
+      "name": "otel-demo/Deployment/recommendation",
+      "contributing_factor": false,
+      "reasoning": "Recommendation service lost traffic following upstream errors, contributing to overall degradation.",
+      "evidence": "trace all_paths shows recommendation disappeared; alert RequestLatency warning."
+    },
+    {
+      "name": "otel-demo/Deployment/flagd",
+      "contributing_factor": false,
+      "reasoning": "Flagd received error spikes from ad and fraud-detection but did not itself cause the incident.",
+      "evidence": "trace error paths ad → flagd and fraud-detection → flagd marked as NEW with 100% error upstream."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Deployment/flagd",
+      "condition": "ad service generated 100% error rate in its spans",
+      "effect": "flagd observed errors, contributing to downstream failures"
+    },
+    {
+      "source": "otel-demo/Deployment/fraud-detection",
+      "target": "otel-demo/Deployment/flagd",
+      "condition": "fraud-detection service generated 100% error rate in its spans",
+      "effect": "flagd observed errors, adding to system instability"
+    },
+    {
+      "source": "otel-demo/Deployment/frontend",
+      "target": "otel-demo/Deployment/frontend-proxy",
+      "condition": "CPU throttling caused request errors and latency spikes",
+      "effect": "frontend-proxy traffic and error rate degraded"
+    },
+    {
+      "source": "otel-demo/Deployment/frontend-proxy",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "Reduced upstream traffic and error spikes",
+      "effect": "frontend experienced higher error rate and latency"
+    },
+    {
+      "source": "otel-demo/Deployment/frontend",
+      "target": "otel-demo/Deployment/cart",
+      "condition": "Frontend errors prevented requests reaching cart",
+      "effect": "cart traffic disappeared, triggering NoRequestsDetected"
+    },
+    {
+      "source": "otel-demo/Deployment/frontend",
+      "target": "otel-demo/Deployment/recommendation",
+      "condition": "Frontend request failures cascaded to recommendation calls",
+      "effect": "recommendation traffic dropped, contributing to latency alerts"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Frontend pods were throttled, leading to reduced processing capacity and request failures.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Elevated error rate across services, driven by ad and fraud-detection failures and frontend throttling.",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Increased latency due to CPU throttling on frontend and downstream error cascades.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "No traffic observed for cart service after upstream failures, indicating a downstream impact.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Informational alert indicating that other alerts were inhibited; not directly related to root cause.",
+      "explained": true
+    },
+    {
+      "alert": "Watchdog",
+      "explanation": "Always‑firing sanity check; confirms alerting pipeline was functional.",
+      "explained": true
+    }
+  ]
+}
+

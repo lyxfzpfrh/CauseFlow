@@ -1,0 +1,88 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Pod/valkey-cart-58df56c79c-4cvft",
+      "contributing_factor": true,
+      "reasoning": "Pod is in CrashLoopBackOff, triggering KubePodCrashLooping alert and preventing key-value store availability.",
+      "evidence": "KubePodCrashLooping alert firing for pod valkey-cart-58df56c79c-4cvft; event logs show BackOff reasons."
+    },
+    {
+      "name": "otel-demo/Deployment/cart",
+      "contributing_factor": false,
+      "reasoning": "Cart service experiences high latency and error rate because it cannot reach the valkey store.",
+      "evidence": "RequestLatency and RequestErrorRate alerts for service cart; downstream dependency on valkey-cart pod."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Proxy forwards requests to cart; degraded cart causes proxy latency and errors.",
+      "evidence": "RequestLatency and RequestErrorRate alerts for frontend-proxy; error propagation from cart."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "User‑facing frontend shows high latency and error rate due to downstream cart failures.",
+      "evidence": "RequestLatency and RequestErrorRate alerts for frontend; upstream cart degradation."
+    },
+    {
+      "name": "otel-demo/Pod/cart-755465879b-4p8d9",
+      "contributing_factor": false,
+      "reasoning": "Cart pod shows CPU throttling, a symptom of resource pressure but not primary cause.",
+      "evidence": "CPUThrottlingHigh alert for container cart; pod events show normal lifecycle."
+    },
+    {
+      "name": "otel-demo/Pod/postgresql-c7fd45b87-n75gn",
+      "contributing_factor": false,
+      "reasoning": "PostgreSQL pod shows CPU throttling but remains healthy; unrelated to main outage.",
+      "evidence": "CPUThrottlingHigh alert for container postgresql; no crash or latency alerts."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Pod/valkey-cart-58df56c79c-4cvft",
+      "target": "otel-demo/Deployment/cart",
+      "condition": "valkey store unavailable due to CrashLoopBackOff",
+      "effect": "cart service latency spikes and error rate rises"
+    },
+    {
+      "source": "otel-demo/Deployment/cart",
+      "target": "otel-demo/Deployment/frontend-proxy",
+      "condition": "cart returns errors/timeouts",
+      "effect": "frontend-proxy latency and error rate increase"
+    },
+    {
+      "source": "otel-demo/Deployment/frontend-proxy",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "proxy propagates errors to client requests",
+      "effect": "frontend experiences high latency and error rate"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "Pod valkey-cart is repeatedly crashing, preventing it from serving requests.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate > 0 for frontend, frontend-proxy, and cart services indicates downstream failures.",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency > 1500ms for frontend, frontend-proxy, and cart services reflects degraded response times.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Elevated CPU throttling for cart and postgresql containers; observed but not root cause.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Info‑level inhibition alerts; they do not indicate a problem.",
+      "explained": true
+    }
+  ]
+}
+

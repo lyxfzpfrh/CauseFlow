@@ -1,0 +1,223 @@
+{
+  "metadata": {
+    "scenario": "Scenario-91",
+    "run": 1,
+    "duration_seconds": 0,
+    "inference_count": 85,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "otel-demo-fraud-detection-kafka-network-partition"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "kube-system/Deployment/kube-scheduler",
+            "matches_gt": false
+          },
+          {
+            "entity": "kube-system/Deployment/kube-controller-manager",
+            "matches_gt": false
+          }
+        ],
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The model predicted two root causes: 'kube-system/Deployment/kube-scheduler' and 'kube-system/Deployment/kube-controller-manager'. Neither of these entities could be confidently mapped to the ground truth root cause 'otel-demo-fraud-detection-kafka-network-partition' based on their name, kind, or namespace. Therefore, no root causes were correctly identified."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0,
+        "justification": "The model did not correctly identify any of the ground truth root cause entities. Therefore, the reasoning accuracy score is 0.",
+        "details": {}
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is 0 because none of the entities in the model's propagation path could be mapped to any of the semantic components defined from the ground truth. The model's path is entirely unrelated to the actual fault propagation.",
+        "details": {
+          "normalization_map": {},
+          "semantic_components": {
+            "Chaos Component": [
+              "otel-demo-fraud-detection-kafka-network-partition"
+            ],
+            "Fraud Detection Service Component": [
+              "fraud-detection-pod-1",
+              "fraud-detection-service-1"
+            ],
+            "Kafka Component": [
+              "kafka-1",
+              "kafka-service-1"
+            ]
+          },
+          "contracted_gt_path": [
+            "Chaos Component",
+            "Fraud Detection Service Component",
+            "Kafka Component"
+          ],
+          "contracted_model_path": [],
+          "lcs_components": [],
+          "true_positives_TP": 0,
+          "model_path_length": 0,
+          "gt_path_length": 3
+        },
+        "precision": null,
+        "recall": 0.0,
+        "calculation": 0
+      },
+      "fault_localization_component_identification": {
+        "calculation": 0,
+        "justification": "The first performance failure in GT.propagations is: 'Fraud detection pods cannot establish or maintain connections to Kafka'. Using the Priority 2 rule (Chaos Target), the source 'otel-demo-fraud-detection-kafka-network-partition' is a Chaos entity, so the first impacted component is the component of the target 'fraud-detection-pod-1', which is 'Fraud Detection Service Component'. This component was not found in the model's contracted path, which was empty.",
+        "details": {
+          "gt_first_impacted_component": "Fraud Detection Service Component",
+          "effect_used": "Fraud detection pods cannot establish or maintain connections to Kafka",
+          "priority_rule_applied": "Priority 2",
+          "found_in_model_path": false
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": 0,
+        "justification": "For both predicted root cause entities ('kube-system/Deployment/kube-scheduler' and 'kube-system/Deployment/kube-controller-manager'), their corresponding semantic components are not on the contracted GT path. Therefore, no partial credit can be awarded. The score for each is 0, and the max score is 0.",
+        "details": [
+          {
+            "entity": "kube-system/Deployment/kube-scheduler",
+            "metric1_is_correct": false,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 0
+          },
+          {
+            "entity": "kube-system/Deployment/kube-controller-manager",
+            "metric1_is_correct": false,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "For precision, the model's two predicted root cause components ('Kube Scheduler Component', 'Kube Controller Manager Component') are not on the contracted GT path, so their scores are 0. The average is 0. For recall, the single GT root cause component ('Chaos Component') has an infinite hop distance to any predicted component, so its score is 0. The average is 0. The F1 score is therefore 0.",
+        "precision_details": [
+          {
+            "entity": "kube-system/Deployment/kube-scheduler",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          },
+          {
+            "entity": "kube-system/Deployment/kube-controller-manager",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-fraud-detection-kafka-network-partition",
+            "is_on_path": true,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 3,
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The gt_path_length is 3. For precision, the model's two predicted root cause components are not on the contracted GT path, so their scores are 0. The average is 0. For recall, the single GT root cause component has an infinite hop distance to any predicted component, so its score is 0. The average is 0. The F1 score is therefore 0.",
+        "precision_details": [
+          {
+            "entity": "kube-system/Deployment/kube-scheduler",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          },
+          {
+            "entity": "kube-system/Deployment/kube-controller-manager",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-fraud-detection-kafka-network-partition",
+            "is_on_path": true,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      }
+    },
+    "incident_id": "Scenario-91",
+    "trial_id": "1"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 0.0,
+    "root_cause_entity_recall": 0.0,
+    "root_cause_entity_f1": 0.0,
+    "root_cause_reasoning": 0,
+    "propagation_chain": 0,
+    "fault_localization_component_identification": 0,
+    "root_cause_reasoning_partial": 0,
+    "root_cause_proximity_no_fp_precision": 0.0,
+    "root_cause_proximity_no_fp_recall": 0.0,
+    "root_cause_proximity_no_fp_f1": 0,
+    "root_cause_proximity_with_fp_precision": 0.0,
+    "root_cause_proximity_with_fp_recall": 0.0,
+    "root_cause_proximity_with_fp_f1": 0,
+    "root_cause_entity_k_precision": 0.0,
+    "root_cause_entity_k_recall": 0.0,
+    "root_cause_entity_k_f1": 0.0,
+    "root_cause_entity_k@1_precision": 0.0,
+    "root_cause_entity_k@1_recall": 0.0,
+    "root_cause_entity_k@1_f1": 0.0,
+    "root_cause_entity_k@2_precision": 0.0,
+    "root_cause_entity_k@2_recall": 0.0,
+    "root_cause_entity_k@2_f1": 0.0,
+    "root_cause_entity_k@3_precision": 0.0,
+    "root_cause_entity_k@3_recall": 0.0,
+    "root_cause_entity_k@3_f1": 0.0,
+    "root_cause_entity_k@4_precision": 0.0,
+    "root_cause_entity_k@4_recall": 0.0,
+    "root_cause_entity_k@4_f1": 0.0,
+    "root_cause_entity_k@5_precision": 0.0,
+    "root_cause_entity_k@5_recall": 0.0,
+    "root_cause_entity_k@5_f1": 0.0
+  }
+}

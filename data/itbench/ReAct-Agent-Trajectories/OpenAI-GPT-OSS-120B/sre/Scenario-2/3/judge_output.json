@@ -1,0 +1,265 @@
+{
+  "metadata": {
+    "scenario": "Scenario-2",
+    "run": 3,
+    "duration_seconds": 0,
+    "inference_count": 0,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "flagd-config"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "otel-demo/Pod/frontend-675fd7b5c5-64mj8",
+            "matches_gt": false
+          },
+          {
+            "entity": "otel-demo/Pod/ad-554b849958-fbw9s",
+            "matches_gt": false
+          },
+          {
+            "entity": "otel-demo/Pod/cart-755465879b-rh5r4",
+            "matches_gt": false
+          }
+        ],
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The Ground Truth root cause is the 'flagd-config' ConfigMap. The model predicted three Pods as root causes ('frontend-675fd7b5c5-64mj8', 'ad-554b849958-fbw9s', 'cart-755465879b-rh5r4'). None of the predicted entities match the GT root cause. Therefore, precision, recall, and F1 are all 0."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0,
+        "justification": "The model did not correctly identify any of the ground truth root cause entities. Therefore, the reasoning accuracy score is 0.",
+        "details": {}
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components grouped by application service. The GT path is ['Flagd Config Component', 'Cart Service Component', 'Frontend Service Component', 'Frontend Proxy Component'] and the model path is ['Frontend Service Component', 'Frontend Proxy Component', 'Unmapped Component', 'Cart Service Component']. The Longest Common Subsequence (LCS) is ['Frontend Service Component', 'Frontend Proxy Component'], giving a TP of 2. With a model path length of 4 and a GT path length of 4, the precision and recall are both 0.5.",
+        "details": {
+          "normalization_map": {
+            "otel-demo/Pod/frontend-675fd7b5c5-64mj8": "frontend-service-1",
+            "otel-demo/Pod/cart-755465879b-rh5r4": "cart-service-1",
+            "otel-demo/Service/frontend-proxy": "frontend-proxy-service-1",
+            "otel-demo/Service/cart": "cart-service-1"
+          },
+          "semantic_components": {
+            "Flagd Config Component": [
+              "flagd-config"
+            ],
+            "Cart Service Component": [
+              "cart-service-1"
+            ],
+            "Frontend Service Component": [
+              "frontend-service-1"
+            ],
+            "Frontend Proxy Component": [
+              "frontend-proxy-service-1"
+            ],
+            "Unmapped Component": [
+              "otel-demo/Pod/ad-554b849958-fbw9s",
+              "otel-demo/Service/ad"
+            ]
+          },
+          "contracted_gt_path": [
+            "Flagd Config Component",
+            "Cart Service Component",
+            "Frontend Service Component",
+            "Frontend Proxy Component"
+          ],
+          "contracted_model_path": [
+            "Frontend Service Component",
+            "Frontend Proxy Component",
+            "Unmapped Component",
+            "Cart Service Component"
+          ],
+          "lcs_components": [
+            "Frontend Service Component",
+            "Frontend Proxy Component"
+          ],
+          "true_positives_TP": 2,
+          "model_path_length": 4,
+          "gt_path_length": 4
+        },
+        "precision": 0.5,
+        "recall": 0.5,
+        "calculation": 0.5
+      },
+      "fault_localization_component_identification": {
+        "calculation": 1,
+        "justification": "The first performance failure in GT.propagations is: 'Cart service returns errors when users attempt to empty their shopping cart'. Using the Priority 1 rule (explicit component name in effect), the first impacted component is 'Cart Service Component'. This component was found in the model's contracted path.",
+        "details": {
+          "gt_first_impacted_component": "Cart Service Component",
+          "effect_used": "Cart service returns errors when users attempt to empty their shopping cart",
+          "priority_rule_applied": "Priority 1",
+          "found_in_model_path": true
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": 0,
+        "justification": "None of the predicted root causes matched the GT root cause. For the predicted entity 'otel-demo/Pod/frontend-675fd7b5c5-64mj8', its component ('Frontend Service Component') is 2 hops away from the GT root component. However, the model's reasoning (CPU throttling) is incorrect compared to the GT's reasoning (upstream errors from cart service), so SymptomReasoningCorrectness is 0. For 'otel-demo/Pod/cart-755465879b-rh5r4', its component ('Cart Service Component') is 1 hop away, but its reasoning (CPU throttling) is also incorrect compared to the GT's reasoning (feature flag failure), so SymptomReasoningCorrectness is 0. The third predicted entity is not on the GT path. The max score is therefore 0.",
+        "details": [
+          {
+            "entity": "otel-demo/Pod/frontend-675fd7b5c5-64mj8",
+            "metric1_is_correct": false,
+            "hop_away": 2,
+            "SymptomReasoningCorrectness": 0,
+            "entity_score": 0.0
+          },
+          {
+            "entity": "otel-demo/Pod/ad-554b849958-fbw9s",
+            "metric1_is_correct": false,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 0
+          },
+          {
+            "entity": "otel-demo/Pod/cart-755465879b-rh5r4",
+            "metric1_is_correct": false,
+            "hop_away": 1,
+            "SymptomReasoningCorrectness": 0,
+            "entity_score": 0.0
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 0.27777777777777773,
+        "calculation_recall": 0.5,
+        "calculation_f1": 0.35714285714285715,
+        "justification": "Precision: The model predicted 3 root cause components. 'Frontend Service Component' is 2 hops away from the GT root component (score=1/3). 'Unmapped Component' is not on the path (score=0). 'Cart Service Component' is 1 hop away (score=1/2). The average is (1/3 + 0 + 1/2)/3. Recall: The single GT root component's closest predicted component is 'Cart Service Component' at 1 hop away (score=1/2). The average is (1/2)/1.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Pod/frontend-675fd7b5c5-64mj8",
+            "is_on_path": true,
+            "hop_away": 2,
+            "entity_score": 0.3333333333333333
+          },
+          {
+            "entity": "otel-demo/Pod/ad-554b849958-fbw9s",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          },
+          {
+            "entity": "otel-demo/Pod/cart-755465879b-rh5r4",
+            "is_on_path": true,
+            "hop_away": 1,
+            "entity_score": 0.5
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "flagd-config",
+            "is_on_path": true,
+            "hop_away": 1,
+            "entity_score": 0.5
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 4,
+        "calculation_precision": 0.48888888888888893,
+        "calculation_recall": 0.8,
+        "calculation_f1": 0.606896551724138,
+        "justification": "With gt_path_length=4. Precision: 'Frontend Service Component' (hop=2) scores 1/(1+2/4). 'Unmapped Component' scores 0. 'Cart Service Component' (hop=1) scores 1/(1+1/4). The average is the precision score. Recall: The GT component's closest predicted component is at 1 hop, scoring 1/(1+1/4). The average is the recall score.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Pod/frontend-675fd7b5c5-64mj8",
+            "is_on_path": true,
+            "hop_away": 2,
+            "entity_score": 0.6666666666666666
+          },
+          {
+            "entity": "otel-demo/Pod/ad-554b849958-fbw9s",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          },
+          {
+            "entity": "otel-demo/Pod/cart-755465879b-rh5r4",
+            "is_on_path": true,
+            "hop_away": 1,
+            "entity_score": 0.8
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "flagd-config",
+            "is_on_path": true,
+            "hop_away": 1,
+            "entity_score": 0.8
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      }
+    },
+    "incident_id": "Scenario-2",
+    "trial_id": "3"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 0.0,
+    "root_cause_entity_recall": 0.0,
+    "root_cause_entity_f1": 0,
+    "root_cause_reasoning": 0,
+    "propagation_chain": 0.5,
+    "fault_localization_component_identification": 1,
+    "root_cause_reasoning_partial": 0,
+    "root_cause_proximity_no_fp_precision": 0.27777777777777773,
+    "root_cause_proximity_no_fp_recall": 0.5,
+    "root_cause_proximity_no_fp_f1": 0.35714285714285715,
+    "root_cause_proximity_with_fp_precision": 0.48888888888888893,
+    "root_cause_proximity_with_fp_recall": 0.8,
+    "root_cause_proximity_with_fp_f1": 0.606896551724138,
+    "root_cause_entity_k_precision": 0.0,
+    "root_cause_entity_k_recall": 0.0,
+    "root_cause_entity_k_f1": 0.0,
+    "root_cause_entity_k@1_precision": 0.0,
+    "root_cause_entity_k@1_recall": 0.0,
+    "root_cause_entity_k@1_f1": 0.0,
+    "root_cause_entity_k@2_precision": 0.0,
+    "root_cause_entity_k@2_recall": 0.0,
+    "root_cause_entity_k@2_f1": 0.0,
+    "root_cause_entity_k@3_precision": 0.0,
+    "root_cause_entity_k@3_recall": 0.0,
+    "root_cause_entity_k@3_f1": 0.0,
+    "root_cause_entity_k@4_precision": 0.0,
+    "root_cause_entity_k@4_recall": 0.0,
+    "root_cause_entity_k@4_f1": 0.0,
+    "root_cause_entity_k@5_precision": 0.0,
+    "root_cause_entity_k@5_recall": 0.0,
+    "root_cause_entity_k@5_f1": 0.0
+  }
+}

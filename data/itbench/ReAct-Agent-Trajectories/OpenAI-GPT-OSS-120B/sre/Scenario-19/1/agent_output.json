@@ -1,0 +1,70 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": true,
+      "reasoning": "Frontend pods were CPU‑throttled, causing request latency spikes and error rate increase.",
+      "evidence": "CPUThrottlingHigh (14 occurrences) and RequestLatency (51) & RequestErrorRate (91) alerts fire for namespace otel-demo, all referencing frontend pod/container."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Service performance degraded as a downstream effect of the throttled frontend pods.",
+      "evidence": "RequestLatency and RequestErrorRate alerts target the frontend service, showing high latency and errors."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Proxy observed increased errors due to upstream frontend failures.",
+      "evidence": "Error‑rate alerts propagate through the call chain defined in operational_topology.json where frontend‑proxy calls frontend."
+    },
+    {
+      "name": "otel-demo/Service/cart-service",
+      "contributing_factor": false,
+      "reasoning": "Cart service calls frontend for product info and suffered downstream timeouts.",
+      "evidence": "Topology shows cart-service → frontend; frontend errors cause timeouts observed in request error alerts."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/frontend",
+      "target": "otel-demo/Service/frontend",
+      "condition": "CPU throttling reduced pod processing capacity",
+      "effect": "Increased request latency and error rate observed at the service level"
+    },
+    {
+      "source": "otel-demo/Service/frontend",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Frontend returned 5xx/timeout responses",
+      "effect": "Proxy observed higher error counts and latency"
+    },
+    {
+      "source": "otel-demo/Service/frontend",
+      "target": "otel-demo/Service/cart-service",
+      "condition": "Frontend failures when cart queries product data",
+      "effect": "Cart service experienced downstream errors and latency spikes"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Pods in otel-demo namespace exceed CPU throttling thresholds, indicating resource contention.",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Observed request latency exceeds acceptable limits for services in otel-demo.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate for HTTP requests in otel-demo crossed warning threshold.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Infrastructure alert that suppresses info‑level alerts; not directly related to the incident.",
+      "explained": true
+    }
+  ]
+}

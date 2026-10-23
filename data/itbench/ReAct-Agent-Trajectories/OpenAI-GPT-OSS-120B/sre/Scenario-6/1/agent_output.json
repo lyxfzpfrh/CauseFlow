@@ -1,0 +1,48 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "ad deployment shows error spans and zero request volume, indicating it is failing and causing downstream errors.",
+      "evidence": "NoRequestsDetected alert for service ad; service_ad metrics show STATUS_CODE_ERROR spans; RequestErrorRate alerts for upstream services."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "frontend-proxy reports request errors due to downstream ad failures.",
+      "evidence": "RequestErrorRate alert for service frontend-proxy with error rate >0."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "frontend receives errors propagated from frontend-proxy.",
+      "evidence": "RequestErrorRate alert for service frontend with error rate >0."
+    },
+    {
+      "name": "otel-demo/Namespace/otel-demo",
+      "contributing_factor": false,
+      "reasoning": "Namespace holds the affected services but is not the cause.",
+      "evidence": "InfoInhibitor alert is a deadmanssnitch, not indicative of failure."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "ad service returns errors (STATUS_CODE_ERROR) and no traffic",
+      "effect": "frontend-proxy experiences increased error rate."
+    },
+    {
+      "source": "otel-demo/Service/frontend-proxy",
+      "target": "otel-demo/Service/frontend",
+      "condition": "frontend-proxy returns error responses to clients",
+      "effect": "frontend sees request error rate >0."
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "InfoInhibitor", "explanation": "Deadmanssnitch alert, always firing to verify alert pipeline.", "explained": true},
+    {"alert": "RequestErrorRate", "explanation": "Error rate in service frontend and frontend-proxy exceeds threshold, caused by downstream ad failures.", "explained": true},
+    {"alert": "CPUThrottlingHigh", "explanation": "Single instance of high CPU throttling observed, not central to incident.", "explained": true},
+    {"alert": "NoRequestsDetected", "explanation": "Service ad received zero requests, indicating it is not functioning.", "explained": true}
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/cart",
+      "contributing_factor": true,
+      "reasoning": "Cart pods entered CrashLoopBackOff due to OOMKilled, preventing the Service from serving traffic.",
+      "evidence": "Alert KubePodCrashLooping on cart pods, metric spikes in memory usage, logs showing OOMKilled."
+    },
+    {
+      "name": "otel-demo/Service/cart",
+      "contributing_factor": false,
+      "reasoning": "Service became unavailable because its backing pods were unhealthy.",
+      "evidence": "ServiceDown alert triggered, Endpoint ready count 0, downstream 5xx alerts on frontend."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend pods returned 5xx errors when calling the cart service.",
+      "evidence": "HighHTTP5xxRate alert on frontend, trace errors showing failed calls to cart service."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "User‑facing service showed degraded latency and error rate due to downstream cart failures.",
+      "evidence": "ServiceLatencyHigh and ServiceErrorRate alerts, traces indicating downstream errors."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/cart",
+      "target": "otel-demo/Service/cart",
+      "condition": "Pods repeatedly exited with OOMKilled causing CrashLoopBackOff",
+      "effect": "Service endpoints lost readiness, traffic 0"
+    },
+    {
+      "source": "otel-demo/Service/cart",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "Service returned connection errors / HTTP 500",
+      "effect": "Frontend pods generated 5xx responses to users"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "Cart pods repeatedly crashed due to OOM, triggering CrashLoopBackOff.",
+      "explained": true
+    },
+    {
+      "alert": "KubeServiceDown",
+      "explanation": "Cart service lost all ready endpoints because its pods were unhealthy.",
+      "explained": true
+    },
+    {
+      "alert": "HighHTTP5xxRate",
+      "explanation": "Frontend pods returned a high rate of 5xx errors caused by downstream cart failures.",
+      "explained": true
+    },
+    {
+      "alert": "ServiceLatencyHigh",
+      "explanation": "Overall request latency increased due to retries and timeouts when calling cart.",
+      "explained": true
+    }
+  ]
+}

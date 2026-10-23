@@ -1,0 +1,181 @@
+{
+  "metadata": {
+    "scenario": "Scenario-102",
+    "run": 2,
+    "duration_seconds": 0,
+    "inference_count": 0,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "otel-demo-namespace-1"
+        ],
+        "predicted_entities": [],
+        "calculation_precision": null,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The Ground Truth has one root cause entity ('otel-demo-namespace-1'). The model's response did not identify any contributing factors. Therefore, 0 entities were correctly identified out of 1, and 0 entities were predicted. This results in 0 for precision, recall, and F1 score."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0,
+        "justification": "The model did not correctly identify any root cause entities, so the reasoning accuracy score is 0.",
+        "details": {}
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components. The GT path has 4 components, while the model's path is empty. With a TP (LCS) of 0, both precision and recall are 0, resulting in an F1-score of 0.",
+        "details": {
+          "normalization_map": {},
+          "semantic_components": {
+            "Namespace Quota Component": [
+              "otel-demo-namespace-1",
+              "otel-demo-memory-quota-1"
+            ],
+            "Ad Service Component": [
+              "ad-pod-1",
+              "ad-service-1",
+              "ad-deployment-1",
+              "ad-replicaset-1"
+            ],
+            "Frontend Service Component": [
+              "frontend-service-1",
+              "frontend-pod-1"
+            ],
+            "Frontend Proxy Service Component": [
+              "frontend-proxy-service-1",
+              "frontend-proxy-pod-1"
+            ]
+          },
+          "contracted_gt_path": [
+            "Namespace Quota Component",
+            "Ad Service Component",
+            "Frontend Service Component",
+            "Frontend Proxy Service Component"
+          ],
+          "contracted_model_path": [],
+          "lcs_components": [],
+          "true_positives_TP": 0,
+          "model_path_length": 0,
+          "gt_path_length": 4
+        },
+        "precision": null,
+        "recall": 0.0,
+        "calculation": 0
+      },
+      "fault_localization_component_identification": {
+        "calculation": 0,
+        "justification": "The first performance failure in GT.propagations is: 'Ad pods cannot be created, resulting in MinimumReplicasUnavailable'. Using the Priority 1 rule (explicit component name 'Ad pods'), the first impacted component is 'Ad Service Component'. This component was not found in the model's empty contracted path.",
+        "details": {
+          "gt_first_impacted_component": "Ad Service Component",
+          "effect_used": "Ad pods cannot be created, resulting in MinimumReplicasUnavailable",
+          "priority_rule_applied": "Priority 1",
+          "found_in_model_path": false
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": 0,
+        "justification": "The model did not predict any root cause entities, so no partial credit can be awarded. The max score over an empty set of entities is 0.",
+        "details": []
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": null,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The model predicted M=0 root cause components. Precision is the average score over these 0 components, resulting in 0. The GT has N=1 root cause component. For recall, the distance from this GT component to any model component is infinite, so its score is 0. The average recall is 0. The F1 score is therefore 0.",
+        "precision_details": [],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-namespace-1",
+            "is_on_path": true,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 4,
+        "calculation_precision": null,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The model predicted M=0 root cause components. Precision is the average score over these 0 components, resulting in 0. The GT has N=1 root cause component. For recall, the distance from this GT component to any model component is infinite, so its score is 0. The average recall is 0. The F1 score is therefore 0.",
+        "precision_details": [],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-namespace-1",
+            "is_on_path": true,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      }
+    },
+    "incident_id": "Scenario-102",
+    "trial_id": "2"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": null,
+    "root_cause_entity_recall": 0.0,
+    "root_cause_entity_f1": 0,
+    "root_cause_reasoning": 0,
+    "propagation_chain": 0,
+    "fault_localization_component_identification": 0,
+    "root_cause_reasoning_partial": 0,
+    "root_cause_proximity_no_fp_precision": null,
+    "root_cause_proximity_no_fp_recall": 0.0,
+    "root_cause_proximity_no_fp_f1": 0,
+    "root_cause_proximity_with_fp_precision": null,
+    "root_cause_proximity_with_fp_recall": 0.0,
+    "root_cause_proximity_with_fp_f1": 0,
+    "root_cause_entity_k_precision": 0.0,
+    "root_cause_entity_k_recall": 0.0,
+    "root_cause_entity_k_f1": 0.0,
+    "root_cause_entity_k@1_precision": 0.0,
+    "root_cause_entity_k@1_recall": 0.0,
+    "root_cause_entity_k@1_f1": 0.0,
+    "root_cause_entity_k@2_precision": 0.0,
+    "root_cause_entity_k@2_recall": 0.0,
+    "root_cause_entity_k@2_f1": 0.0,
+    "root_cause_entity_k@3_precision": 0.0,
+    "root_cause_entity_k@3_recall": 0.0,
+    "root_cause_entity_k@3_f1": 0.0,
+    "root_cause_entity_k@4_precision": 0.0,
+    "root_cause_entity_k@4_recall": 0.0,
+    "root_cause_entity_k@4_f1": 0.0,
+    "root_cause_entity_k@5_precision": 0.0,
+    "root_cause_entity_k@5_recall": 0.0,
+    "root_cause_entity_k@5_f1": 0.0
+  }
+}

@@ -1,0 +1,221 @@
+{
+  "metadata": {
+    "scenario": "Scenario-7",
+    "run": 2,
+    "duration_seconds": 0,
+    "inference_count": 0,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "flagd-config"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "otel-demo/Pod/frontend-675fd7b5c5-sn9gc",
+            "matches_gt": false
+          }
+        ],
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The Ground Truth root cause is the 'flagd-config' ConfigMap. The model predicted 'otel-demo/Pod/frontend-675fd7b5c5-sn9gc' as the root cause, which normalizes to the 'frontend-service-1' entity. This does not match the GT root cause. Therefore, precision, recall, and F1 are all 0."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0,
+        "justification": "The model did not correctly identify any root cause entities, so the reasoning accuracy score is 0.",
+        "details": {}
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components grouped by application service and configuration. The GT path has 5 components and the model path has 5 components (including unmapped ones). The Longest Common Subsequence (LCS) is ['Frontend Service Component', 'Frontend Proxy Service Component'], giving a TP of 2. With a TP of 2 and path lengths of 5 (model) and 5 (GT), the precision and recall are both 2/5.",
+        "details": {
+          "normalization_map": {
+            "otel-demo/Pod/frontend-675fd7b5c5-sn9gc": "frontend-service-1",
+            "otel-demo/Service/frontend": "frontend-service-1",
+            "otel-demo/Service/frontend-proxy": "frontend-proxy-service-1",
+            "otel-demo/Service/recommendation": "otel-demo/Service/recommendation",
+            "otel-demo/Service/cart": "otel-demo/Service/cart"
+          },
+          "semantic_components": {
+            "Flagd Config Component": [
+              "flagd-config"
+            ],
+            "Payment Service Component": [
+              "payment-service-1"
+            ],
+            "Checkout Service Component": [
+              "checkout-service-1"
+            ],
+            "Frontend Service Component": [
+              "frontend-service-1"
+            ],
+            "Frontend Proxy Service Component": [
+              "frontend-proxy-service-1"
+            ]
+          },
+          "contracted_gt_path": [
+            "Flagd Config Component",
+            "Payment Service Component",
+            "Checkout Service Component",
+            "Frontend Service Component",
+            "Frontend Proxy Service Component"
+          ],
+          "contracted_model_path": [
+            "Frontend Service Component",
+            "Frontend Proxy Service Component",
+            "otel-demo/Service/recommendation",
+            "Frontend Proxy Service Component",
+            "otel-demo/Service/cart"
+          ],
+          "lcs_components": [
+            "Frontend Service Component",
+            "Frontend Proxy Service Component"
+          ],
+          "true_positives_TP": 2,
+          "model_path_length": 5,
+          "gt_path_length": 5
+        },
+        "precision": 0.4,
+        "recall": 0.4,
+        "calculation": 0.4000000000000001
+      },
+      "fault_localization_component_identification": {
+        "calculation": 0,
+        "justification": "The first performance failure in GT.propagations is: 'Payment service returns errors for all charge requests'. Using Priority 1 rule (explicit component name in effect), the first impacted component is 'Payment Service Component'. This component was not found in the model's contracted path.",
+        "details": {
+          "gt_first_impacted_component": "Payment Service Component",
+          "effect_used": "Payment service returns errors for all charge requests",
+          "priority_rule_applied": "Priority 1",
+          "found_in_model_path": false
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": 0.0,
+        "justification": "The single predicted root cause entity 'otel-demo/Pod/frontend-675fd7b5c5-sn9gc' was incorrect. Partial credit is calculated. The entity's component ('Frontend Service Component') is on the GT path, 3 hops away from the root cause component ('Flagd Config Component'). However, the model's reasoning ('CPU throttling') does not match the actual symptom for the frontend component in the GT ('receives errors from checkout'). Therefore, SymptomReasoningCorrectness is 0, resulting in a final score of 0.",
+        "details": [
+          {
+            "entity": "otel-demo/Pod/frontend-675fd7b5c5-sn9gc",
+            "metric1_is_correct": false,
+            "hop_away": 3,
+            "SymptomReasoningCorrectness": 0,
+            "entity_score": 0.0
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 0.25,
+        "calculation_recall": 0.25,
+        "calculation_f1": 0.25,
+        "justification": "Precision: The model predicted one root cause component ('Frontend Service Component'). Its minimum hop distance to a GT root cause component ('Flagd Config Component') is 3. The score is (1/(1+3)) = 0.25. The average over one entity is 0.25. Recall: The one GT root cause component ('Flagd Config Component') has a minimum hop distance of 3 to a predicted component ('Frontend Service Component'). The score is (1/(1+3)) = 0.25. The average over one entity is 0.25. The F1 score is calculated from these P and R values.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Pod/frontend-675fd7b5c5-sn9gc",
+            "is_on_path": true,
+            "hop_away": 3,
+            "entity_score": 0.25
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "flagd-config",
+            "is_on_path": true,
+            "hop_away": 3,
+            "entity_score": 0.25
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 5,
+        "calculation_precision": 0.625,
+        "calculation_recall": 0.625,
+        "calculation_f1": 0.625,
+        "justification": "The contracted GT path length is 5. Precision: The model's predicted component ('Frontend Service Component') is 3 hops away from the GT root component. The score is (1 / (1 + 3/5)). The average is this score. Recall: The GT root component ('Flagd Config Component') is 3 hops away from the model's predicted component. The score is (1 / (1 + 3/5)). The average is this score. The F1 is calculated from P and R.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Pod/frontend-675fd7b5c5-sn9gc",
+            "is_on_path": true,
+            "hop_away": 3,
+            "entity_score": 0.625
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "flagd-config",
+            "is_on_path": true,
+            "hop_away": 3,
+            "entity_score": 0.625
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      }
+    },
+    "incident_id": "Scenario-7",
+    "trial_id": "2"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 0.0,
+    "root_cause_entity_recall": 0.0,
+    "root_cause_entity_f1": 0,
+    "root_cause_reasoning": 0,
+    "propagation_chain": 0.4000000000000001,
+    "fault_localization_component_identification": 0,
+    "root_cause_reasoning_partial": 0.0,
+    "root_cause_proximity_no_fp_precision": 0.25,
+    "root_cause_proximity_no_fp_recall": 0.25,
+    "root_cause_proximity_no_fp_f1": 0.25,
+    "root_cause_proximity_with_fp_precision": 0.625,
+    "root_cause_proximity_with_fp_recall": 0.625,
+    "root_cause_proximity_with_fp_f1": 0.625,
+    "root_cause_entity_k_precision": 0.0,
+    "root_cause_entity_k_recall": 0.0,
+    "root_cause_entity_k_f1": 0.0,
+    "root_cause_entity_k@1_precision": 0.0,
+    "root_cause_entity_k@1_recall": 0.0,
+    "root_cause_entity_k@1_f1": 0.0,
+    "root_cause_entity_k@2_precision": 0.0,
+    "root_cause_entity_k@2_recall": 0.0,
+    "root_cause_entity_k@2_f1": 0.0,
+    "root_cause_entity_k@3_precision": 0.0,
+    "root_cause_entity_k@3_recall": 0.0,
+    "root_cause_entity_k@3_f1": 0.0,
+    "root_cause_entity_k@4_precision": 0.0,
+    "root_cause_entity_k@4_recall": 0.0,
+    "root_cause_entity_k@4_f1": 0.0,
+    "root_cause_entity_k@5_precision": 0.0,
+    "root_cause_entity_k@5_recall": 0.0,
+    "root_cause_entity_k@5_f1": 0.0
+  }
+}

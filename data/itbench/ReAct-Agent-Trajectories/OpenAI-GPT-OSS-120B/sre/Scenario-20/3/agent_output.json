@@ -1,0 +1,148 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/product-catalog",
+      "contributing_factor": true,
+      "reasoning": "Deployment pods cannot start due to ImagePullBackOff error for its container image.",
+      "evidence": "Alert PendingPodsDetected; pod spec shows state Pending with ImagePullBackOff reason."
+    },
+    {
+      "name": "otel-demo/Pod/product-catalog-56fbb5f966-h9xjk",
+      "contributing_factor": false,
+      "reasoning": "Pod is pending and never becomes Ready, providing no endpoints.",
+      "evidence": "PendingPodsDetected alert and pod status shows ImagePullBackOff."
+    },
+    {
+      "name": "otel-demo/Service/product-catalog",
+      "contributing_factor": false,
+      "reasoning": "Service has no ready endpoints because its pod is pending.",
+      "evidence": "Kubernetes service points to pending pod; downstream error alerts."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend returns high error rate as calls to product-catalog fail.",
+      "evidence": "RequestErrorRate alert for frontend (34% error)."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout errors increase due to missing product data from product-catalog.",
+      "evidence": "RequestErrorRate alert for checkout (1.58% error)."
+    },
+    {
+      "name": "otel-demo/Service/recommendation",
+      "contributing_factor": false,
+      "reasoning": "Recommendation service sees errors because it depends on product-catalog.",
+      "evidence": "RequestErrorRate alert for recommendation (2.36% error)."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Proxy layer propagates errors from backend services.",
+      "evidence": "RequestErrorRate alert for frontend-proxy (17.21% error)."
+    },
+    {
+      "name": "otel-demo/Service/fraud-detection",
+      "contributing_factor": false,
+      "reasoning": "No requests observed, likely because upstream checkout failed.",
+      "evidence": "NoRequestsDetected alert for fraud-detection."
+    },
+    {
+      "name": "otel-demo/Service/shipping",
+      "contributing_factor": false,
+      "reasoning": "No requests observed, downstream of checkout.",
+      "evidence": "NoRequestsDetected alert for shipping."
+    },
+    {
+      "name": "otel-demo/Service/currency",
+      "contributing_factor": false,
+      "reasoning": "No requests observed, downstream of checkout.",
+      "evidence": "NoRequestsDetected alert for currency."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/product-catalog",
+      "target": "otel-demo/Pod/product-catalog-56fbb5f966-h9xjk",
+      "condition": "ImagePullBackOff prevents pod from becoming Ready",
+      "effect": "Pod stays Pending with no endpoints"
+    },
+    {
+      "source": "otel-demo/Pod/product-catalog-56fbb5f966-h9xjk",
+      "target": "otel-demo/Service/product-catalog",
+      "condition": "Service has no ready endpoints",
+      "effect": "Calls to product-catalog fail"
+    },
+    {
+      "source": "otel-demo/Service/product-catalog",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Backend unavailable",
+      "effect": "Frontend sees high request error rate"
+    },
+    {
+      "source": "otel-demo/Service/product-catalog",
+      "target": "otel-demo/Service/checkout",
+      "condition": "Backend unavailable",
+      "effect": "Checkout sees request errors"
+    },
+    {
+      "source": "otel-demo/Service/product-catalog",
+      "target": "otel-demo/Service/recommendation",
+      "condition": "Backend unavailable",
+      "effect": "Recommendation sees request errors"
+    },
+    {
+      "source": "otel-demo/Service/frontend",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Frontend errors propagate",
+      "effect": "Proxy shows elevated error rate"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/fraud-detection",
+      "condition": "Checkout fails to complete orders",
+      "effect": "No requests recorded for fraud-detection"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/shipping",
+      "condition": "Checkout fails to create shipments",
+      "effect": "No requests recorded for shipping"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/currency",
+      "condition": "Checkout cannot retrieve currency data",
+      "effect": "No requests recorded for currency"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "High error rates in several services caused by upstream product-catalog unavailability.",
+      "explained": true
+    },
+    {
+      "alert": "PendingPodsDetected",
+      "explanation": "A pod in otel-demo namespace is stuck pending due to ImagePullBackOff.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "Services report zero traffic because upstream checkout cannot complete requests.",
+      "explained": true
+    },
+    {
+      "alert": "Watchdog",
+      "explanation": "System health check always firing; indicates alerting pipeline is functional.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Info-level alert inhibition mechanism; not directly related to incident.",
+      "explained": true
+    }
+  ]
+}
+

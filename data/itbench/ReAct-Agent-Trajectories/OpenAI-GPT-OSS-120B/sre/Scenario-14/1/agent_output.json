@@ -1,0 +1,53 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Namespace/otel-demo",
+      "contributing_factor": true,
+      "reasoning": "All pods in the namespace entered CrashLoopBackOff simultaneously, indicating a cluster‑wide resource pressure that prevented containers from starting.",
+      "evidence": "KubePodCrashLooping, KubePodNotReady and KubeDeploymentReplicasMismatch alerts fire for every pod in otel-demo; events show Killing for many pods."
+    },
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": false,
+      "reasoning": "ad pods crashed because the upstream namespace resource exhaustion stopped them from starting.",
+      "evidence": "CrashLooping alert includes pod ad‑*; event Killing for ad pod; deployment replicas mismatch."
+    },
+    {
+      "name": "otel-demo/Deployment/cart",
+      "contributing_factor": false,
+      "reasoning": "cart pods failed to start as a downstream effect of the namespace‑wide failure.",
+      "evidence": "Cart pod appears in CrashLooping alert and events."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Namespace/otel-demo",
+      "target": "otel-demo/Deployment/ad",
+      "condition": "Namespace resource quota exhaustion prevented pod start",
+      "effect": "ad pods entered CrashLoopBackOff and were not ready"
+    },
+    {
+      "source": "otel-demo/Namespace/otel-demo",
+      "target": "otel-demo/Deployment/cart",
+      "condition": "Same quota exhaustion",
+      "effect": "cart pods entered CrashLoopBackOff"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "Pods repeatedly fail to start and are restarted by the kubelet, indicating container start failures.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodNotReady",
+      "explanation": "Pod readiness probe never succeeded, often due to CrashLoopBackOff.",
+      "explained": true
+    },
+    {
+      "alert": "KubeDeploymentReplicasMismatch",
+      "explanation": "Desired replica count does not match available pods because pods cannot start.",
+      "explained": true
+    }
+  ]
+}

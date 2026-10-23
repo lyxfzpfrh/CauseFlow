@@ -1,0 +1,67 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/recommendation",
+      "contributing_factor": true,
+      "reasoning": "CPU throttling on its pod limited processing, causing downstream failures.",
+      "evidence": "CPUThrottlingHigh alert on recommendation pod, StressChaos events targeting recommendation, high CPU usage metrics."
+    },
+    {
+      "name": "otel-demo/Pod/recommendation-5f45f75855-htttv",
+      "contributing_factor": false,
+      "reasoning": "Pod experienced elevated CPU throttling, symptom of the deployment issue.",
+      "evidence": "CPUThrottlingHigh alert references this pod, metric series show CPU usage spikes."
+    },
+    {
+      "name": "otel-demo/Service/recommendation",
+      "contributing_factor": false,
+      "reasoning": "Service received no requests because its pod was throttled.",
+      "evidence": "NoRequestsDetected alert for service_name recommendation."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Proxy observed high latency and error rate due to downstream recommendation failures.",
+      "evidence": "RequestLatency and RequestErrorRate alerts for service_name frontend-proxy; traces show error RPC from recommendation."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend experienced degraded responses because proxy returned errors/latency.",
+      "evidence": "Impact inferred from proxy alerts; no direct alert but downstream effect."
+    },
+    {
+      "name": "otel-demo/Pod/fraud-detection-9fb7d885b-dz8j9",
+      "contributing_factor": false,
+      "reasoning": "InfoInhibitor alert is informational and did not affect service health.",
+      "evidence": "InfoInhibitor alert with severity none, state firing."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Pod/recommendation-5f45f75855-htttv",
+      "target": "otel-demo/Service/recommendation",
+      "condition": "CPU throttling reduced pod responsiveness",
+      "effect": "No requests were processed, triggering NoRequestsDetected alert"
+    },
+    {
+      "source": "otel-demo/Service/recommendation",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Recommendation returned errors and slow responses",
+      "effect": "Proxy saw increased error rate and latency, firing RequestErrorRate and RequestLatency alerts"
+    },
+    {
+      "source": "otel-demo/Service/frontend-proxy",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Proxy propagated errors/latency to client",
+      "effect": "Frontend experienced degraded user experience (inferred impact)"
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "CPUThrottlingHigh", "explanation": "Pod recommendation exceeded CPU quota, causing throttling; leads to performance degradation.", "explained": true},
+    {"alert": "RequestLatency", "explanation": "Frontend-proxy observed high request latency, likely from downstream recommendation slowdown.", "explained": true},
+    {"alert": "RequestErrorRate", "explanation": "Frontend-proxy error rate rose due to failed calls to recommendation service.", "explained": true},
+    {"alert": "NoRequestsDetected", "explanation": "No traffic reached recommendation service, indicating it was not responding.", "explained": true},
+    {"alert": "InfoInhibitor", "explanation": "Informational alert that inhibits lower‑severity alerts; not a problem.", "explained": true}
+  ]
+}

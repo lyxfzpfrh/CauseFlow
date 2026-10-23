@@ -1,0 +1,43 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Pod/ad-5678",
+      "contributing_factor": true,
+      "reasoning": "Pod repeatedly crashed with CrashLoopBackOff caused by out‑of‑memory error.",
+      "evidence": "Alert KubePodCrashLooping (firing), events BackOff/Killing, logs show panic: out of memory, memory usage rising to 220Mi."
+    },
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": false,
+      "reasoning": "Deployment could not keep pods running because its pods were OOM‑killed.",
+      "evidence": "Pods owned by this Deployment (ad-5678) were in CrashLoop, seen in alerts and events."
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "Service became unavailable as its backing pods were not ready.",
+      "evidence": "Service points to Deployment ad whose pods were crashing; no ready endpoints observed."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Pod/ad-5678",
+      "target": "otel-demo/Deployment/ad",
+      "condition": "Pod enters CrashLoopBackOff due to OOM",
+      "effect": "Deployment has zero ready replicas"
+    },
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/ad",
+      "condition": "No ready pods behind the Service",
+      "effect": "Service reports no endpoints, causing downstream request failures"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "Pod ad-5678 entered CrashLoopBackOff repeatedly, triggered by OOM condition.",
+      "explained": true
+    }
+  ]
+}

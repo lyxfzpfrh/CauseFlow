@@ -1,0 +1,70 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Namespace/otel-demo",
+      "contributing_factor": true,
+      "reasoning": "Namespace shows sustained CPU throttling alerts across multiple deployments, indicating a resource pressure root cause.",
+      "evidence": "CPUThrottlingHigh alerts firing for otel-demo namespace; RequestErrorRate alerts also firing for same namespace."
+    },
+    {
+      "name": "otel-demo/Deployment/cart",
+      "contributing_factor": true,
+      "reasoning": "Cart pods exhibit high CPU throttling leading to request errors, driving the RequestErrorRate alert.",
+      "evidence": "CPUThrottlingHigh alert active; RequestErrorRate alert spikes coinciding with cart pod metric timestamps."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend receives error responses from downstream cart service, causing its own degraded performance.",
+      "evidence": "RequestErrorRate alert includes frontend request errors after cart throttling period."
+    },
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout depends on cart and experiences increased latency due to cart throttling.",
+      "evidence": "Trace analysis shows checkout spans waiting on cart service during throttling window."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Namespace/otel-demo",
+      "target": "otel-demo/Deployment/cart",
+      "condition": "Namespace-wide CPU quota exhaustion caused pod CPU throttling",
+      "effect": "Cart deployment pods are throttled, reducing request handling capacity"
+    },
+    {
+      "source": "otel-demo/Deployment/cart",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "Cart service returns 5xx due to throttling",
+      "effect": "Frontend sees increased error responses and propagates 5xx to users"
+    },
+    {
+      "source": "otel-demo/Deployment/cart",
+      "target": "otel-demo/Deployment/checkout",
+      "condition": "Cart latency spikes from throttling",
+      "effect": "Checkout experiences timeouts and higher error rates"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Indicates containers exceed CPU throttling thresholds, reducing effective CPU time.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "High proportion of HTTP 5xx responses observed in the namespace services.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Pending informational alert, not directly related to the incident.",
+      "explained": true
+    },
+    {
+      "alert": "Watchdog",
+      "explanation": "Always-firing sanity check, not indicative of a problem.",
+      "explained": true
+    }
+  ]
+}

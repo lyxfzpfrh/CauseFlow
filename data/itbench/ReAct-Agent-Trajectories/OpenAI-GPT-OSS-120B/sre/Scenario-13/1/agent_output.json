@@ -1,0 +1,82 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/frontend-proxy",
+      "contributing_factor": true,
+      "reasoning": "Frontend-proxy shows sustained high request error rate and error spans, indicating it cannot forward traffic correctly.",
+      "evidence": "RequestErrorRate alerts for frontend-proxy (warning) and trace span metrics with STATUS_CODE_ERROR increasing after 17:30."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend service lost traffic because upstream frontend-proxy failed, causing downstream 5xx errors.",
+      "evidence": "Trace critical paths for frontend disappear after 17:30; RequestErrorRate alerts for frontend show high values."
+    },
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": false,
+      "reasoning": "Ad service received error responses due to upstream frontend-proxy failure.",
+      "evidence": "RequestErrorRate alert for ad spikes concurrently with frontend-proxy errors."
+    },
+    {
+      "name": "otel-demo/Deployment/recommendation",
+      "contributing_factor": false,
+      "reasoning": "Recommendation service impacted by loss of traffic from frontend-proxy.",
+      "evidence": "RequestErrorRate alert for recommendation aligns with frontend-proxy error surge."
+    },
+    {
+      "name": "otel-demo/Deployment/fraud-detection",
+      "contributing_factor": false,
+      "reasoning": "Fraud-detection service shows increased error rate as a downstream symptom.",
+      "evidence": "RequestErrorRate alert for fraud-detection appears during the incident window."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/frontend-proxy",
+      "target": "otel-demo/Service/frontend",
+      "condition": "frontend-proxy returns HTTP errors for client requests",
+      "effect": "frontend receives no successful traffic, leading to its own error spikes"
+    },
+    {
+      "source": "otel-demo/Service/frontend",
+      "target": "otel-demo/Deployment/ad",
+      "condition": "frontend forwards requests to ad but receives errors from upstream",
+      "effect": "ad reports high request error rate"
+    },
+    {
+      "source": "otel-demo/Service/frontend",
+      "target": "otel-demo/Deployment/recommendation",
+      "condition": "frontend forwards calls to recommendation under error conditions",
+      "effect": "recommendation shows increased error alerts"
+    },
+    {
+      "source": "otel-demo/Service/frontend",
+      "target": "otel-demo/Deployment/fraud-detection",
+      "condition": "frontend calls fraud-detection during degraded traffic",
+      "effect": "fraud-detection experiences request errors"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Warning when request error rate for a service exceeds zero; indicates service is returning errors.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Info alert showing high CPU throttling percentage; observed but not primary cause.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Info-level inhibition alert; not directly relevant to incident.",
+      "explained": true
+    },
+    {
+      "alert": "Watchdog",
+      "explanation": "Always‑firing sentinel alert; confirms alerting pipeline is healthy.",
+      "explained": true
+    }
+  ]
+}

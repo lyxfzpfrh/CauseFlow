@@ -1,0 +1,70 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/cart",
+      "contributing_factor": true,
+      "reasoning": "Cart pods entered CrashLoopBackOff because of OOM kills, stopping the cart service.",
+      "evidence": "Alert \"KubePodCrashLooping\" firing for cart pods; metric spikes in memory usage; events show OOMKilled."
+    },
+    {
+      "name": "otel-demo/Service/cart",
+      "contributing_factor": false,
+      "reasoning": "Service cart lost endpoints when its pods crashed, causing downstream failures.",
+      "evidence": "ServiceDown alert for cart; downstream services reported connection errors."
+    },
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout depended on cart; requests timed out after cart became unavailable.",
+      "evidence": "High latency alerts for checkout; trace spans show failed calls to cart."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend returned 5xx errors because checkout could not complete due to missing cart data.",
+      "evidence": "Alert \"HTTP5xx\" for frontend; logs contain \"checkout failed\" messages."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/cart",
+      "target": "otel-demo/Service/cart",
+      "condition": "Cart pods crash and stop serving traffic",
+      "effect": "Service cart loses all ready endpoints"
+    },
+    {
+      "source": "otel-demo/Service/cart",
+      "target": "otel-demo/Deployment/checkout",
+      "condition": "Checkout makes RPC calls to cart service",
+      "effect": "Checkout experiences timeouts and high latency"
+    },
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Frontend calls checkout to complete orders",
+      "effect": "Frontend returns HTTP 5xx errors to users"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "Cart pods repeatedly crashed due to OOM, triggering CrashLoopBackOff alerts.",
+      "explained": true
+    },
+    {
+      "alert": "ServiceDown",
+      "explanation": "Cart service reported no ready endpoints after its pods crashed.",
+      "explained": true
+    },
+    {
+      "alert": "HighLatency",
+      "explanation": "Checkout pods showed elevated latency because calls to cart timed out.",
+      "explained": true
+    },
+    {
+      "alert": "HTTP5xx",
+      "explanation": "Frontend service emitted 5xx responses as downstream checkout failures propagated.",
+      "explained": true
+    }
+  ]
+}

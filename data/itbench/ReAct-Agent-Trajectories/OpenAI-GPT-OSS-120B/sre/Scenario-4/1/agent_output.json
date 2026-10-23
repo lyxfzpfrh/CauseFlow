@@ -1,0 +1,102 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Pod/product-catalog-55f64b54c9-lbxd9",
+      "contributing_factor": true,
+      "reasoning": "Pod suffered 100% CPU throttling during the incident window.",
+      "evidence": "CPUThrottlingHigh alert for container in this pod; compute_throttle script shows 100% max throttle."
+    },
+    {
+      "name": "otel-demo/Pod/ad-554b849958-dq6wv",
+      "contributing_factor": true,
+      "reasoning": "Pod experienced ~96% CPU throttling, degrading its response time.",
+      "evidence": "CPUThrottlingHigh alert; max throttle 95.83% from metrics."
+    },
+    {
+      "name": "otel-demo/Pod/fraud-detection-9fb7d885b-mz2dk",
+      "contributing_factor": true,
+      "reasoning": "Pod showed ~61% CPU throttling, likely causing latency spikes.",
+      "evidence": "CPUThrottlingHigh alert; max throttle 60.90% from metrics."
+    },
+    {
+      "name": "otel-demo/Pod/cart-755465879b-rrl62",
+      "contributing_factor": true,
+      "reasoning": "Pod had ~56% CPU throttling, impairing cart service performance.",
+      "evidence": "CPUThrottlingHigh alert; max throttle 55.62% from metrics."
+    },
+    {
+      "name": "otel-demo/Pod/payment-55766d76b9-lm22w",
+      "contributing_factor": true,
+      "reasoning": "Pod exhibited ~49% CPU throttling, affecting payment processing.",
+      "evidence": "CPUThrottlingHigh alert; max throttle 49.46% from metrics."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Service reported elevated request error rate due to upstream throttling.",
+      "evidence": "RequestErrorRate alert firing for service_name=frontend-proxy."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend experienced downstream latency as callers timed out.",
+      "evidence": "Indirect impact inferred from request errors in frontend-proxy and high throttling in its upstream pods."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout depends on cart and payment services that were throttled.",
+      "evidence": "Potential downstream impact; no direct alert but affected by upstream pod throttling."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Pod/product-catalog-55f64b54c9-lbxd9",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "100% CPU throttling slowed product‑catalog responses",
+      "effect": "Increased error rate observed by frontend‑proxy"
+    },
+    {
+      "source": "otel-demo/Pod/ad-554b849958-dq6wv",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Severe CPU throttling degraded ad‑service latency",
+      "effect": "Contributed to request errors in frontend‑proxy"
+    },
+    {
+      "source": "otel-demo/Pod/fraud-detection-9fb7d885b-mz2dk",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "High CPU throttling caused slow fraud checks",
+      "effect": "Upstream latency propagated as errors in frontend‑proxy"
+    },
+    {
+      "source": "otel-demo/Pod/cart-755465879b-rrl62",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "CPU throttling slowed cart reads/writes",
+      "effect": "Frontend‑proxy observed increased error responses"
+    },
+    {
+      "source": "otel-demo/Pod/payment-55766d76b9-lm22w",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Payment pod throttling delayed payment calls",
+      "effect": "Contributed to request error spike in frontend‑proxy"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Indicates processes in a container are being throttled by the kernel, leading to reduced CPU availability.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Shows non‑zero error rate for the frontend‑proxy service, likely caused by upstream latency.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Info‑level inhibition alert; does not indicate a problem itself.",
+      "explained": true
+    }
+  ]
+}
+

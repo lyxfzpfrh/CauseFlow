@@ -1,0 +1,60 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Pod/checkout-5f7b6c5c7f-9k2l",
+      "contributing_factor": true,
+      "reasoning": "Pod repeatedly crashes and enters CrashLoopBackOff, preventing it from serving traffic.",
+      "evidence": "KubePodCrashLooping alert firing, BackOff events for the pod, rising error_rate in checkout service metrics."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Service became unavailable because its only backing pod was in CrashLoopBackOff.",
+      "evidence": "KubeServiceUnavailable alert firing, checkout service metrics show error_rate rising to 0.4+, no ready endpoints."
+    },
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": false,
+      "reasoning": "Deployment could not maintain ready replicas as its pod continually failed.",
+      "evidence": "Deployment spec shows zero ready replicas, linked to pod CrashLoop events."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend error rate increased after checkout service became unavailable, indicating downstream impact.",
+      "evidence": "frontend service metrics error_rate climbs from 0.02 to >0.8 coinciding with checkout failure times."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Pod/checkout-5f7b6c5c7f-9k2l",
+      "target": "otel-demo/Service/checkout",
+      "condition": "Pod stuck in CrashLoopBackOff with no ready containers",
+      "effect": "Checkout service has no ready endpoints and reports ServiceUnavailable."
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Checkout endpoints missing causing request failures",
+      "effect": "Frontend observed increased error_rate and failing requests."
+    },
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Pod/checkout-5f7b6c5c7f-9k2l",
+      "condition": "Deployment creates pod that enters CrashLoopBackOff",
+      "effect": "Pod fails to become ready, triggering CrashLoop alert."
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "Pod repeatedly fails to start, entering CrashLoopBackOff, indicating a crash or misconfiguration.",
+      "explained": true
+    },
+    {
+      "alert": "KubeServiceUnavailable",
+      "explanation": "Service has no ready endpoints because its backing pod is in CrashLoop, leading to request failures.",
+      "explained": true
+    }
+  ]
+}

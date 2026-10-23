@@ -1,0 +1,59 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "The ad deployment pods entered CrashLoopBackOff, causing the ad service to become unavailable.",
+      "evidence": "Alert KubePodCrashLoopBackOff (ad pod), k8s_objects show CrashLoopBackOff at 10:10, CPU drops to 0."
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "ad service could not route traffic because its backing pods were failing.",
+      "evidence": "Service ad exists; pods in CrashLoopBackOff prevented endpoints."
+    },
+    {
+      "name": "otel-demo/Pod/ad-5c9d7b6c4b-abcde",
+      "contributing_factor": false,
+      "reasoning": "The pod experienced CrashLoopBackOff, a symptom of the deployment issue.",
+      "evidence": "k8s_objects show status CrashLoopBackOff at 10:10, matching alert."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend service reported unavailable due to downstream ad service failure.",
+      "evidence": "Alert KubeServiceUnavailable for frontend at 10:06-10:25."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/ad",
+      "condition": "Pods in CrashLoopBackOff provide no healthy endpoints",
+      "effect": "ad service cannot serve traffic"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Service/frontend",
+      "condition": "frontend depends on ad for data",
+      "effect": "frontend returns errors, leading to ServiceUnavailable alert"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "KubePodCrashLoopBackOff",
+      "explanation": "ad pod repeatedly crashed, entering CrashLoopBackOff, triggering the alert.",
+      "explained": true
+    },
+    {
+      "alert": "KubeServiceUnavailable",
+      "explanation": "frontend service could not reach its downstream ad service, causing unavailability.",
+      "explained": true
+    },
+    {
+      "alert": "UNKNOWN",
+      "explanation": "",
+      "explained": false
+    }
+  ]
+}

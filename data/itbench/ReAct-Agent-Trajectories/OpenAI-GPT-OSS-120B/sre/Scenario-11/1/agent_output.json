@@ -1,0 +1,66 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": true,
+      "reasoning": "Checkout service latency exceeds 1500 ms for ~33 % of requests, matching the RequestLatency alert.",
+      "evidence": "Alert RequestLatency (checkout) firing; metric bucket analysis shows 4 046 291 requests above 1500 ms (33 %)."
+    },
+    {
+      "name": "otel-demo/Service/flagd",
+      "contributing_factor": true,
+      "reasoning": "Flagd service returns errors (STATUS_CODE_ERROR) in resolve calls, driving ad service failures.",
+      "evidence": "Ad metric buckets contain 58 errors in flagd resolve span; span error rate non‑zero."
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "Ad service shows a non‑zero error rate (0.011) triggered by upstream flagd errors.",
+      "evidence": "Alert RequestErrorRate (ad) firing; flagd error spans observed in ad metric data."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Frontend‑proxy error rate (0.40) spikes due to downstream ad failures and slow checkout responses.",
+      "evidence": "Alert RequestErrorRate (frontend-proxy) firing; downstream calls to ad and checkout observed in traces."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Service/flagd",
+      "target": "otel-demo/Service/ad",
+      "condition": "Flagd resolve calls return errors",
+      "effect": "Ad service error rate rises"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Ad service returns errors",
+      "effect": "Frontend‑proxy sees increased 5xx responses"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Checkout latency exceeds SLA",
+      "effect": "Proxy experiences high latency and timeout errors"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "RequestLatency",
+      "explanation": "Checkout service latency above 1500 ms triggers warning.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Ad service error rate >0 triggers warning.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Frontend‑proxy error rate >0 triggers warning.",
+      "explained": true
+    }
+  ]
+}
+

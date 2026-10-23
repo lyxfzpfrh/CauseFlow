@@ -1,0 +1,67 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "Deployment ad cannot schedule its pod because all nodes have a control‑plane taint and the pod has no toleration.",
+      "evidence": "FailedScheduling events for pod ad-dd7f45975-mw86p; PendingPodsDetected alert; KubePodNotReady alert for the pod."
+    },
+    {
+      "name": "otel-demo/Deployment/cart",
+      "contributing_factor": true,
+      "reasoning": "Deployment cart experiences the same scheduling block as ad, leaving its pod pending.",
+      "evidence": "FailedScheduling events for pod cart-5b597c6db5-pkzkh; PendingPodsDetected alert; KubePodNotReady alert for the pod."
+    },
+    {
+      "name": "otel-demo/Pod/ad-dd7f45975-mw86p",
+      "contributing_factor": false,
+      "reasoning": "Pod remains pending and not ready, triggering KubePodNotReady alert.",
+      "evidence": "KubePodNotReady alert on ad pod; events show FailedScheduling."
+    },
+    {
+      "name": "otel-demo/Pod/cart-5b597c6db5-pkzkh",
+      "contributing_factor": false,
+      "reasoning": "Pod remains pending and not ready, triggering KubePodNotReady alert.",
+      "evidence": "KubePodNotReady alert on cart pod; events show FailedScheduling."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend receives error responses because downstream ad and cart services are unavailable.",
+      "evidence": "RequestErrorRate alert in otel-demo namespace; traces show increased error calls to frontend."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Pod/ad-dd7f45975-mw86p",
+      "condition": "Pods cannot be scheduled due to node taint without toleration",
+      "effect": "Pod stays pending and not ready"
+    },
+    {
+      "source": "otel-demo/Deployment/cart",
+      "target": "otel-demo/Pod/cart-5b597c6db5-pkzkh",
+      "condition": "Pods cannot be scheduled due to node taint without toleration",
+      "effect": "Pod stays pending and not ready"
+    },
+    {
+      "source": "otel-demo/Pod/ad-dd7f45975-mw86p",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Pod not ready leads to missing service endpoint",
+      "effect": "Frontend experiences increased request error rate"
+    },
+    {
+      "source": "otel-demo/Pod/cart-5b597c6db5-pkzkh",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Pod not ready leads to missing service endpoint",
+      "effect": "Frontend experiences increased request error rate"
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "CPUThrottlingHigh", "explanation": "High CPU throttling observed on frontend pod, but not a root cause of the outage.", "explained": true},
+    {"alert": "InfoInhibitor", "explanation": "Info‑level alerts are being inhibited; not directly relevant to the incident.", "explained": true},
+    {"alert": "KubePodNotReady", "explanation": "Pods ad and cart stayed non‑ready for >15 min due to scheduling failures.", "explained": true},
+    {"alert": "PendingPodsDetected", "explanation": "Namespace otel-demo had pending pods (ad, cart) because they could not be scheduled.", "explained": true},
+    {"alert": "RequestErrorRate", "explanation": "Frontend service saw elevated error rate caused by downstream pods being unavailable.", "explained": true}
+  ]
+}

@@ -1,0 +1,1640 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/frontend-proxy",
+      "contributing_factor": true,
+      "reasoning": "frontend-proxy shows latency above threshold, likely blocking downstream calls.",
+      "evidence": "RequestLatency alert firing for frontend-proxy."
+    },
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": false,
+      "reasoning": "checkout has high request error rate, likely downstream effect.",
+      "evidence": "RequestErrorRate alert firing for checkout."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "frontend has high request error rate, likely downstream effect.",
+      "evidence": "RequestErrorRate alert firing for frontend."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "frontend-proxy has high request error rate, likely downstream effect.",
+      "evidence": "RequestErrorRate alert firing for frontend-proxy."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/frontend-proxy",
+      "target": "otel-demo/Deployment/checkout",
+      "condition": "high latency in frontend-proxy causing timeouts",
+      "effect": "checkout experiences increased error rate"
+    },
+    {
+      "source": "otel-demo/Deployment/frontend-proxy",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "high latency in frontend-proxy causing timeouts",
+      "effect": "frontend experiences increased error rate"
+    },
+    {
+      "source": "otel-demo/Deployment/frontend-proxy",
+      "target": "otel-demo/Deployment/frontend-proxy",
+      "condition": "high latency in frontend-proxy causing timeouts",
+      "effect": "frontend-proxy experiences increased error rate"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.39999999999999997)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.7999999999999999)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 16.066666666666666)",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.7999999999999999)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.4666666666666663)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 17.41111111111111)",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.5777777777777777)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.133333333333333)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 17.688888888888886)",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 17.4)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.7777777777777777)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.4555555555555553)",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.6444444444444444)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.222222222222222)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 16.677777777777774)",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.111111111111111)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 17.24444444444444)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.6)",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.6666666666666666)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.322222222222222)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 16.577777777777776)",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 18.755555555555553)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.8888888888888888)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.633333333333333)",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.4888888888888887)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 17.34444444444444)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.7333333333333333)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "89.25% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "33.54% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.7333333333333333)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.3666666666666665)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 17.099999999999998)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "90.11% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "34.05% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.6444444444444444)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.211111111111111)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 17.911111111111108)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "90.38% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "35.47% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.4555555555555553)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 17.93333333333333)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.8222222222222221)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "90.72% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "35.36% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.5777777777777777)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.0111111111111108)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 15.02222222222222)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "92.05% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "35.27% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "73.94% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.3777777777777777)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.7888888888888888)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 16.988888888888887)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "74.06% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "29.8% throttling of CPU in namespace otel-demo for container opentelemetry-collector in pod otel-collector-564d9c7987-ls78p on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "92.16% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "35.99% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.3444444444444443)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 15.866666666666664)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.711111111111111)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "88.84% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "35.76% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "72.74% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "29.41% throttling of CPU in namespace otel-demo for container opentelemetry-collector in pod otel-collector-564d9c7987-ls78p on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.1222222222222222)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 16.41111111111111)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.5333333333333332)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "72.34% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "28.89% throttling of CPU in namespace otel-demo for container opentelemetry-collector in pod otel-collector-564d9c7987-ls78p on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "88.19% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "35.41% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.5333333333333332)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.9333333333333332)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 16.144444444444442)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "34.65% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "71.53% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "28.4% throttling of CPU in namespace otel-demo for container opentelemetry-collector in pod otel-collector-564d9c7987-ls78p on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "87.3% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.6666666666666666)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.2444444444444445)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 16.911111111111108)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "88.76% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "35.75% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "71.61% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "27.66% throttling of CPU in namespace otel-demo for container opentelemetry-collector in pod otel-collector-564d9c7987-ls78p on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.7777777777777777)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.3999999999999997)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 16.499999999999996)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "70.88% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "27.01% throttling of CPU in namespace otel-demo for container opentelemetry-collector in pod otel-collector-564d9c7987-ls78p on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "93.66% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "35.04% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.6444444444444444)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.1888888888888887)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 17.455555555555552)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "95.3% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "34.52% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "71.07% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "26.61% throttling of CPU in namespace otel-demo for container opentelemetry-collector in pod otel-collector-564d9c7987-ls78p on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.7555555555555554)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.4666666666666666)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 16.588888888888885)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "64.27% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "97.42% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "33.81% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.6222222222222221)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.1888888888888887)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 18.188888888888886)",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.4444444444444444)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.7888888888888888)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 9.133333333333333)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "53.51% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "94.45% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "32.71% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "43.03% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "95.25% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "36.34% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.3777777777777777)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.5222222222222221)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 15.588888888888887)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "36.93% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "93.48% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "38.2% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.02222222222222222)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.1222222222222222)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 11.588888888888887)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "33.62% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "91.88% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "39.42% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.08888888888888888)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 11.066666666666665)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.04444444444444444)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "36.91% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "87.49% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "41.07% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 10.799999999999999)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.19999999999999998)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.39999999999999997)",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.28888888888888886)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.4999999999999999)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 13.877777777777776)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "90.38% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "40.34% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "43.71% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "50.8% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "92.21% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "39.72% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.39999999999999997)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.811111111111111)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 14.077777777777776)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "56.31% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "90.06% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "37.11% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.3333333333333333)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.5555555555555555)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 15.077777777777776)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "59.11% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "90.86% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "38.26% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.4888888888888888)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.8555555555555554)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 13.31111111111111)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "61.53% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "92.6% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "37.67% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.3333333333333333)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.5111111111111111)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 17.022222222222222)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "60.8% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "89.94% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "37.68% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.5333333333333332)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.1444444444444444)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 14.12222222222222)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "60.1% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "87.28% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "36.95% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.2444444444444444)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.4666666666666666)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 14.888888888888888)",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.5111111111111111)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.8999999999999999)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 15.755555555555553)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "37.86% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "60.47% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "87.5% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "36.97% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "62.67% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "88.02% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 14.244444444444442)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.5333333333333332)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.0777777777777777)",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.39999999999999997)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.7777777777777777)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 14.099999999999998)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "61.4% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "91.15% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "38.23% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "61.52% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "90.98% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "38.92% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.6888888888888888)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.2999999999999998)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 14.83333333333333)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "60.24% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "94.55% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "38.95% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 14.711111111111109)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.42222222222222217)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.7555555555555554)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "56.81% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "96.63% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "38.69% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 14.31111111111111)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.4444444444444444)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.7888888888888889)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "54.71% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "96.13% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "39.23% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.6666666666666666)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.2444444444444445)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 14.688888888888886)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "54.47% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "93.69% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "39.02% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.9444444444444442)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 15.177777777777775)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.4888888888888888)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "94.94% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "37.88% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "55.27% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "28.33% throttling of CPU in namespace otel-demo for container opentelemetry-collector in pod otel-collector-564d9c7987-ls78p on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.6666666666666666)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.0555555555555554)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 14.33333333333333)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "37.48% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "57.44% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "28.41% throttling of CPU in namespace otel-demo for container opentelemetry-collector in pod otel-collector-564d9c7987-ls78p on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "94.64% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.6222222222222221)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 1.2)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 14.933333333333332)",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.42222222222222217)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.8222222222222222)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 15.244444444444442)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "59.99% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "27.78% throttling of CPU in namespace otel-demo for container opentelemetry-collector in pod otel-collector-564d9c7987-ls78p on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "94.12% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "37.62% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "61.14% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "28.04% throttling of CPU in namespace otel-demo for container opentelemetry-collector in pod otel-collector-564d9c7987-ls78p on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "95.49% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "37.14% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.3555555555555555)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.6888888888888888)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 14.12222222222222)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "65.76% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "27.5% throttling of CPU in namespace otel-demo for container opentelemetry-collector in pod otel-collector-564d9c7987-ls78p on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "92.43% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "34.54% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.42222222222222217)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.6888888888888888)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 14.22222222222222)",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "66.19% throttling of CPU in namespace otel-demo for container frontend-proxy in pod frontend-proxy-6b4d584985-kxvn6 on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "28.13% throttling of CPU in namespace otel-demo for container opentelemetry-collector in pod otel-collector-564d9c7987-ls78p on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "91.52% throttling of CPU in namespace otel-demo for container frontend in pod frontend-675fd7b5c5-jlpzp on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "36.04% throttling of CPU in namespace otel-demo for container product-catalog in pod product-catalog-7c7f8b68dc-prcsr on cluster .",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency in service frontend-proxy in namespace otel-demo is above 1500ms (current: 15000s)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service checkout in namespace otel-demo is above 0 (current: 0.28888888888888886)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend in namespace otel-demo is above 0 (current: 0.6)",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Request error rate in service frontend-proxy in namespace otel-demo is above 0 (current: 14.62222222222222)",
+      "explained": true
+    }
+  ]
+}

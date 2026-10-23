@@ -1,0 +1,124 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": true,
+      "reasoning": "Checkout deployment pods are in CrashLoopBackOff, preventing the checkout service from running.",
+      "evidence": "KubePodCrashLooping alert for pod checkout-849d65649b-..., CrashLoopBackOffPodsDetected alerts, scaling events showing pod creation failures."
+    },
+    {
+      "name": "otel-demo/Pod/checkout-849d65649b-qqtsz",
+      "contributing_factor": false,
+      "reasoning": "Pod is stuck in CrashLoopBackOff, causing the deployment failure.",
+      "evidence": "KubePodCrashLooping alert and events for pod checkout-849d65649b-..."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend reports high request error rate due to downstream checkout failures.",
+      "evidence": "RequestErrorRate alert for service frontend with error rate >0."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Ingress proxy shows elevated error rate because checkout service is unavailable.",
+      "evidence": "RequestErrorRate alert for service frontend-proxy."
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "Ad service error rate spikes as requests cascade from failing checkout flow.",
+      "evidence": "RequestErrorRate alert for service ad."
+    },
+    {
+      "name": "otel-demo/Service/payment",
+      "contributing_factor": false,
+      "reasoning": "Payment service error rate rises due to checkout service outage.",
+      "evidence": "RequestErrorRate alert for service payment."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "No requests detected because the service pods are not running.",
+      "evidence": "NoRequestsDetected alert for service checkout."
+    },
+    {
+      "name": "otel-demo/Service/accounting",
+      "contributing_factor": false,
+      "reasoning": "Accounting receives no traffic as checkout events are absent.",
+      "evidence": "NoRequestsDetected alert for service accounting."
+    },
+    {
+      "name": "otel-demo/Service/fraud-detection",
+      "contributing_factor": false,
+      "reasoning": "Fraud detection sees no requests because checkout pipeline is down.",
+      "evidence": "NoRequestsDetected alert for service fraud-detection."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/checkout",
+      "condition": "Deployment pods crash and never become ready",
+      "effect": "Service receives zero requests, triggering NoRequestsDetected"
+    },
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Checkout unavailable for upstream calls",
+      "effect": "Ingress proxy error rate rises, triggering RequestErrorRate"
+    },
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Checkout failures cause frontend calls to fail",
+      "effect": "Frontend error rate rises, triggering RequestErrorRate"
+    },
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/ad",
+      "condition": "Downstream call chain broken after checkout",
+      "effect": "Ad service sees error spikes, triggering RequestErrorRate"
+    },
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/payment",
+      "condition": "Checkout not processing orders",
+      "effect": "Payment service error rate spikes, triggering RequestErrorRate"
+    },
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/accounting",
+      "condition": "No checkout events published to Kafka",
+      "effect": "Accounting receives no requests, triggering NoRequestsDetected"
+    },
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/fraud-detection",
+      "condition": "Checkout pipeline halted",
+      "effect": "Fraud detection sees no traffic, triggering NoRequestsDetected"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate >0 for a service, here caused by downstream checkout outage.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "Service received zero requests in the observation window, indicating upstream failure.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "Indicates pods are repeatedly crashing; observed for checkout deployment.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "Specific pod in CrashLoopBackOff; checkout pod identified.",
+      "explained": true
+    }
+  ]
+}

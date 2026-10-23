@@ -1,0 +1,89 @@
+{
+  "entities": [
+    {
+      "name": "chaos-mesh/JVMChaos/otel-demo-ad-jvm-return-6rznj",
+      "contributing_factor": true,
+      "reasoning": "Applied JVMChaos experiment to ad pod caused CPU throttling and errors.",
+      "evidence": "Chaos event 'Applied' at 2025-12-15T16:32:14 for otel-demo/ad pod; CPUThrottlingHigh alert 53% on ad container; RequestErrorRate alert on ad service."
+    },
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": false,
+      "reasoning": "Ad pods experienced high CPU throttling and error rate due to chaos experiment.",
+      "evidence": "CPUThrottlingHigh alert (53%) and RequestErrorRate alert (1.06) for ad service."
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "Service reported increased error rate as a symptom of pod issues.",
+      "evidence": "RequestErrorRate alert for ad service firing with value >0."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend observed errors downstream from ad service failure.",
+      "evidence": "RequestErrorRate alert for frontend with value 4.62."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Proxy propagated errors from frontend and ad services.",
+      "evidence": "RequestErrorRate alert for frontend-proxy with value 2.4."
+    },
+    {
+      "name": "otel-demo/Service/recommendation",
+      "contributing_factor": false,
+      "reasoning": "Recommendation service showed error spikes likely secondary impact.",
+      "evidence": "RequestErrorRate alert for recommendation with value 0.011."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "chaos-mesh/JVMChaos/otel-demo-ad-jvm-return-6rznj",
+      "target": "otel-demo/Deployment/ad",
+      "condition": "Chaos experiment induced CPU throttling and failures in ad pod",
+      "effect": "Ad pods report high CPU throttling and error rate"
+    },
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/ad",
+      "condition": "Pod containers throttled and erroring",
+      "effect": "Service ad returns increased errors"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Frontend depends on ad for data",
+      "effect": "Frontend experiences high error rate"
+    },
+    {
+      "source": "otel-demo/Service/frontend",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Proxy forwards traffic to frontend",
+      "effect": "Proxy sees elevated error rate"
+    },
+    {
+      "source": "otel-demo/Service/frontend-proxy",
+      "target": "otel-demo/Service/recommendation",
+      "condition": "Recommendation called via proxy chain",
+      "effect": "Recommendation shows minor error increase"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate for the listed service exceeded zero, indicating request failures.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Container CPU throttling percentage high, leading to performance degradation.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Info-level alerts inhibition; not a direct failure but indicates info alerts present.",
+      "explained": true
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "ImagePullBackOff caused pod creation failures, preventing ad pods from becoming ready.",
+      "evidence": "alert KubePodNotReady, event FailedCreate, log WARN Image pull error"
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": true,
+      "reasoning": "Readiness probe failed, marking service unhealthy and returning errors to callers.",
+      "evidence": "alert KubeServiceUnhealthy, event Unhealthy, log ERROR checkout readiness probe failed"
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend pods entered CrashLoopBackOff after upstream ad and checkout failures caused request timeouts and 500 responses.",
+      "evidence": "alert KubePodCrashLooping, logs ERROR frontend timeouts, trace spans showing errors from ad and checkout"
+    },
+    {
+      "name": "otel-demo/Pod/ad-6f4c9b5c8d-fghij",
+      "contributing_factor": false,
+      "reasoning": "Pod remained not ready due to ImagePullBackOff, downstream callers observed failures.",
+      "evidence": "event FailedCreate, alert KubePodNotReady"
+    },
+    {
+      "name": "otel-demo/Pod/frontend-5d8f7c8c5b-abcde",
+      "contributing_factor": false,
+      "reasoning": "Pod repeatedly crashed because calls to ad and checkout timed out, leading to CrashLoopBackOff.",
+      "evidence": "alert KubePodCrashLooping, logs ERROR frontend calls, trace error spans"
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Pod/ad-6f4c9b5c8d-fghij",
+      "condition": "ImagePullBackOff prevented pod start",
+      "effect": "Pod remained NotReady"
+    },
+    {
+      "source": "otel-demo/Pod/ad-6f4c9b5c8d-fghij",
+      "target": "otel-demo/Pod/frontend-5d8f7c8c5b-abcde",
+      "condition": "Frontend requests to ad timed out",
+      "effect": "Frontend pod entered CrashLoopBackOff"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Pod/frontend-5d8f7c8c5b-abcde",
+      "condition": "Readiness probe failure returned 500 errors",
+      "effect": "Frontend pod entered CrashLoopBackOff"
+    },
+    {
+      "source": "otel-demo/Pod/frontend-5d8f7c8c5b-abcde",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "Pod repeatedly restarts",
+      "effect": "Deployment reports CrashLooping pods"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "Frontend pod crashed repeatedly due to upstream service failures causing request errors.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodNotReady",
+      "explanation": "ad pod could not start because of ImagePullBackOff, leaving it not ready.",
+      "explained": true
+    },
+    {
+      "alert": "KubeServiceUnhealthy",
+      "explanation": "checkout service failed readiness probe, marking it unhealthy.",
+      "explained": true
+    }
+  ]
+}

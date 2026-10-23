@@ -1,0 +1,269 @@
+{
+  "metadata": {
+    "scenario": "Scenario-31",
+    "run": 3,
+    "duration_seconds": 0,
+    "inference_count": 68,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "frontend-block-all-ports"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "otel-demo/Deployment/ad",
+            "matches_gt": false,
+            "matched_to": null
+          },
+          {
+            "entity": "otel-demo/Deployment/cart",
+            "matches_gt": false,
+            "matched_to": null
+          },
+          {
+            "entity": "otel-demo/Deployment/fraud-detection",
+            "matches_gt": false,
+            "matched_to": null
+          }
+        ],
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The model predicted three root causes ('otel-demo/Deployment/ad', 'otel-demo/Deployment/cart', 'otel-demo/Deployment/fraud-detection'), none of which could be normalized to the single ground truth root cause entity 'frontend-block-all-ports'. Therefore, both precision and recall are 0."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0,
+        "justification": "No root cause entities were correctly identified, so the reasoning accuracy score is 0.",
+        "details": {}
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components. The GT path is ['Network Policy Component', 'Frontend Service Component', 'Frontend-Proxy Service Component']. The model path is ['Ad Service Component', 'Frontend-Proxy Service Component', 'Cart Service Component', 'Frontend-Proxy Service Component', 'Fraud Detection Service Component', 'Frontend-Proxy Service Component']. The Longest Common Subsequence is ['Frontend-Proxy Service Component'], giving a TP of 1.",
+        "details": {
+          "normalization_map": {
+            "otel-demo/Service/frontend-proxy": "frontend-proxy-service-1"
+          },
+          "semantic_components": {
+            "Network Policy Component": [
+              "frontend-block-all-ports"
+            ],
+            "Frontend Service Component": [
+              "frontend-pod-1",
+              "frontend-service-1"
+            ],
+            "Frontend-Proxy Service Component": [
+              "frontend-proxy-pod-1",
+              "frontend-proxy-service-1"
+            ],
+            "Ad Service Component": [
+              "otel-demo/Deployment/ad"
+            ],
+            "Cart Service Component": [
+              "otel-demo/Deployment/cart"
+            ],
+            "Fraud Detection Service Component": [
+              "otel-demo/Deployment/fraud-detection"
+            ]
+          },
+          "contracted_gt_path": [
+            "Network Policy Component",
+            "Frontend Service Component",
+            "Frontend-Proxy Service Component"
+          ],
+          "contracted_model_path": [
+            "Ad Service Component",
+            "Frontend-Proxy Service Component",
+            "Cart Service Component",
+            "Frontend-Proxy Service Component",
+            "Fraud Detection Service Component",
+            "Frontend-Proxy Service Component"
+          ],
+          "lcs_components": [
+            "Frontend-Proxy Service Component"
+          ],
+          "true_positives_TP": 1,
+          "model_path_length": 6,
+          "gt_path_length": 3
+        },
+        "precision": 0.16666666666666666,
+        "recall": 0.3333333333333333,
+        "calculation": 0.2222222222222222
+      },
+      "fault_localization_component_identification": {
+        "calculation": 0,
+        "justification": "The first performance failure in GT.propagations is: 'Frontend service cannot receive traffic, making it completely unavailable'. Using Priority 1 rule (explicit naming in effect), the first impacted component is 'Frontend Service Component'. This component was not found in the model's contracted path.",
+        "details": {
+          "gt_first_impacted_component": "Frontend Service Component",
+          "effect_used": "Frontend service cannot receive traffic, making it completely unavailable",
+          "priority_rule_applied": "Priority 1",
+          "found_in_model_path": false
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": 0,
+        "justification": "The model predicted three root causes: 'otel-demo/Deployment/ad', 'otel-demo/Deployment/cart', and 'otel-demo/Deployment/fraud-detection'. None of these matched the true root cause. For partial credit, we check if the semantic components of these entities ('Ad Service Component', 'Cart Service Component', 'Fraud Detection Service Component') are on the ground truth path. None of them are, so the partial credit for each is 0. The maximum score is 0.",
+        "details": [
+          {
+            "entity": "otel-demo/Deployment/ad",
+            "metric1_is_correct": false,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 0
+          },
+          {
+            "entity": "otel-demo/Deployment/cart",
+            "metric1_is_correct": false,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 0
+          },
+          {
+            "entity": "otel-demo/Deployment/fraud-detection",
+            "metric1_is_correct": false,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "For precision, none of the model's predicted root cause components ('Ad Service Component', 'Cart Service Component', 'Fraud Detection Service Component') are on the contracted GT path, so their scores are all 0, leading to P=0. For recall, the GT root cause component ('Network Policy Component') has an infinite hop distance to any of the model's predicted components (as they are not on the path), resulting in a score of 0 and R=0. Thus, F1 is 0.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/ad",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          },
+          {
+            "entity": "otel-demo/Deployment/cart",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          },
+          {
+            "entity": "otel-demo/Deployment/fraud-detection",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "frontend-block-all-ports",
+            "is_on_path": true,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 3,
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The gt_path_length is 3. For precision, none of the model's predicted root cause components ('Ad Service Component', 'Cart Service Component', 'Fraud Detection Service Component') are on the contracted GT path, so their scores are all 0, leading to P=0. For recall, the GT root cause component ('Network Policy Component') has an infinite hop distance to any of the model's predicted components (as they are not on the path), resulting in a score of 0 and R=0. Thus, F1 is 0.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/ad",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          },
+          {
+            "entity": "otel-demo/Deployment/cart",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          },
+          {
+            "entity": "otel-demo/Deployment/fraud-detection",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "frontend-block-all-ports",
+            "is_on_path": true,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      }
+    },
+    "incident_id": "Scenario-31",
+    "trial_id": "3"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 0.0,
+    "root_cause_entity_recall": 0.0,
+    "root_cause_entity_f1": 0.0,
+    "root_cause_reasoning": 0,
+    "propagation_chain": 0.2222222222222222,
+    "fault_localization_component_identification": 0,
+    "root_cause_reasoning_partial": 0,
+    "root_cause_proximity_no_fp_precision": 0.0,
+    "root_cause_proximity_no_fp_recall": 0.0,
+    "root_cause_proximity_no_fp_f1": 0,
+    "root_cause_proximity_with_fp_precision": 0.0,
+    "root_cause_proximity_with_fp_recall": 0.0,
+    "root_cause_proximity_with_fp_f1": 0,
+    "root_cause_entity_k_precision": 0.0,
+    "root_cause_entity_k_recall": 0.0,
+    "root_cause_entity_k_f1": 0.0,
+    "root_cause_entity_k@1_precision": 0.0,
+    "root_cause_entity_k@1_recall": 0.0,
+    "root_cause_entity_k@1_f1": 0.0,
+    "root_cause_entity_k@2_precision": 0.0,
+    "root_cause_entity_k@2_recall": 0.0,
+    "root_cause_entity_k@2_f1": 0.0,
+    "root_cause_entity_k@3_precision": 0.0,
+    "root_cause_entity_k@3_recall": 0.0,
+    "root_cause_entity_k@3_f1": 0.0,
+    "root_cause_entity_k@4_precision": 0.0,
+    "root_cause_entity_k@4_recall": 0.0,
+    "root_cause_entity_k@4_f1": 0.0,
+    "root_cause_entity_k@5_precision": 0.0,
+    "root_cause_entity_k@5_recall": 0.0,
+    "root_cause_entity_k@5_f1": 0.0
+  }
+}

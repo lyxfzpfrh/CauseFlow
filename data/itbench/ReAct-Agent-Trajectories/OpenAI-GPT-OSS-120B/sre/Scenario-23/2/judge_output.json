@@ -1,0 +1,269 @@
+{
+  "metadata": {
+    "scenario": "Scenario-23",
+    "run": 2,
+    "duration_seconds": 0,
+    "inference_count": 83,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "checkout-deployment-1"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "otel-demo/Deployment/checkout",
+            "matches_gt": true,
+            "matched_to": "checkout-deployment-1"
+          },
+          {
+            "entity": "otel-demo/Pod/postgresql-c7fd45b87-prpvd",
+            "matches_gt": false
+          }
+        ],
+        "calculation_precision": 0.5,
+        "calculation_recall": 1.0,
+        "calculation_f1": 0.6666666666666666,
+        "justification": "The Ground Truth has one root cause entity: 'checkout-deployment-1'. The model predicted two root cause entities. The first, 'otel-demo/Deployment/checkout', correctly maps to 'checkout-deployment-1'. The second, 'otel-demo/Pod/postgresql-c7fd45b87-prpvd', does not match any GT root cause. This results in 1 correct prediction out of 2 (Precision=0.5) and 1 correct prediction out of 1 GT entity (Recall=1.0)."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0.5,
+        "justification": "The single correctly identified root cause entity was 'otel-demo/Deployment/checkout'. The model's reasoning was 'Deployment has replica mismatch and its pod is not Ready...'. The GT condition is 'checkout deployment updated to point to an invalid image - incorrect architecture'. The model's reasoning describes the symptoms (replica mismatch, pod not ready) rather than the actual cause (invalid image), so it receives a partial score of 0.5.",
+        "details": [
+          {
+            "predicted_entity": "otel-demo/Deployment/checkout",
+            "gt_entity": "checkout-deployment-1",
+            "predicted_reasoning": "Deployment has replica mismatch and its pod is not Ready, causing request failures for dependent services.",
+            "gt_reasoning": "checkout deployment updated to point to an invalid image - incorrect architecture",
+            "score": 0.5
+          }
+        ]
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components. The GT path contracts to a single 'Checkout Service Component'. The model's path is much longer and includes a loop, resulting in a different contracted path. The Longest Common Subsequence (LCS) is just the 'Checkout Service Component', giving a TP of 1. With a GT path length of 1 and a model path length of 11, the recall is high but precision is low.",
+        "details": {
+          "normalization_map": {
+            "otel-demo/Deployment/checkout": "checkout-deployment-1",
+            "otel-demo/Pod/checkout-5dccddf8bb-xq5bq": "checkout-pod-1",
+            "otel-demo/Service/checkout": "checkout-service-1"
+          },
+          "semantic_components": {
+            "Checkout Service Component": [
+              "checkout-deployment-1",
+              "checkout-pod-1",
+              "checkout-service-1"
+            ],
+            "Postgresql Component": [
+              "otel-demo/Pod/postgresql-c7fd45b87-prpvd"
+            ],
+            "Frontend Proxy Component": [
+              "otel-demo/Service/frontend-proxy"
+            ],
+            "Frontend Component": [
+              "otel-demo/Service/frontend"
+            ],
+            "Accounting Component": [
+              "otel-demo/Service/accounting"
+            ],
+            "Ad Component": [
+              "otel-demo/Service/ad"
+            ],
+            "Recommendation Component": [
+              "otel-demo/Service/recommendation"
+            ],
+            "Fraud Detection Component": [
+              "otel-demo/Service/fraud-detection"
+            ],
+            "Shipping Component": [
+              "otel-demo/Service/shipping"
+            ],
+            "Quote Component": [
+              "otel-demo/Service/quote"
+            ]
+          },
+          "contracted_gt_path": [
+            "Checkout Service Component"
+          ],
+          "contracted_model_path": [
+            "Checkout Service Component",
+            "Frontend Proxy Component",
+            "Frontend Component",
+            "Postgresql Component",
+            "Accounting Component",
+            "Checkout Service Component",
+            "Ad Component",
+            "Recommendation Component",
+            "Fraud Detection Component",
+            "Shipping Component",
+            "Quote Component"
+          ],
+          "lcs_components": [
+            "Checkout Service Component"
+          ],
+          "true_positives_TP": 1,
+          "model_path_length": 11,
+          "gt_path_length": 1
+        },
+        "precision": 0.09090909090909091,
+        "recall": 1.0,
+        "calculation": 0.16666666666666669
+      },
+      "fault_localization_component_identification": {
+        "calculation": 1,
+        "justification": "The first performance failure in GT.propagations is: 'checkout pod is in ImagePullBackOff error'. Using the Priority 1 rule (explicit component name in effect), the first impacted component is the 'checkout pod', which belongs to the 'Checkout Service Component'. This component was found in the model's contracted path.",
+        "details": {
+          "gt_first_impacted_component": "Checkout Service Component",
+          "effect_used": "checkout pod is in ImagePullBackOff error",
+          "priority_rule_applied": "Priority 1",
+          "found_in_model_path": true
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": 0.5,
+        "justification": "Entity 'otel-demo/Deployment/checkout': This was a correct root cause match, so its score is copied from the 'root_cause_reasoning' metric, which is 0.5. Entity 'otel-demo/Pod/postgresql-c7fd45b87-prpvd': This was an incorrect root cause match. Its semantic component ('Postgresql Component') is not on the contracted GT path ('[Checkout Service Component]'). Therefore, its partial credit score is 0. The maximum of the two scores is 0.5.",
+        "details": [
+          {
+            "entity": "otel-demo/Deployment/checkout",
+            "metric1_is_correct": true,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 0.5
+          },
+          {
+            "entity": "otel-demo/Pod/postgresql-c7fd45b87-prpvd",
+            "metric1_is_correct": false,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 0.5,
+        "calculation_recall": 1.0,
+        "calculation_f1": 0.6666666666666666,
+        "justification": "Precision: The model predicted 2 root cause components. 'Checkout Service Component' has a hop_away of 0 to the GT component, so its score is 1. 'Postgresql Component' is not on the GT path, so its score is 0. The average is (1+0)/2 = 0.5. Recall: The single GT root cause component 'Checkout Service Component' has a minimum hop_away of 0 to the model's predicted components, so its score is 1. The average is 1/1 = 1.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/checkout",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          },
+          {
+            "entity": "otel-demo/Pod/postgresql-c7fd45b87-prpvd",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "checkout-deployment-1",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 1,
+        "calculation_precision": 0.5,
+        "calculation_recall": 1.0,
+        "calculation_f1": 0.6666666666666666,
+        "justification": "The contracted GT path length is 1. Precision: The model predicted 2 root cause components. 'Checkout Service Component' has a hop_away of 0, score = 1/(1+0/1) = 1. 'Postgresql Component' is not on the GT path, score = 0. The average is (1+0)/2 = 0.5. Recall: The single GT root cause component 'Checkout Service Component' has a hop_away of 0, score = 1/(1+0/1) = 1. The average is 1/1 = 1.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/checkout",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          },
+          {
+            "entity": "otel-demo/Pod/postgresql-c7fd45b87-prpvd",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "checkout-deployment-1",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 0.5,
+        "calculation_recall": 1.0,
+        "calculation_f1": 0.6666666666666666
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 0.5,
+        "calculation_recall": 1.0,
+        "calculation_f1": 0.6666666666666666
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 0.5,
+        "calculation_recall": 1.0,
+        "calculation_f1": 0.6666666666666666
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 0.5,
+        "calculation_recall": 1.0,
+        "calculation_f1": 0.6666666666666666
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 0.5,
+        "calculation_recall": 1.0,
+        "calculation_f1": 0.6666666666666666
+      }
+    },
+    "incident_id": "Scenario-23",
+    "trial_id": "2"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 0.5,
+    "root_cause_entity_recall": 1.0,
+    "root_cause_entity_f1": 0.6666666666666666,
+    "root_cause_reasoning": 0.5,
+    "propagation_chain": 0.16666666666666669,
+    "fault_localization_component_identification": 1,
+    "root_cause_reasoning_partial": 0.5,
+    "root_cause_proximity_no_fp_precision": 0.5,
+    "root_cause_proximity_no_fp_recall": 1.0,
+    "root_cause_proximity_no_fp_f1": 0.6666666666666666,
+    "root_cause_proximity_with_fp_precision": 0.5,
+    "root_cause_proximity_with_fp_recall": 1.0,
+    "root_cause_proximity_with_fp_f1": 0.6666666666666666,
+    "root_cause_entity_k_precision": 0.5,
+    "root_cause_entity_k_recall": 1.0,
+    "root_cause_entity_k_f1": 0.6666666666666666,
+    "root_cause_entity_k@1_precision": 1.0,
+    "root_cause_entity_k@1_recall": 1.0,
+    "root_cause_entity_k@1_f1": 1.0,
+    "root_cause_entity_k@2_precision": 0.5,
+    "root_cause_entity_k@2_recall": 1.0,
+    "root_cause_entity_k@2_f1": 0.6666666666666666,
+    "root_cause_entity_k@3_precision": 0.5,
+    "root_cause_entity_k@3_recall": 1.0,
+    "root_cause_entity_k@3_f1": 0.6666666666666666,
+    "root_cause_entity_k@4_precision": 0.5,
+    "root_cause_entity_k@4_recall": 1.0,
+    "root_cause_entity_k@4_f1": 0.6666666666666666,
+    "root_cause_entity_k@5_precision": 0.5,
+    "root_cause_entity_k@5_recall": 1.0,
+    "root_cause_entity_k@5_f1": 0.6666666666666666
+  }
+}

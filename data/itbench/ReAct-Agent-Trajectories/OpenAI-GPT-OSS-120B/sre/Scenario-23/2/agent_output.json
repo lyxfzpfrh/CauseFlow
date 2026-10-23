@@ -1,0 +1,169 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": true,
+      "reasoning": "Deployment has replica mismatch and its pod is not Ready, causing request failures for dependent services.",
+      "evidence": "KubeDeploymentReplicasMismatch alert (critical) and KubePodNotReady alert for pod checkout-5dccddf8bb-xq5bq; PendingPodsDetected alert shows a pending pod in namespace."
+    },
+    {
+      "name": "otel-demo/Pod/postgresql-c7fd45b87-prpvd",
+      "contributing_factor": true,
+      "reasoning": "Pod shows 43% CPU throttling, indicating resource starvation that can degrade DB latency for services.",
+      "evidence": "CPUThrottlingHigh alert (warning) reporting 43.1% throttling for container postgresql in this pod."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Error rate exceeds zero due to downstream checkout failures.",
+      "evidence": "RequestErrorRate alert (warning) for service frontend-proxy with value 2.04."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Likely receives errors from frontend-proxy as it forwards traffic.",
+      "evidence": "Implicit from topology; no direct alert but downstream of frontend-proxy."
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "Error rate alert indicates it cannot serve requests, probably because checkout downstream fails.",
+      "evidence": "RequestErrorRate alert (warning) for service ad with value 0.011."
+    },
+    {
+      "name": "otel-demo/Service/recommendation",
+      "contributing_factor": false,
+      "reasoning": "Error rate alert shows failures, likely caused by upstream checkout issues.",
+      "evidence": "RequestErrorRate alert (warning) for service recommendation."
+    },
+    {
+      "name": "otel-demo/Service/fraud-detection",
+      "contributing_factor": false,
+      "reasoning": "Error rate alert indicates it is impacted by checkout or DB slowdown.",
+      "evidence": "RequestErrorRate alert (warning) for service fraud-detection."
+    },
+    {
+      "name": "otel-demo/Service/shipping",
+      "contributing_factor": false,
+      "reasoning": "Error rate alert suggests shipping calls are failing, possibly due to checkout or DB problems.",
+      "evidence": "RequestErrorRate alert (warning) for service shipping."
+    },
+    {
+      "name": "otel-demo/Service/quote",
+      "contributing_factor": false,
+      "reasoning": "NoRequestsDetected alert means the service received no traffic, likely because upstream services are failing.",
+      "evidence": "NoRequestsDetected alert (warning) for service quote."
+    },
+    {
+      "name": "otel-demo/Service/accounting",
+      "contributing_factor": false,
+      "reasoning": "May experience errors due to DB throttling, though no direct alert; included as downstream consumer.",
+      "evidence": "Depends on postgresql pod which is throttled."
+    },
+    {
+      "name": "otel-demo/Pod/checkout-5dccddf8bb-xq5bq",
+      "contributing_factor": false,
+      "reasoning": "Pod is NotReady, reflecting the Deployment issue and propagating failures.",
+      "evidence": "KubePodNotReady alert for this pod."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/checkout",
+      "condition": "Replica count mismatch and pod not Ready cause service endpoints to be unavailable",
+      "effect": "Downstream services receive errors"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Checkout service returns errors or no responses",
+      "effect": "Frontend-proxy error rate spikes"
+    },
+    {
+      "source": "otel-demo/Service/frontend-proxy",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Proxy forwards failing responses",
+      "effect": "Frontend experiences increased error rate"
+    },
+    {
+      "source": "otel-demo/Pod/postgresql-c7fd45b87-prpvd",
+      "target": "otel-demo/Service/accounting",
+      "condition": "High CPU throttling degrades DB latency",
+      "effect": "Accounting service experiences request errors"
+    },
+    {
+      "source": "otel-demo/Service/accounting",
+      "target": "otel-demo/Service/checkout",
+      "condition": "Accounting calls to DB are slow/failed",
+      "effect": "Checkout service errors increase"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/ad",
+      "condition": "Checkout errors propagate to ad service calls",
+      "effect": "Ad service error rate rises"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/recommendation",
+      "condition": "Checkout failures affect recommendation requests",
+      "effect": "Recommendation error rate rises"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/fraud-detection",
+      "condition": "Checkout errors cascade to fraud-detection",
+      "effect": "Fraud-detection error rate rises"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/shipping",
+      "condition": "Checkout failures block shipping calls",
+      "effect": "Shipping error rate rises"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/quote",
+      "condition": "Checkout unavailability stops traffic to quote",
+      "effect": "NoRequestsDetected alert for quote"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate >0 for the listed services indicates they are returning error responses, often due to downstream failures.",
+      "explained": true
+    },
+    {
+      "alert": "PendingPodsDetected",
+      "explanation": "At least one pod in otel-demo is pending, likely the checkout pod, preventing it from serving traffic.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "Quote service received zero requests, caused by upstream services being unavailable.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodNotReady",
+      "explanation": "Checkout pod is not Ready, reflecting the Deployment issue and causing service failures.",
+      "explained": true
+    },
+    {
+      "alert": "KubeDeploymentReplicasMismatch",
+      "explanation": "Checkout deployment has fewer ready replicas than desired, leading to missing pods.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "PostgreSQL pod experiences high CPU throttling, degrading database performance for dependent services.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Inhibits info‑level alerts while higher severity alerts fire; not directly related to the incident.",
+      "explained": true
+    }
+  ]
+}

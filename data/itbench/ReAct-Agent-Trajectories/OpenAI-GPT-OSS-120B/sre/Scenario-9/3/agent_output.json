@@ -1,0 +1,77 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "The ad deployment pods entered CrashLoopBackOff and stopped serving, which caused downstream 5xx errors.",
+      "evidence": "Alert \"KubePodCrashLooping\" fired for ad pods; pod events show repeated ContainerCreating → CrashLoopBackOff; metrics show ad request latency > 5s and error rate > 80%."
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "The ad service became unavailable because all its backing pods were in CrashLoopBackOff.",
+      "evidence": "Service endpoint list empty in service discovery; alerts \"KubeServiceUnreachable\" for ad."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend deployment remained running but returned 5xx responses when calling the ad service.",
+      "evidence": "Alert \"KubePodHighHttp5xx\" fired for frontend pods; trace spans show failed HTTP calls to ad service."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend service was reachable but its backend calls failed, leading to user‑facing errors.",
+      "evidence": "Service endpoint healthy; alert \"KubeServiceHighErrorRate\" for frontend."
+    },
+    {
+      "name": "otel-demo/Namespace/otel-demo",
+      "contributing_factor": false,
+      "reasoning": "Namespace itself had no quota or limit violations; it only hosts the affected services.",
+      "evidence": "No namespace‑level alerts; resource usage within limits."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/ad",
+      "condition": "All ad pods were in CrashLoopBackOff and not ready",
+      "effect": "ad service lost all ready endpoints and became unreachable"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "Frontend calls to ad service timed out or returned errors",
+      "effect": "frontend pods generated high 5xx response rate"
+    },
+    {
+      "source": "otel-demo/Deployment/frontend",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Frontend pods returned HTTP 5xx to clients",
+      "effect": "frontend service showed elevated error metrics"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "Fired because ad pods repeatedly failed to start and entered CrashLoopBackOff.",
+      "explained": true
+    },
+    {
+      "alert": "KubeServiceUnreachable",
+      "explanation": "Ad service had no ready endpoints due to its pods crashing.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodHighHttp5xx",
+      "explanation": "Frontend pods returned many HTTP 5xx responses when downstream ad calls failed.",
+      "explained": true
+    },
+    {
+      "alert": "KubeServiceHighErrorRate",
+      "explanation": "Frontend service error rate rose above threshold because its pods served 5xx responses.",
+      "explained": true
+    }
+  ]
+}
+

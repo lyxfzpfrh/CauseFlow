@@ -1,0 +1,108 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Pod/product-catalog-fcf7564cf-p8wgh",
+      "contributing_factor": true,
+      "reasoning": "Pod is in CrashLoopBackOff, preventing the product‑catalog service from running.",
+      "evidence": "Alert KubePodCrashLooping (pod product-catalog-fcf7564cf-p8wgh) and CrashLoopBackOffPodsDetected (1 pod) firing at 15:46:01."
+    },
+    {
+      "name": "otel-demo/Deployment/product-catalog",
+      "contributing_factor": true,
+      "reasoning": "Deployment has replica mismatch because its pod cannot become ready.",
+      "evidence": "Alert KubeDeploymentReplicasMismatch for product-catalog firing at 15:46:01."
+    },
+    {
+      "name": "otel-demo/Service/product-catalog",
+      "contributing_factor": false,
+      "reasoning": "Service receives no traffic as its backing pods are down, causing downstream errors.",
+      "evidence": "Alert NoRequestsDetected for service product-catalog (0 requests) firing at 15:47:26."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend reports high request error rate due to upstream product‑catalog failures.",
+      "evidence": "Alert RequestErrorRate for frontend (value 17.4) firing at 15:46:32."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Proxy shows high error rate because calls to downstream services fail.",
+      "evidence": "Alert RequestErrorRate for frontend-proxy (value 8.66) firing at 15:45:32."
+    },
+    {
+      "name": "otel-demo/Service/recommendation",
+      "contributing_factor": false,
+      "reasoning": "Recommendation service errors increase as it cannot reach product‑catalog.",
+      "evidence": "Alert RequestErrorRate for recommendation (value 1.31) firing at 15:47:32."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout depends on product‑catalog; its error rate rises due to missing product data.",
+      "evidence": "Alert RequestErrorRate for checkout (value 0.71) firing at 15:47:32."
+    },
+    {
+      "name": "otel-demo/Pod/frontend-675fd7b5c5-bqfms",
+      "contributing_factor": false,
+      "reasoning": "Frontend pod shows CPU throttling, likely a symptom of retry storm caused by upstream failures.",
+      "evidence": "Alert CPUThrottlingHigh for container frontend (26.7%) firing at 15:43:32."
+    },
+    {
+      "name": "otel-demo/Pod/postgresql-c7fd45b87-rw7jp",
+      "contributing_factor": false,
+      "reasoning": "PostgreSQL pod shows high CPU throttling, probably secondary to increased load from retries.",
+      "evidence": "Alert CPUThrottlingHigh for container postgresql (52.9%) firing at 15:47:32."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Pod/product-catalog-fcf7564cf-p8wgh",
+      "target": "otel-demo/Deployment/product-catalog",
+      "condition": "Pod stuck in CrashLoopBackOff prevents it from becoming Ready",
+      "effect": "Deployment reports replica mismatch (0 ready)"
+    },
+    {
+      "source": "otel-demo/Deployment/product-catalog",
+      "target": "otel-demo/Service/product-catalog",
+      "condition": "No ready replicas for the Deployment",
+      "effect": "Service receives zero requests"
+    },
+    {
+      "source": "otel-demo/Service/product-catalog",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Frontend calls product‑catalog for item data",
+      "effect": "Frontend returns 5xx errors, raising RequestErrorRate"
+    },
+    {
+      "source": "otel-demo/Service/product-catalog",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Proxy forwards traffic to product‑catalog",
+      "effect": "Proxy sees increased error responses, raising its RequestErrorRate"
+    },
+    {
+      "source": "otel-demo/Service/product-catalog",
+      "target": "otel-demo/Service/recommendation",
+      "condition": "Recommendation queries product‑catalog for catalogue data",
+      "effect": "Recommendation errors increase, raising its RequestErrorRate"
+    },
+    {
+      "source": "otel-demo/Service/product-catalog",
+      "target": "otel-demo/Service/checkout",
+      "condition": "Checkout needs product details during order processing",
+      "effect": "Checkout experiences errors, raising its RequestErrorRate"
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "CPUThrottlingHigh", "explanation": "Containers exceed CPU throttling thresholds, indicating node CPU pressure or excessive retries.", "explained": true},
+    {"alert": "CrashLoopBackOffPodsDetected", "explanation": "At least one pod in otel-demo is crash looping, the primary driver of the outage.", "explained": true},
+    {"alert": "KubeControllerManagerDown", "explanation": "Controller manager target missing; unrelated to otel-demo workload outage.", "explained": true},
+    {"alert": "KubeDeploymentReplicasMismatch", "explanation": "Deployment replica count not met, here for product‑catalog due to pod crash.", "explained": true},
+    {"alert": "KubePodCrashLooping", "explanation": "Specific pod product‑catalog is in CrashLoopBackOff.", "explained": true},
+    {"alert": "KubeSchedulerDown", "explanation": "Scheduler target missing; not a direct cause for service errors.", "explained": true},
+    {"alert": "NoRequestsDetected", "explanation": "Services with zero traffic, many are downstream of the failed product‑catalog.", "explained": true},
+    {"alert": "PrometheusNotConnectedToAlertmanagers", "explanation": "Prometheus connectivity issue; does not affect application flow.", "explained": true},
+    {"alert": "RequestErrorRate", "explanation": "High error rates in several services, symptomatic of upstream product‑catalog failure.", "explained": true},
+    {"alert": "Watchdog", "explanation": "Internal watchdog alert, not directly tied to the incident.", "explained": true}
+  ]
+}

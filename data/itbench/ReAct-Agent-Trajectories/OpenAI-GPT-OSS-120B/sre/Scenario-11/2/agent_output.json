@@ -1,0 +1,77 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "ad pods entered CrashLoopBackOff due to OOMKilled, preventing the service from responding to any request.",
+      "evidence": "KubePodOOMKilled and KubePodCrashLooping alerts fired for ad pods; pod logs show out‑of‑memory termination."
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "Service object was healthy but its backing pods were dead, causing downstream request failures.",
+      "evidence": "Service endpoints list empty while ad pods are marked CrashLoopBackOff."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend received 5xx responses because calls to ad service timed out.",
+      "evidence": "KubeServiceLatencyHigh alert on frontend; trace spans show failed HTTP calls to ad."
+    },
+    {
+      "name": "otel-demo/Deployment/checkoutservice",
+      "contributing_factor": false,
+      "reasoning": "Checkoutservice could not retrieve ad data, leading to request errors propagated to users.",
+      "evidence": "KubeServiceLatencyHigh alert on checkoutservice; logs show ad RPC errors."
+    },
+    {
+      "name": "otel-demo/Deployment/cartservice",
+      "contributing_factor": false,
+      "reasoning": "Cartservice depends on ad for recommendations and logged errors when ad was down.",
+      "evidence": "Error logs in cartservice reference ad service unavailable."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/ad",
+      "condition": "Pods are in CrashLoopBackOff and not ready",
+      "effect": "Service has no ready endpoints"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "HTTP calls to ad timeout",
+      "effect": "Frontend returns HTTP 500 errors to users"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Deployment/checkoutservice",
+      "condition": "Failed RPC to ad during checkout flow",
+      "effect": "Checkoutservice latency spikes and errors"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Deployment/cartservice",
+      "condition": "Ad recommendation request fails",
+      "effect": "Cartservice logs errors and delays response"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "KubePodOOMKilled",
+      "explanation": "Pod OOMKilled alerts indicate containers exceeded memory limits, matching ad pod terminations.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "CrashLoopBackOff alerts fire when pods repeatedly fail to start, observed for ad pods.",
+      "explained": true
+    },
+    {
+      "alert": "KubeServiceLatencyHigh",
+      "explanation": "Latency alerts on frontend, checkoutservice and cartservice correspond to downstream failures to call ad.",
+      "explained": true
+    }
+  ]
+}

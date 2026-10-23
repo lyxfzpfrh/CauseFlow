@@ -1,0 +1,466 @@
+{
+  "entities": [],
+  "propagations": [],
+  "alerts_explained": [
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "PendingPodsDetected",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "",
+      "explained": false
+    }
+  ]
+}

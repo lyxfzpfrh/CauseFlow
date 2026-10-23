@@ -1,0 +1,3312 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": true,
+      "reasoning": "Alert RequestErrorRate fired for this service.",
+      "evidence": "Alert RequestErrorRate in otel-demo namespace, state firing."
+    },
+    {
+      "name": "otel-demo/Service/prometheus-kube-prometheus-kubelet",
+      "contributing_factor": true,
+      "reasoning": "Alert InfoInhibitor fired for this service.",
+      "evidence": "Alert InfoInhibitor in otel-demo namespace, state firing."
+    },
+    {
+      "name": "otel-demo/Namespace/otel-demo",
+      "contributing_factor": true,
+      "reasoning": "Alert PendingPodsDetected fired for this service.",
+      "evidence": "Alert PendingPodsDetected in otel-demo namespace, state firing."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": true,
+      "reasoning": "Alert RequestErrorRate fired for this service.",
+      "evidence": "Alert RequestErrorRate in otel-demo namespace, state firing."
+    },
+    {
+      "name": "otel-demo/Service/fraud-detection",
+      "contributing_factor": true,
+      "reasoning": "Alert NoRequestsDetected fired for this service.",
+      "evidence": "Alert NoRequestsDetected in otel-demo namespace, state firing."
+    },
+    {
+      "name": "otel-demo/Service/accounting",
+      "contributing_factor": true,
+      "reasoning": "Alert NoRequestsDetected fired for this service.",
+      "evidence": "Alert NoRequestsDetected in otel-demo namespace, state firing."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": true,
+      "reasoning": "Alert NoRequestsDetected fired for this service.",
+      "evidence": "Alert NoRequestsDetected in otel-demo namespace, state firing."
+    },
+    {
+      "name": "otel-demo/Service/prometheus-kube-state-metrics",
+      "contributing_factor": true,
+      "reasoning": "Alert KubePodCrashLooping fired for this service.",
+      "evidence": "Alert KubePodCrashLooping in otel-demo namespace, state firing."
+    },
+    {
+      "name": "otel-demo/Service/quote",
+      "contributing_factor": true,
+      "reasoning": "Alert NoRequestsDetected fired for this service.",
+      "evidence": "Alert NoRequestsDetected in otel-demo namespace, state firing."
+    },
+    {
+      "name": "otel-demo/Service/email",
+      "contributing_factor": true,
+      "reasoning": "Alert NoRequestsDetected fired for this service.",
+      "evidence": "Alert NoRequestsDetected in otel-demo namespace, state firing."
+    },
+    {
+      "name": "otel-demo/Service/payment",
+      "contributing_factor": true,
+      "reasoning": "Alert NoRequestsDetected fired for this service.",
+      "evidence": "Alert NoRequestsDetected in otel-demo namespace, state firing."
+    },
+    {
+      "name": "otel-demo/Service/currency",
+      "contributing_factor": true,
+      "reasoning": "Alert NoRequestsDetected fired for this service.",
+      "evidence": "Alert NoRequestsDetected in otel-demo namespace, state firing."
+    },
+    {
+      "name": "otel-demo/Service/shipping",
+      "contributing_factor": true,
+      "reasoning": "Alert NoRequestsDetected fired for this service.",
+      "evidence": "Alert NoRequestsDetected in otel-demo namespace, state firing."
+    },
+    {
+      "name": "otel-demo/Service/recommendation",
+      "contributing_factor": true,
+      "reasoning": "Alert RequestErrorRate fired for this service.",
+      "evidence": "Alert RequestErrorRate in otel-demo namespace, state firing."
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": true,
+      "reasoning": "Alert RequestErrorRate fired for this service.",
+      "evidence": "Alert RequestErrorRate in otel-demo namespace, state firing."
+    }
+  ],
+  "propagations": [],
+  "alerts_explained": [
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "PendingPodsDetected",
+      "explanation": "PendingPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service quote.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service email.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service payment.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service currency.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service shipping.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service currency.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service shipping.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service quote.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service email.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service payment.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service currency.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service quote.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service shipping.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service email.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service payment.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service email.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service payment.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service currency.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service quote.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service shipping.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service quote.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service shipping.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service email.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service payment.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service currency.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service shipping.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service email.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service payment.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service currency.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service quote.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service quote.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service shipping.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service email.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service payment.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service currency.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service shipping.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service email.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service payment.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service currency.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service quote.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "CrashLoopBackOffPodsDetected indicates a problem for service namespace.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "KubePodCrashLooping indicates a problem for service prometheus-kube-state-metrics.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPUThrottlingHigh indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service payment.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service recommendation.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "InfoInhibitor indicates a problem for service prometheus-kube-prometheus-kubelet.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service recommendation.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service ad.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service recommendation.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service ad.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service recommendation.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service ad.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service recommendation.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service ad.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service checkout.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service accounting.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "NoRequestsDetected indicates a problem for service fraud-detection.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend-proxy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "RequestErrorRate indicates a problem for service frontend.",
+      "explained": true
+    }
+  ]
+}

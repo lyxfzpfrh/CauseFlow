@@ -1,0 +1,58 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": true,
+      "reasoning": "Frontend container shows 41% CPU throttling and elevated request error rate, indicating it cannot serve traffic.",
+      "evidence": "CPUThrottlingHigh alert (41% throttle) and RequestErrorRate alert for service frontend (value 2.09)"
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Proxy receives errors propagated from the failing frontend, reflected by its RequestErrorRate alert.",
+      "evidence": "RequestErrorRate alert for service frontend-proxy (value 1.04)"
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "Ad service reports NoRequestsDetected because upstream frontend never forwards calls.",
+      "evidence": "NoRequestsDetected alert for service ad (value 0)"
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/frontend",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Frontend experiences high CPU throttling and returns errors",
+      "effect": "Proxy sees increased error rate"
+    },
+    {
+      "source": "otel-demo/Service/frontend-proxy",
+      "target": "otel-demo/Service/ad",
+      "condition": "Proxy fails to forward requests due to upstream errors",
+      "effect": "Ad service receives no traffic, triggering NoRequestsDetected"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Processes in the frontend container are throttled >25%, degrading performance.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate >0 for frontend and frontend-proxy indicates failed requests.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "Service ad reports zero requests, likely downstream of failing frontend.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Informational inhibition alerts, not directly related to incident.",
+      "explained": true
+    }
+  ]
+}

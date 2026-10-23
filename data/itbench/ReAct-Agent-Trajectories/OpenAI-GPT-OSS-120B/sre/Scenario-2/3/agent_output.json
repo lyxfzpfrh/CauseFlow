@@ -1,0 +1,83 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Pod/frontend-675fd7b5c5-64mj8",
+      "contributing_factor": true,
+      "reasoning": "Pod shows CPUThrottlingHigh alerts, indicating it is being throttled and cannot serve requests efficiently.",
+      "evidence": "CPUThrottlingHigh alert for container frontend in pod frontend-675fd7b5c5-64mj8; concurrent RequestErrorRate alert for service frontend-proxy."
+    },
+    {
+      "name": "otel-demo/Pod/ad-554b849958-fbw9s",
+      "contributing_factor": true,
+      "reasoning": "Ad pod receives CPUThrottlingHigh alerts, leading to degraded response latency.",
+      "evidence": "CPUThrottlingHigh alert for container ad; RequestErrorRate alert for service ad."
+    },
+    {
+      "name": "otel-demo/Pod/cart-755465879b-rh5r4",
+      "contributing_factor": true,
+      "reasoning": "Cart pod is throttled, causing request errors observed downstream.",
+      "evidence": "CPUThrottlingHigh alert for container cart; RequestErrorRate alert for service cart."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Service surfaces high error rate caused by upstream pod throttling.",
+      "evidence": "RequestErrorRate alert for service frontend-proxy; correlated with CPUThrottlingHigh alerts on its pods."
+    },
+    {
+      "name": "otel-demo/Service/fraud-detection",
+      "contributing_factor": false,
+      "reasoning": "Elevated error rate due to upstream pod throttling affecting request processing.",
+      "evidence": "RequestErrorRate alert for fraud-detection; upstream CPUThrottlingHigh alerts on fraud-detection pod."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout service receives errors propagated from throttled upstream services.",
+      "evidence": "RequestErrorRate alert for checkout; upstream CPUThrottlingHigh alerts on related pods."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Pod/frontend-675fd7b5c5-64mj8",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "CPU throttling limits CPU time for the pod",
+      "effect": "Increased request error rate observed in frontend-proxy service"
+    },
+    {
+      "source": "otel-demo/Pod/ad-554b849958-fbw9s",
+      "target": "otel-demo/Service/ad",
+      "condition": "CPU throttling on ad pod",
+      "effect": "Higher error responses from ad service"
+    },
+    {
+      "source": "otel-demo/Pod/cart-755465879b-rh5r4",
+      "target": "otel-demo/Service/cart",
+      "condition": "CPU throttling on cart pod",
+      "effect": "RequestErrorRate spikes for cart service"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Indicates a pod's container is being throttled by the kernel, reducing its CPU availability.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate of calls for a service exceeds zero, often caused by upstream latency or throttling.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Suppresses informational alerts while a warning or critical alert is active; not a direct incident cause.",
+      "explained": true
+    },
+    {
+      "alert": "Watchdog",
+      "explanation": "Always‑firing sentinel alert confirming alerting pipeline health; irrelevant to incident.",
+      "explained": true
+    }
+  ]
+}
+

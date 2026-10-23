@@ -1,0 +1,55 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "Deployment pods repeatedly crash (CrashLoopBackOff), causing service outage.",
+      "evidence": "KubePodCrashLoopBackOff alerts for pod ad-..., pod restart metric increasing, BackOff events."
+    },
+    {
+      "name": "otel-demo/Pod/ad-554b849958-zs8ds",
+      "contributing_factor": false,
+      "reasoning": "Pod is the concrete instance that crashes, symptom of the deployment failure.",
+      "evidence": "Alerts, events, and metric restart count for this pod."
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "Service has no ready endpoints because its pods are unavailable.",
+      "evidence": "Pod unready state leads to empty endpoints; downstream callers record errors."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend calls ad service and receives errors, degrading user experience.",
+      "evidence": "Trace spans from frontend show HTTP 500 errors when invoking /ad (derived from missing ad endpoints)."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Pod/ad-554b849958-zs8ds",
+      "condition": "Deployment pods crash causing CrashLoopBackOff",
+      "effect": "Pod restarts repeatedly and becomes unavailable"
+    },
+    {
+      "source": "otel-demo/Pod/ad-554b849958-zs8ds",
+      "target": "otel-demo/Service/ad",
+      "condition": "Pod fails health checks, endpoints removed",
+      "effect": "Service has no ready endpoints, cannot serve traffic"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Frontend depends on ad service for ads",
+      "effect": "Frontend receives HTTP 500 errors, impacting user requests"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "KubePodCrashLoopBackOff",
+      "explanation": "Indicates a container in the pod repeatedly crashes and is being restarted, leading to service disruption.",
+      "explained": true
+    }
+  ]
+}

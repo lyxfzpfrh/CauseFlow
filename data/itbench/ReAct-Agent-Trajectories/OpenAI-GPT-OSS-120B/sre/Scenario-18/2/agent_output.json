@@ -1,0 +1,109 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Pod/checkout-5dccddf8bb-9dn2q",
+      "contributing_factor": true,
+      "reasoning": "Pod entered CrashLoopBackOff and stopped serving, causing checkout service outage.",
+      "evidence": "CrashLoopBackOffPodsDetected alert (1 pod), pod status shows waiting reason CrashLoopBackOff, BackOff events count 52"
+    },
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": false,
+      "reasoning": "Deployment's replica became unavailable due to the failing pod.",
+      "evidence": "Deployment status: unavailableReplicas=1, MinimumReplicasUnavailable condition, linked to pod CrashLoopBackOff"
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Service received no requests because its pod was down.",
+      "evidence": "NoRequestsDetected alert for service checkout (warning)"
+    },
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": false,
+      "reasoning": "Downstream ad deployment experienced errors as checkout calls failed.",
+      "evidence": "RequestErrorRate alert for service ad (warning)"
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "Service observed non‑zero error rate due to failed calls to checkout.",
+      "evidence": "RequestErrorRate alert description shows error rate 0.00979 for ad"
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend showed high CPU throttling, likely a secondary symptom of increased retry traffic.",
+      "evidence": "CPUThrottlingHigh info alert for container frontend"
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend service may be impacted by upstream errors and throttling.",
+      "evidence": "CPUThrottlingHigh alert references frontend pod"
+    },
+    {
+      "name": "otel-demo/Namespace/otel-demo",
+      "contributing_factor": false,
+      "reasoning": "Namespace level alerts aggregate pod failures.",
+      "evidence": "CrashLoopBackOffPodsDetected alert at namespace level"
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Pod/checkout-5dccddf8bb-9dn2q",
+      "target": "otel-demo/Service/checkout",
+      "condition": "Pod CrashLoopBackOff stops serving requests",
+      "effect": "Checkout service receives zero traffic"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/ad",
+      "condition": "Checkout endpoints fail, causing downstream call errors",
+      "effect": "Ad service error rate rises above zero"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Clients retry failed checkout calls, increasing load",
+      "effect": "Frontend experiences high CPU throttling"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate in a service exceeded threshold, indicating failing downstream calls.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "Service received no requests during the window, usually due to upstream outage.",
+      "explained": true
+    },
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "One or more pods in the namespace are in CrashLoopBackOff, causing availability loss.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Suppresses noisy info‑level alerts while higher severity alerts are firing.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPU throttling percentage for a container exceeds a warning threshold.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "Specific pod is in CrashLoopBackOff waiting state.",
+      "explained": true
+    },
+    {
+      "alert": "KubeClientCertificateExpiration",
+      "explanation": "Client certificate used by apiserver is nearing expiration; unrelated to incident.",
+      "explained": true
+    }
+  ]
+}

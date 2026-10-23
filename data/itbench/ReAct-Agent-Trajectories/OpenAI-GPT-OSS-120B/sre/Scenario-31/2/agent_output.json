@@ -1,0 +1,53 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/checkoutservice",
+      "contributing_factor": true,
+      "reasoning": "checkoutservice pods entered CrashLoopBackOff, preventing order processing.",
+      "evidence": "Firing alert 'KubePodCrashLooping' for checkoutservice; trace errors showing checkout spans failed; CPU throttling metrics spikes."
+    },
+    {
+      "name": "otel-demo/Deployment/cartservice",
+      "contributing_factor": false,
+      "reasoning": "Cartservice received 5xx from checkoutservice and propagated errors to the frontend.",
+      "evidence": "Trace shows cart->checkout calls returning error; frontend alert 'HighErrorRate' spikes after checkout failure."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend served HTTP 500 responses because downstream checkoutservice was unavailable.",
+      "evidence": "HighErrorRate alert on frontend; logs contain 'HTTP 500' entries; trace shows failed downstream calls."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/checkoutservice",
+      "target": "otel-demo/Deployment/cartservice",
+      "condition": "checkoutservice pods crash and return HTTP 500",
+      "effect": "cartservice requests to checkout fail, raising its error count"
+    },
+    {
+      "source": "otel-demo/Deployment/cartservice",
+      "target": "otel-demo/Service/frontend",
+      "condition": "cartservice propagates checkout errors as HTTP 500",
+      "effect": "frontend returns 500 to users, triggering high error rate alert"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "Pods repeatedly fail to start and enter CrashLoopBackOff, indicating a runtime error.",
+      "explained": true
+    },
+    {
+      "alert": "HighErrorRate",
+      "explanation": "Service observed a surge in 5xx responses, often caused by downstream failures.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Container CPU throttling exceeded 80%, leading to latency spikes.",
+      "explained": true
+    }
+  ]
+}

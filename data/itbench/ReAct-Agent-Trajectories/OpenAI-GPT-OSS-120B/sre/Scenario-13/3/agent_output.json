@@ -1,0 +1,46 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Pod/ad-5c9d8f9b8c-6j9hq",
+      "contributing_factor": true,
+      "reasoning": "Pod entered CrashLoopBackOff causing service outage.",
+      "evidence": "pod_crashloopbackoff alert, ad pod log error at 12:05, high CPU/memory alerts on same pod."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend could not route to backend ad pods, leading to service unavailable.",
+      "evidence": "service_unavailable alert, frontend log error at 12:07, dependency on ad service."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Pod/ad-5c9d8f9b8c-6j9hq",
+      "target": "otel-demo/Service/frontend",
+      "condition": "ad pod CrashLoopBackOff makes backend unavailable",
+      "effect": "frontend service reports ServiceUnavailable"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "K8sPodCrashLoopBackOff",
+      "explanation": "Pod ad is repeatedly crashing, triggering CrashLoopBackOff.",
+      "explained": true
+    },
+    {
+      "alert": "K8sServiceUnavailable",
+      "explanation": "Frontend service cannot reach backend pods due to CrashLoopBackOff.",
+      "explained": true
+    },
+    {
+      "alert": "K8s",
+      "explanation": "CPU usage high on ad pod indicates resource pressure before crash.",
+      "explained": true
+    },
+    {
+      "alert": "K8s",
+      "explanation": "Memory usage high on ad pod indicates resource pressure before crash.",
+      "explained": true
+    }
+  ]
+}

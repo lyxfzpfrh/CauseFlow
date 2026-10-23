@@ -1,0 +1,70 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/checkoutservice",
+      "contributing_factor": true,
+      "reasoning": "The checkoutservice pods entered CrashLoopBackOff, causing the service to be unavailable.",
+      "evidence": "Alert \"KubePodCrashLoopBackOff\" fired for checkoutservice pods from 2023-07-11T14:02:00Z to 2023-07-11T14:45:00Z; pod event logs show repeated container restarts."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend received 5xx responses because it could not reach checkoutservice.",
+      "evidence": "Alert \"KubeServiceUnavailable\" for frontend triggered at 2023-07-11T14:05:00Z; trace spans show timeout errors when calling checkoutservice."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend deployment pods remained running but were impacted by downstream checkout failures.",
+      "evidence": "No crash or restart events for frontend pods; only increased latency metrics observed."
+    },
+    {
+      "name": "otel-demo/Service/checkoutservice",
+      "contributing_factor": false,
+      "reasoning": "Service object mirrors the failing deployment; its endpoints became empty, propagating failure.",
+      "evidence": "Kubernetes Endpoints object for checkoutservice empty during incident period."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/checkoutservice",
+      "target": "otel-demo/Service/checkoutservice",
+      "condition": "Pods crash and stop providing ready endpoints",
+      "effect": "Service has no ready endpoints, causing DNS resolution failures"
+    },
+    {
+      "source": "otel-demo/Service/checkoutservice",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Frontend calls checkoutservice via service DNS",
+      "effect": "Calls time out, frontend returns HTTP 500 to users"
+    },
+    {
+      "source": "otel-demo/Service/frontend",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "Frontend pods receive high error rate from upstream",
+      "effect": "Increased latency and 5xx metrics observed on frontend pods"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "KubePodCrashLoopBackOff",
+      "explanation": "Pods of checkoutservice repeatedly failed to start, entering CrashLoopBackOff.",
+      "explained": true
+    },
+    {
+      "alert": "KubeServiceUnavailable",
+      "explanation": "Frontend service returned 5xx errors because its downstream checkoutservice had no ready endpoints.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodHighCpuUsage",
+      "explanation": "",
+      "explained": false
+    },
+    {
+      "alert": "KubePodMemoryPressure",
+      "explanation": "",
+      "explained": false
+    }
+  ]
+}

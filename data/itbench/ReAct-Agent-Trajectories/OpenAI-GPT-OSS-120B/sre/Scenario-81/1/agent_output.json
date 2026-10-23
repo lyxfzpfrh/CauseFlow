@@ -1,0 +1,75 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Service/flagd",
+      "contributing_factor": true,
+      "reasoning": "Flagd returned error status in many spans, causing downstream services to fail.",
+      "evidence": "Trace metrics show STATUS_CODE_ERROR for flagd.evaluation spans from cart and recommendation services."
+    },
+    {
+      "name": "otel-demo/Service/cart",
+      "contributing_factor": true,
+      "reasoning": "Cart service observed flagd errors and emitted its own errors.",
+      "evidence": "Trace spans for cart contain STATUS_CODE_ERROR on ResolveBoolean and POST /CartService calls."
+    },
+    {
+      "name": "otel-demo/Service/recommendation",
+      "contributing_factor": true,
+      "reasoning": "Recommendation service also suffered flagd errors, raising its error rate.",
+      "evidence": "Trace metrics for recommendation show STATUS_CODE_ERROR on flagd evaluation spans."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout depended on cart and recommendation; their failures propagated.",
+      "evidence": "Trace paths include checkout→cart and checkout→recommendation with error spans."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend returned 5xx errors due to downstream checkout failures.",
+      "evidence": "RequestErrorRate and RequestLatency alerts fired around 17:59 for frontend service."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Service/flagd",
+      "target": "otel-demo/Service/cart",
+      "condition": "Flagd ResolveBoolean calls returned error status",
+      "effect": "Cart service errors increased"
+    },
+    {
+      "source": "otel-demo/Service/flagd",
+      "target": "otel-demo/Service/recommendation",
+      "condition": "Flagd ResolveBoolean calls returned error status",
+      "effect": "Recommendation service errors increased"
+    },
+    {
+      "source": "otel-demo/Service/cart",
+      "target": "otel-demo/Service/checkout",
+      "condition": "Cart service returned errors on GetCart/AddItem",
+      "effect": "Checkout failures rose"
+    },
+    {
+      "source": "otel-demo/Service/recommendation",
+      "target": "otel-demo/Service/checkout",
+      "condition": "Recommendation errors on flag checks",
+      "effect": "Checkout experienced additional errors"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Checkout errors caused failed order processing",
+      "effect": "Frontend observed high error rate and latency"
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "RequestErrorRate", "explanation": "High error rate on frontend due to downstream failures.", "explained": true},
+    {"alert": "RequestLatency", "explanation": "Increased latency on frontend requests as downstream services slowed or errored.", "explained": true},
+    {"alert": "InfoInhibitor", "explanation": "", "explained": false},
+    {"alert": "KubeControllerManagerDown", "explanation": "", "explained": false},
+    {"alert": "KubeSchedulerDown", "explanation": "", "explained": false},
+    {"alert": "Watchdog", "explanation": "", "explained": false},
+    {"alert": "PrometheusNotConnectedToAlertmanagers", "explanation": "", "explained": false}
+  ]
+}

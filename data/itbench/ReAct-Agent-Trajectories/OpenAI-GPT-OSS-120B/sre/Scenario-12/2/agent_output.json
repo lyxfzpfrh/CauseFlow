@@ -1,0 +1,58 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/cart",
+      "contributing_factor": true,
+      "reasoning": "Cart pods entered CrashLoopBackOff due to OOMKilled, causing the cart service to be unavailable.",
+      "evidence": "Alert KubePodCrashLoopBackOff on cart pods, OOMKilled events, high memory usage metric, error logs from cart deployment."
+    },
+    {
+      "name": "otel-demo/Service/cart",
+      "contributing_factor": false,
+      "reasoning": "Service endpoint failed because its backing pods were crashing.",
+      "evidence": "Service had no ready endpoints, observed by alert KubeServiceUnreachable and traces showing failed calls."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend received 5xx errors when calling cart service, degrading user experience.",
+      "evidence": "Trace error tree shows increased latency and errors from frontend -> cart, alert KubePodHigh5xx on frontend pods."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/cart",
+      "target": "otel-demo/Service/cart",
+      "condition": "Pods crash and become unavailable",
+      "effect": "Service reports no ready endpoints"
+    },
+    {
+      "source": "otel-demo/Service/cart",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "Frontend calls cart and receives connection errors",
+      "effect": "Frontend returns HTTP 5xx to clients"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "KubePodCrashLoopBackOff",
+      "explanation": "Pods of cart deployment repeatedly failed to start due to OOMKilled, triggering CrashLoopBackOff.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodOOMKilled",
+      "explanation": "Memory usage exceeded container limits on cart pods, causing OOM termination.",
+      "explained": true
+    },
+    {
+      "alert": "KubeServiceUnreachable",
+      "explanation": "Cart service had no ready endpoints because its pods were down.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodHigh5xx",
+      "explanation": "Frontend pods returned many 5xx responses caused by downstream cart failures.",
+      "explained": true
+    }
+  ]
+}

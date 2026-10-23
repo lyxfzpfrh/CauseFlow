@@ -1,0 +1,98 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Namespace/otel-demo",
+      "contributing_factor": true,
+      "reasoning": "Namespace exceeded its resource quota, preventing new pods from being scheduled.",
+      "evidence": "KubeQuotaExceeded alert fired 50 times for otel-demo namespace."
+    },
+    {
+      "name": "otel-demo/Deployment/cart",
+      "contributing_factor": false,
+      "reasoning": "Cart deployment could not scale because pods were blocked by the quota limit.",
+      "evidence": "KubeDeploymentReplicasMismatch and RequestErrorRate alerts reference cart‑service."
+    },
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout deployment suffered replica mismatches due to the same quota restriction.",
+      "evidence": "KubeDeploymentReplicasMismatch alert includes checkout‑service."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Frontend‑proxy observed high request error rates as upstream services were unavailable.",
+      "evidence": "RequestErrorRate alert (206 occurrences) for service frontend-proxy."
+    },
+    {
+      "name": "otel-demo/Service/cart",
+      "contributing_factor": false,
+      "reasoning": "Cart service generated NoRequestsDetected alerts indicating it received no traffic.",
+      "evidence": "NoRequestsDetected alert (67 occurrences) for service cart."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout service also showed NoRequestsDetected alerts due to upstream failures.",
+      "evidence": "NoRequestsDetected alert (67 occurrences) for service checkout."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Namespace/otel-demo",
+      "target": "otel-demo/Deployment/cart",
+      "condition": "Resource quota exceeded prevented pod creation",
+      "effect": "Cart deployment replica count dropped, causing service errors"
+    },
+    {
+      "source": "otel-demo/Namespace/otel-demo",
+      "target": "otel-demo/Deployment/checkout",
+      "condition": "Resource quota exceeded prevented pod creation",
+      "effect": "Checkout deployment replica count dropped, causing service errors"
+    },
+    {
+      "source": "otel-demo/Deployment/cart",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Cart pods unavailable, requests to frontend‑proxy failed",
+      "effect": "Frontend‑proxy error rate increased (RequestErrorRate alert)"
+    },
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Checkout pods unavailable, requests to frontend‑proxy failed",
+      "effect": "Frontend‑proxy error rate increased (RequestErrorRate alert)"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "High error rate in requests to affected services, caused by upstream pods failing to start.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "Service received no traffic, likely because upstream dependencies were down.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Info‑level alerts were suppressed; presence indicates other higher‑severity alerts were active.",
+      "explained": true
+    },
+    {
+      "alert": "KubeQuotaExceeded",
+      "explanation": "Namespace resource quota exceeded, preventing pod scheduling.",
+      "explained": true
+    },
+    {
+      "alert": "KubeDeploymentReplicasMismatch",
+      "explanation": "Desired replica count differs from available pods, caused by quota blockage.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "CPU throttling observed on some pods, likely a symptom of resource contention.",
+      "explained": true
+    }
+  ]
+}

@@ -1,0 +1,236 @@
+{
+  "metadata": {
+    "scenario": "Scenario-34",
+    "run": 2,
+    "duration_seconds": 0,
+    "inference_count": 0,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "valkey-pod-1"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "otel-demo/Pod/prometheus-kube-prometheus-kubelet",
+            "matches_gt": false,
+            "matched_to": null
+          }
+        ],
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The Ground Truth root cause is 'valkey-pod-1' (or its alias 'valkey-service-1'). The model predicted 'otel-demo/Pod/prometheus-kube-prometheus-kubelet' as the root cause, which does not match the GT entity or its alias. Therefore, there are 0 correct matches."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0,
+        "justification": "The model did not correctly identify any root cause entities, so the reasoning accuracy score is 0.",
+        "details": {}
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components grouped by service. The GT path has 5 components and the model path has 6. The Longest Common Subsequence (LCS) between the two paths is 3 components ('Cart Service Component', 'Frontend Service Component', 'Frontend-Proxy Service Component'). With a TP of 3, a model path length of 6, and a GT path length of 5, the precision and recall are calculated accordingly.",
+        "details": {
+          "normalization_map": {
+            "otel-demo/Deployment/cart": "cart-service-1",
+            "otel-demo/Deployment/frontend": "frontend-service-1",
+            "otel-demo/Deployment/frontend-proxy": "frontend-proxy-service-1",
+            "otel-demo/Deployment/checkout": "checkout-service-1",
+            "otel-demo/Pod/prometheus-kube-prometheus-kubelet": "otel-demo/Pod/prometheus-kube-prometheus-kubelet",
+            "otel-demo/Deployment/shipping": "otel-demo/Deployment/shipping"
+          },
+          "semantic_components": {
+            "Valkey Component": [
+              "valkey-pod-1",
+              "valkey-service-1"
+            ],
+            "Cart Service Component": [
+              "cart-service-1",
+              "cart-pod-1"
+            ],
+            "Checkout Service Component": [
+              "checkout-service-1",
+              "checkout-pod-1"
+            ],
+            "Frontend Service Component": [
+              "frontend-service-1",
+              "frontend-pod-1"
+            ],
+            "Frontend-Proxy Service Component": [
+              "frontend-proxy-service-1",
+              "frontend-proxy-pod-1"
+            ],
+            "Prometheus Kubelet Component": [
+              "otel-demo/Pod/prometheus-kube-prometheus-kubelet"
+            ],
+            "Shipping Component": [
+              "otel-demo/Deployment/shipping"
+            ]
+          },
+          "contracted_gt_path": [
+            "Valkey Component",
+            "Cart Service Component",
+            "Checkout Service Component",
+            "Frontend Service Component",
+            "Frontend-Proxy Service Component"
+          ],
+          "contracted_model_path": [
+            "Prometheus Kubelet Component",
+            "Cart Service Component",
+            "Frontend Service Component",
+            "Frontend-Proxy Service Component",
+            "Checkout Service Component",
+            "Shipping Component"
+          ],
+          "lcs_components": [
+            "Cart Service Component",
+            "Frontend Service Component",
+            "Frontend-Proxy Service Component"
+          ],
+          "true_positives_TP": 3,
+          "model_path_length": 6,
+          "gt_path_length": 5
+        },
+        "precision": 0.5,
+        "recall": 0.6,
+        "calculation": 0.5454545454545454
+      },
+      "fault_localization_component_identification": {
+        "calculation": 1,
+        "justification": "The first performance failure in GT.propagations is: 'Cart service experiences high latency and errors when accessing cart data'. Using the Priority 4 rule (Default to Target), the first impacted component is the target of the propagation, 'cart-service-1', which belongs to the 'Cart Service Component'. This component was found in the model's contracted path.",
+        "details": {
+          "gt_first_impacted_component": "Cart Service Component",
+          "effect_used": "Cart service experiences high latency and errors when accessing cart data",
+          "priority_rule_applied": "Priority 4",
+          "found_in_model_path": true
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": 0,
+        "justification": "The model's predicted root cause entity 'otel-demo/Pod/prometheus-kube-prometheus-kubelet' was incorrect. To calculate partial credit, we check if its corresponding semantic component ('Prometheus Kubelet Component') is on the contracted GT path. It is not. Therefore, the partial credit score is 0.",
+        "details": [
+          {
+            "entity": "otel-demo/Pod/prometheus-kube-prometheus-kubelet",
+            "metric1_is_correct": false,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "For precision, the model's predicted root cause component ('Prometheus Kubelet Component') is not on the contracted GT path, so its score is 0. The average precision is 0. For recall, the GT root cause component ('Valkey Component') has an infinite hop distance to the model's predicted component (as it's not on the path), so its score is 0. The average recall is 0. The F1 score is therefore 0.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Pod/prometheus-kube-prometheus-kubelet",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "valkey-pod-1",
+            "is_on_path": true,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 5,
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The gt_path_length is 5. For precision, the model's predicted root cause component ('Prometheus Kubelet Component') is not on the contracted GT path, so its score is 0. The average precision is 0. For recall, the GT root cause component ('Valkey Component') has an infinite hop distance to the model's predicted component (as it's not on the path), so its score is 0. The average recall is 0. The F1 score is therefore 0.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Pod/prometheus-kube-prometheus-kubelet",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "valkey-pod-1",
+            "is_on_path": true,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      }
+    },
+    "incident_id": "Scenario-34",
+    "trial_id": "2"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 0.0,
+    "root_cause_entity_recall": 0.0,
+    "root_cause_entity_f1": 0,
+    "root_cause_reasoning": 0,
+    "propagation_chain": 0.5454545454545454,
+    "fault_localization_component_identification": 1,
+    "root_cause_reasoning_partial": 0,
+    "root_cause_proximity_no_fp_precision": 0.0,
+    "root_cause_proximity_no_fp_recall": 0.0,
+    "root_cause_proximity_no_fp_f1": 0,
+    "root_cause_proximity_with_fp_precision": 0.0,
+    "root_cause_proximity_with_fp_recall": 0.0,
+    "root_cause_proximity_with_fp_f1": 0,
+    "root_cause_entity_k_precision": 0.0,
+    "root_cause_entity_k_recall": 0.0,
+    "root_cause_entity_k_f1": 0.0,
+    "root_cause_entity_k@1_precision": 0.0,
+    "root_cause_entity_k@1_recall": 0.0,
+    "root_cause_entity_k@1_f1": 0.0,
+    "root_cause_entity_k@2_precision": 0.0,
+    "root_cause_entity_k@2_recall": 0.0,
+    "root_cause_entity_k@2_f1": 0.0,
+    "root_cause_entity_k@3_precision": 0.0,
+    "root_cause_entity_k@3_recall": 0.0,
+    "root_cause_entity_k@3_f1": 0.0,
+    "root_cause_entity_k@4_precision": 0.0,
+    "root_cause_entity_k@4_recall": 0.0,
+    "root_cause_entity_k@4_f1": 0.0,
+    "root_cause_entity_k@5_precision": 0.0,
+    "root_cause_entity_k@5_recall": 0.0,
+    "root_cause_entity_k@5_f1": 0.0
+  }
+}

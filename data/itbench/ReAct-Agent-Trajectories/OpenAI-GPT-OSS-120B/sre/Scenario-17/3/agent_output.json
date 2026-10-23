@@ -1,0 +1,74 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Service/product-catalog-service",
+      "contributing_factor": true,
+      "reasoning": "NetworkChaos was applied to product‑catalog causing packet loss and latency.",
+      "evidence": "Chaos events for otel-demo-product-catalog-network-delay in k8s_events; high RequestErrorRate and RequestLatency alerts for product‑catalog and downstream services."
+    },
+    {
+      "name": "otel-demo/Service/recommendation-service",
+      "contributing_factor": false,
+      "reasoning": "Calls product‑catalog; suffered increased errors and latency due to upstream chaos.",
+      "evidence": "NoRequestsDetected, RequestErrorRate, RequestLatency alerts for recommendation; topology shows recommendation → product‑catalog."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Directly calls product‑catalog; observed request errors and latency spikes.",
+      "evidence": "RequestErrorRate and RequestLatency alerts for frontend; topology shows frontend → product‑catalog."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Frontend‑proxy forwards traffic to frontend which hit degraded product‑catalog.",
+      "evidence": "RequestErrorRate alert for frontend‑proxy; upstream dependency on frontend."
+    },
+    {
+      "name": "otel-demo/Service/checkout-service",
+      "contributing_factor": false,
+      "reasoning": "Checkout calls product‑catalog; experienced latency and error spikes.",
+      "evidence": "RequestErrorRate and RequestLatency alerts for checkout; topology shows checkout → product‑catalog."
+    },
+    {
+      "name": "otel-demo/Service/fraud-detection-service",
+      "contributing_factor": false,
+      "reasoning": "Pod exhibited high CPU throttling, raising CPUThrottlingHigh alerts.",
+      "evidence": "CPUThrottlingHigh alerts; metric series container_cpu_cfs_throttled_periods_total for fraud‑detection pod."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Service/product-catalog-service",
+      "target": "otel-demo/Service/recommendation-service",
+      "condition": "Network delay and packet loss injected on product‑catalog",
+      "effect": "Recommendation saw 0 requests and high error rate/latency"
+    },
+    {
+      "source": "otel-demo/Service/product-catalog-service",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Network delay on product‑catalog",
+      "effect": "Frontend observed elevated error rate and latency"
+    },
+    {
+      "source": "otel-demo/Service/product-catalog-service",
+      "target": "otel-demo/Service/checkout-service",
+      "condition": "Network delay on product‑catalog",
+      "effect": "Checkout experienced request errors and latency spikes"
+    },
+    {
+      "source": "otel-demo/Service/frontend",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Frontend returned errors to its proxy",
+      "effect": "Frontend‑proxy generated RequestErrorRate alert"
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "RequestErrorRate", "explanation": "Error rate above threshold for a service, indicating downstream failures.", "explained": true},
+    {"alert": "RequestLatency", "explanation": "Observed latency exceeds SLA, often due to upstream delays.", "explained": true},
+    {"alert": "NoRequestsDetected", "explanation": "Service received zero traffic, usually because upstream calls failed.", "explained": true},
+    {"alert": "CPUThrottlingHigh", "explanation": "Container CPU throttling > threshold, showing CPU pressure.", "explained": true},
+    {"alert": "InfoInhibitor", "explanation": "Informational alert used to suppress other alerts; not a failure.", "explained": true}
+  ]
+}
+

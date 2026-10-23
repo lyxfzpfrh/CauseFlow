@@ -1,0 +1,244 @@
+{
+  "metadata": {
+    "scenario": "Scenario-33",
+    "run": 1,
+    "duration_seconds": 0,
+    "inference_count": 0,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "ad-pod-1"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "otel-demo/Deployment/ad",
+            "matches_gt": true,
+            "matched_to": "ad-pod-1"
+          },
+          {
+            "entity": "otel-demo/Deployment/cart",
+            "matches_gt": false
+          }
+        ],
+        "calculation_precision": 0.5,
+        "calculation_recall": 1.0,
+        "calculation_f1": 0.6666666666666666,
+        "justification": "The Ground Truth has one root cause entity, 'ad-pod-1'. The model predicted two root cause entities. 'otel-demo/Deployment/ad' correctly normalizes to 'ad-pod-1', resulting in one true positive. 'otel-demo/Deployment/cart' is a false positive as it does not correspond to any GT entity. This yields a recall of 1/1 and a precision of 1/2."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0.0,
+        "justification": "The model correctly identified one root cause entity ('otel-demo/Deployment/ad'). However, its reasoning 'cannot schedule its pod because all nodes have a control\u2011plane taint and the pod has no toleration' is incorrect. The ground truth cause is 'invalid node selector'. These are distinct Kubernetes scheduling failure reasons, so the reasoning score is 0.",
+        "details": {
+          "entity_reasoning_scores": [
+            {
+              "entity": "otel-demo/Deployment/ad",
+              "score": 0,
+              "gt_condition": "Ad deployment pods cannot be scheduled due to invalid node selector",
+              "model_reasoning": "Deployment ad cannot schedule its pod because all nodes have a control\u2011plane taint and the pod has no toleration."
+            }
+          ]
+        }
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components grouped by application service. The GT path is [Ad, Frontend, Frontend Proxy] and the model path is [Ad, Frontend]. With a Longest Common Subsequence (LCS) of [Ad, Frontend], the TP is 2. The model path length is 2 and GT path length is 3.",
+        "details": {
+          "normalization_map": {
+            "otel-demo/Deployment/ad": "ad-pod-1",
+            "otel-demo/Pod/ad-dd7f45975-mw86p": "ad-pod-1",
+            "otel-demo/Service/frontend": "frontend-service-1"
+          },
+          "semantic_components": {
+            "Ad Service Component": [
+              "ad-pod-1",
+              "ad-service-1"
+            ],
+            "Frontend Service Component": [
+              "frontend-pod-1",
+              "frontend-service-1"
+            ],
+            "Frontend Proxy Component": [
+              "frontend-proxy-pod-1",
+              "frontend-proxy-service-1"
+            ]
+          },
+          "contracted_gt_path": [
+            "Ad Service Component",
+            "Frontend Service Component",
+            "Frontend Proxy Component"
+          ],
+          "contracted_model_path": [
+            "Ad Service Component",
+            "Frontend Service Component"
+          ],
+          "lcs_components": [
+            "Ad Service Component",
+            "Frontend Service Component"
+          ],
+          "true_positives_TP": 2,
+          "model_path_length": 2,
+          "gt_path_length": 3
+        },
+        "precision": 1.0,
+        "recall": 0.6666666666666666,
+        "calculation": 0.8
+      },
+      "fault_localization_component_identification": {
+        "calculation": 1,
+        "justification": "The first performance failure in GT.propagations is: 'Ad service has no healthy endpoints, becomes completely unavailable'. Using the Priority 1 rule (explicit component in effect), the first impacted component is the 'Ad Service Component'. This component was found in the model's contracted path.",
+        "details": {
+          "gt_first_impacted_component": "Ad Service Component",
+          "effect_used": "Ad service has no healthy endpoints, becomes completely unavailable",
+          "priority_rule_applied": "Priority 1",
+          "found_in_model_path": true
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": 0,
+        "justification": "The model predicted two root causes. Entity 'otel-demo/Deployment/ad' was a correct entity match, so its score is copied from the strict reasoning metric, which was 0. Entity 'otel-demo/Deployment/cart' was a false positive and its component is not on the GT path, so its partial credit is 0. The maximum of these scores is 0.",
+        "details": [
+          {
+            "entity": "otel-demo/Deployment/ad",
+            "metric1_is_correct": true,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 0
+          },
+          {
+            "entity": "otel-demo/Deployment/cart",
+            "metric1_is_correct": false,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 0.5,
+        "calculation_recall": 1.0,
+        "calculation_f1": 0.6666666666666666,
+        "justification": "Precision: The model predicted two root cause components. 'Ad Service Component' has a hop_away of 0 to the GT root cause, for a score of 1. 'Cart Component (FP)' is not on the GT path, for a score of 0. The average precision score is (1+0)/2=0.5. Recall: The single GT root cause component ('Ad Service Component') has a minimum hop_away of 0 to a predicted component, for a score of 1. The average recall score is 1/1=1.0.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/ad",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          },
+          {
+            "entity": "otel-demo/Deployment/cart",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "ad-pod-1",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 3,
+        "calculation_precision": 0.5,
+        "calculation_recall": 1.0,
+        "calculation_f1": 0.6666666666666666,
+        "justification": "The contracted GT path length is 3. Precision: The model predicted two root cause components. 'Ad Service Component' has a hop_away of 0, for a score of 1/(1+0/3)=1. 'Cart Component (FP)' is not on the GT path, for a score of 0. The average precision score is (1+0)/2=0.5. Recall: The single GT root cause component ('Ad Service Component') has a minimum hop_away of 0, for a score of 1/(1+0/3)=1. The average recall score is 1/1=1.0.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/ad",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          },
+          {
+            "entity": "otel-demo/Deployment/cart",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "ad-pod-1",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 0.5,
+        "calculation_recall": 1.0,
+        "calculation_f1": 0.6666666666666666
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 0.5,
+        "calculation_recall": 1.0,
+        "calculation_f1": 0.6666666666666666
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 0.5,
+        "calculation_recall": 1.0,
+        "calculation_f1": 0.6666666666666666
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 0.5,
+        "calculation_recall": 1.0,
+        "calculation_f1": 0.6666666666666666
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 0.5,
+        "calculation_recall": 1.0,
+        "calculation_f1": 0.6666666666666666
+      }
+    },
+    "incident_id": "Scenario-33",
+    "trial_id": "1"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 0.5,
+    "root_cause_entity_recall": 1.0,
+    "root_cause_entity_f1": 0.6666666666666666,
+    "root_cause_reasoning": 0.0,
+    "propagation_chain": 0.8,
+    "fault_localization_component_identification": 1,
+    "root_cause_reasoning_partial": 0,
+    "root_cause_proximity_no_fp_precision": 0.5,
+    "root_cause_proximity_no_fp_recall": 1.0,
+    "root_cause_proximity_no_fp_f1": 0.6666666666666666,
+    "root_cause_proximity_with_fp_precision": 0.5,
+    "root_cause_proximity_with_fp_recall": 1.0,
+    "root_cause_proximity_with_fp_f1": 0.6666666666666666,
+    "root_cause_entity_k_precision": 0.5,
+    "root_cause_entity_k_recall": 1.0,
+    "root_cause_entity_k_f1": 0.6666666666666666,
+    "root_cause_entity_k@1_precision": 1.0,
+    "root_cause_entity_k@1_recall": 1.0,
+    "root_cause_entity_k@1_f1": 1.0,
+    "root_cause_entity_k@2_precision": 0.5,
+    "root_cause_entity_k@2_recall": 1.0,
+    "root_cause_entity_k@2_f1": 0.6666666666666666,
+    "root_cause_entity_k@3_precision": 0.5,
+    "root_cause_entity_k@3_recall": 1.0,
+    "root_cause_entity_k@3_f1": 0.6666666666666666,
+    "root_cause_entity_k@4_precision": 0.5,
+    "root_cause_entity_k@4_recall": 1.0,
+    "root_cause_entity_k@4_f1": 0.6666666666666666,
+    "root_cause_entity_k@5_precision": 0.5,
+    "root_cause_entity_k@5_recall": 1.0,
+    "root_cause_entity_k@5_f1": 0.6666666666666666
+  }
+}

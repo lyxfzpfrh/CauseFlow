@@ -1,0 +1,84 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/checkoutservice",
+      "contributing_factor": true,
+      "reasoning": "Pod checkoutservice-6ffbdd6bd5-ts8s2 repeatedly crashes (CrashLoopBackOff) preventing the service from serving traffic.",
+      "evidence": "Alert KubePodCrashLoopBackOff (critical) on pod checkoutservice-6ffbdd6bd5-ts8s2; events show BackOff restarting container; logs show ERROR connecting to paymentservice."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": true,
+      "reasoning": "Frontend pod runs out of memory and is OOMKilled, causing the service to lose all ready replicas.",
+      "evidence": "Alert KubePodOOMKilled (warning) on pod frontend-5ff783dbd8-4c9bx; logs show WARN memory high and ERROR OOM kill."
+    },
+    {
+      "name": "otel-demo/Pod/checkoutservice-6ffbdd6bd5-ts8s2",
+      "contributing_factor": false,
+      "reasoning": "Pod is the direct symptom of the CrashLoopBackOff caused by the deployment failure.",
+      "evidence": "Same alerts and events as deployment cause."
+    },
+    {
+      "name": "otel-demo/Service/checkoutservice",
+      "contributing_factor": false,
+      "reasoning": "Service has no ready endpoints because its pods are crashing, leading to downstream request failures.",
+      "evidence": "Pods in CrashLoopBackOff; logs from frontend show timeout when calling checkoutservice."
+    },
+    {
+      "name": "otel-demo/Pod/frontend-5ff783dbd8-4c9bx",
+      "contributing_factor": false,
+      "reasoning": "Pod is OOMKilled, a symptom of the deployment's memory pressure.",
+      "evidence": "Alert KubePodOOMKilled and log OOM messages."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Service loses ready endpoints after its pod is OOMKilled, causing user‑facing failures.",
+      "evidence": "No ready pods after OOM event; warning alert present."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/checkoutservice",
+      "target": "otel-demo/Pod/checkoutservice-6ffbdd6bd5-ts8s2",
+      "condition": "Container repeatedly crashes causing CrashLoopBackOff",
+      "effect": "Pod never becomes Ready"
+    },
+    {
+      "source": "otel-demo/Pod/checkoutservice-6ffbdd6bd5-ts8s2",
+      "target": "otel-demo/Service/checkoutservice",
+      "condition": "No Ready endpoints in pod",
+      "effect": "Service cannot serve requests"
+    },
+    {
+      "source": "otel-demo/Service/checkoutservice",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Frontend depends on checkoutservice and receives timeouts",
+      "effect": "Frontend experiences increased latency/errors"
+    },
+    {
+      "source": "otel-demo/Deployment/frontend",
+      "target": "otel-demo/Pod/frontend-5ff783dbd8-4c9bx",
+      "condition": "Memory usage exceeds limit leading to OOM kill",
+      "effect": "Pod terminated and restarted"
+    },
+    {
+      "source": "otel-demo/Pod/frontend-5ff783dbd8-4c9bx",
+      "target": "otel-demo/Service/frontend",
+      "condition": "No Ready pod after OOM",
+      "effect": "Service unavailable to users"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "KubePodCrashLoopBackOff",
+      "explanation": "Critical alert indicating a pod repeatedly crashes, preventing it from becoming Ready.",
+      "explained": true
+    },
+    {
+      "alert": "KubePodOOMKilled",
+      "explanation": "Warning alert that a pod was terminated due to out‑of‑memory, causing loss of service capacity.",
+      "explained": true
+    }
+  ]
+}

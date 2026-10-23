@@ -1,0 +1,219 @@
+{
+  "metadata": {
+    "scenario": "Scenario-1",
+    "run": 1,
+    "duration_seconds": 0,
+    "inference_count": 0,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "load-generator-pod-1",
+          "load-generator-deployment-1",
+          "flagd-config-1"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "otel-demo/Deployment/cart",
+            "matches_gt": false,
+            "matched_to": null
+          }
+        ],
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The ground truth has two root cause groups: 'flagd-config-1' and the alias group containing 'load-generator-pod-1' and 'load-generator-deployment-1'. The model predicted 'otel-demo/Deployment/cart' as the root cause. This entity does not match any of the filters for the ground truth entities or their aliases. Therefore, no root causes were correctly identified. Precision is 0/1, Recall is 0/2, and F1 is 0."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0,
+        "justification": "The model did not correctly identify any of the ground truth root cause entities. Therefore, the reasoning accuracy score is 0.",
+        "details": {}
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components. The GT path is ['Flagd Config Component', 'Load Generator Component', 'Frontend Proxy Component'] and the model path is ['Cart Component', 'Checkout Component']. There are no common components between the two paths. With a TP of 0, model path length of 2, and GT path length of 3, the precision, recall, and F1 scores are all 0.",
+        "details": {
+          "normalization_map": {},
+          "semantic_components": {
+            "Flagd Config Component": [
+              "flagd-config-1"
+            ],
+            "Load Generator Component": [
+              "load-generator-pod-1",
+              "load-generator-deployment-1",
+              "load-generator-service-1"
+            ],
+            "Frontend Proxy Component": [
+              "frontend-proxy-service-1",
+              "frontend-proxy-pod-1"
+            ]
+          },
+          "contracted_gt_path": [
+            "Flagd Config Component",
+            "Load Generator Component",
+            "Frontend Proxy Component"
+          ],
+          "contracted_model_path": [
+            "Cart Component",
+            "Checkout Component"
+          ],
+          "lcs_components": [],
+          "true_positives_TP": 0,
+          "model_path_length": 2,
+          "gt_path_length": 3
+        },
+        "precision": 0.0,
+        "recall": 0.0,
+        "calculation": 0
+      },
+      "fault_localization_component_identification": {
+        "calculation": 0,
+        "justification": "The first performance failure in GT.propagations is: 'frontend-proxy service error rate is above threshold'. Using the Priority 1 rule (explicit component in effect), the first impacted component is 'Frontend Proxy Component'. This component was not found in the model's contracted path ['Cart Component', 'Checkout Component'].",
+        "details": {
+          "gt_first_impacted_component": "Frontend Proxy Component",
+          "effect_used": "frontend-proxy service error rate is above threshold",
+          "priority_rule_applied": "Priority 1",
+          "found_in_model_path": false
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": null,
+        "justification": "The predicted root cause entity 'otel-demo/Deployment/cart' did not match a GT root cause. To calculate partial credit, we check if its semantic component ('Cart Component') is on the contracted GT path. The GT path is ['Flagd Config Component', 'Load Generator Component', 'Frontend Proxy Component']. Since 'Cart Component' is not on the path, the partial credit is 0.",
+        "details": [
+          {
+            "entity": "otel-demo/Deployment/cart",
+            "metric1_is_correct": false,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "For precision, the single model-predicted root cause component ('Cart Component') is not on the GT path, so its score is 0. The average is 0. For recall, the distances from the two GT root cause components ('Flagd Config Component', 'Load Generator Component') to the model's component are infinite as the model component is not on the path. Both scores are 0. The average is 0. The F1 score is 0.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/cart",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "flagd-config-1",
+            "is_on_path": true,
+            "hop_away": null,
+            "entity_score": 0
+          },
+          {
+            "gt_entity": "load-generator-pod-1",
+            "is_on_path": true,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 3,
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The gt_path_length is 3. For precision, the single model-predicted root cause component ('Cart Component') is not on the GT path, so its score is 0. The average is 0. For recall, the distances from the two GT root cause components ('Flagd Config Component', 'Load Generator Component') to the model's component are infinite as the model component is not on the path. Both scores are 0. The average is 0. The F1 score is 0.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/cart",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "flagd-config-1",
+            "is_on_path": true,
+            "hop_away": null,
+            "entity_score": 0
+          },
+          {
+            "gt_entity": "load-generator-pod-1",
+            "is_on_path": true,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      }
+    },
+    "incident_id": "Scenario-1",
+    "trial_id": "1"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 0.0,
+    "root_cause_entity_recall": 0.0,
+    "root_cause_entity_f1": 0,
+    "root_cause_reasoning": 0,
+    "propagation_chain": 0,
+    "fault_localization_component_identification": 0,
+    "root_cause_reasoning_partial": null,
+    "root_cause_proximity_no_fp_precision": 0.0,
+    "root_cause_proximity_no_fp_recall": 0.0,
+    "root_cause_proximity_no_fp_f1": 0,
+    "root_cause_proximity_with_fp_precision": 0.0,
+    "root_cause_proximity_with_fp_recall": 0.0,
+    "root_cause_proximity_with_fp_f1": 0,
+    "root_cause_entity_k_precision": 0.0,
+    "root_cause_entity_k_recall": 0.0,
+    "root_cause_entity_k_f1": 0.0,
+    "root_cause_entity_k@1_precision": 0.0,
+    "root_cause_entity_k@1_recall": 0.0,
+    "root_cause_entity_k@1_f1": 0.0,
+    "root_cause_entity_k@2_precision": 0.0,
+    "root_cause_entity_k@2_recall": 0.0,
+    "root_cause_entity_k@2_f1": 0.0,
+    "root_cause_entity_k@3_precision": 0.0,
+    "root_cause_entity_k@3_recall": 0.0,
+    "root_cause_entity_k@3_f1": 0.0,
+    "root_cause_entity_k@4_precision": 0.0,
+    "root_cause_entity_k@4_recall": 0.0,
+    "root_cause_entity_k@4_f1": 0.0,
+    "root_cause_entity_k@5_precision": 0.0,
+    "root_cause_entity_k@5_recall": 0.0,
+    "root_cause_entity_k@5_f1": 0.0
+  }
+}

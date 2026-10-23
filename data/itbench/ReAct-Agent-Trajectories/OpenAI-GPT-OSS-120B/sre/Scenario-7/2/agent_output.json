@@ -1,0 +1,78 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Pod/frontend-675fd7b5c5-sn9gc",
+      "contributing_factor": true,
+      "reasoning": "Pod shows >25 % CPU throttling, causing latency and request errors in downstream services.",
+      "evidence": "CPUThrottlingHigh alerts (info) for container frontend; metric analysis shows high throttle_pct; request error rate alerts for services."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend service becomes unavailable because its pod is throttled, leading to 5xx responses upstream.",
+      "evidence": "RequestErrorRate alerts for frontend-proxy and recommendation services referencing frontend failures."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Proxy forwards traffic to frontend; receives high error rate when frontend pod is throttled.",
+      "evidence": "RequestErrorRate alerts (warning) for frontend-proxy with non‑zero error rate."
+    },
+    {
+      "name": "otel-demo/Service/recommendation",
+      "contributing_factor": false,
+      "reasoning": "Recommendation service depends on frontend; its request error rate spikes when frontend is throttled.",
+      "evidence": "RequestErrorRate alerts (warning) for recommendation service."
+    },
+    {
+      "name": "otel-demo/Service/cart",
+      "contributing_factor": false,
+      "reasoning": "Cart service calls frontend for product catalog; observed error rate increase due to frontend throttling.",
+      "evidence": "RequestErrorRate alerts (warning) for cart service."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Pod/frontend-675fd7b5c5-sn9gc",
+      "target": "otel-demo/Service/frontend",
+      "condition": "CPU throttling >25 % reduces request processing capacity",
+      "effect": "Frontend returns latency/500 errors, making the service unstable"
+    },
+    {
+      "source": "otel-demo/Service/frontend",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Frontend fails to respond to proxy requests",
+      "effect": "Proxy logs increased error rate and propagates 5xx to clients"
+    },
+    {
+      "source": "otel-demo/Service/frontend-proxy",
+      "target": "otel-demo/Service/recommendation",
+      "condition": "Proxy returns errors for recommendation calls",
+      "effect": "Recommendation service sees elevated request error rate"
+    },
+    {
+      "source": "otel-demo/Service/frontend-proxy",
+      "target": "otel-demo/Service/cart",
+      "condition": "Proxy failures affect cart's calls to frontend",
+      "effect": "Cart service experiences request errors"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Container frontend throttled >25 % CPU in otel-demo namespace, indicating resource contention.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate >0 for services (frontend‑proxy, recommendation, cart, etc.) caused by upstream frontend throttling.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Internal alert used to suppress info‑level alerts; not directly related to the incident.",
+      "explained": true
+    }
+  ]
+}
+

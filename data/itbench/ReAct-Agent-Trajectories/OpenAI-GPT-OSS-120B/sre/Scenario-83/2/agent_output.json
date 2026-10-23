@@ -1,0 +1,81 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": true,
+      "reasoning": "A pod of the checkout deployment entered CrashLoopBackOff, preventing the checkout service from handling requests.",
+      "evidence": "CrashLoopBackOffPodsDetected alert (critical) fired at 2025-12-15T18:12:14Z indicating 1 pod in otel-demo namespace; pod metrics show no ready replicas for checkout deployment."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "The checkout service became unavailable because its deployment pods were crashing, causing downstream errors.",
+      "evidence": "RequestErrorRate warning alert for service_name=checkout fired from 17:40 to 18:13; RequestLatency warning for checkout also fired."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend calls checkout to complete orders; checkout failures manifested as increased error rate and latency observed by frontend.",
+      "evidence": "RequestErrorRate and RequestLatency alerts also list service_name=frontend during the same window."
+    },
+    {
+      "name": "otel-demo/Service/cart",
+      "contributing_factor": false,
+      "reasoning": "Cart service is called by checkout; checkout crashes caused request failures to cart, reflected in error‑rate alerts.",
+      "evidence": "Error‑rate alert includes cart in its service_name label during the incident period."
+    },
+    {
+      "name": "otel-demo/Deployment/accounting",
+      "contributing_factor": false,
+      "reasoning": "Accounting pods showed a brief CPU throttling spike, but severity was only info and did not drive the incident.",
+      "evidence": "CPUThrottlingHigh info alert fired once at 17:36; metrics show a short‑lived increase in throttling percent for pod_accounting."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/checkout",
+      "condition": "CrashLoopBackOff prevents pod readiness",
+      "effect": "Checkout service returns errors and timeouts"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Frontend depends on checkout for order completion",
+      "effect": "Frontend sees increased request error rate and latency"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/cart",
+      "condition": "Checkout invokes cart during order flow",
+      "effect": "Cart experiences request errors propagated from checkout"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "Critical alert that a pod in otel-demo namespace is stuck in CrashLoopBackOff, indicating a deployment failure.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Warning alert that error rate for one or more services exceeded zero, caused by checkout service failures.",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Warning alert that 95th‑percentile latency for services rose above 1500 ms, a downstream effect of checkout timeouts.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Info‑level alert indicating a brief CPU throttling increase on accounting pods; not a root cause.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Informational alert that suppresses other alerts during a known maintenance window; not active during this incident.",
+      "explained": true
+    }
+  ]
+}

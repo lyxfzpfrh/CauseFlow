@@ -1,0 +1,125 @@
+{
+  "entities": [
+    {
+      "name": "chaos-mesh/NetworkChaos/otel-demo-email-checkout-network-partition",
+      "contributing_factor": true,
+      "reasoning": "Chaos experiment created a network partition between email and checkout services causing traffic loss.",
+      "evidence": "Events with reason 'FinalizerInited', 'Updated', 'TimeUp' for otel-demo-email-checkout-network-partition in chaos-mesh namespace."
+    },
+    {
+      "name": "otel-demo/Service/email",
+      "contributing_factor": false,
+      "reasoning": "Email service could not reach checkout due to network partition, leading to increased error rates.",
+      "evidence": "RequestErrorRate alert for email (via frontend-proxy) and increased latency alerts."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout service experienced failed requests and high latency as inbound traffic was blocked.",
+      "evidence": "RequestErrorRate and RequestLatency alerts for checkout service."
+    },
+    {
+      "name": "otel-demo/Service/shipping",
+      "contributing_factor": false,
+      "reasoning": "Shipping service suffered downstream errors due to upstream checkout failures.",
+      "evidence": "RequestErrorRate and RequestLatency alerts for shipping."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend observed errors and latency spikes because its downstream services were impacted.",
+      "evidence": "RequestErrorRate and RequestLatency alerts for frontend."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Proxy relayed requests to failing services, showing elevated error rates.",
+      "evidence": "RequestErrorRate alert for frontend-proxy and latency alerts."
+    },
+    {
+      "name": "otel-demo/Namespace/otel-demo",
+      "contributing_factor": false,
+      "reasoning": "Namespace aggregates the impacted services but is not a direct cause.",
+      "evidence": "InfoInhibitor alert targeting otel-demo namespace."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "chaos-mesh/NetworkChaos/otel-demo-email-checkout-network-partition",
+      "target": "otel-demo/Service/email",
+      "condition": "Network traffic to checkout blocked",
+      "effect": "Email service requests fail, raising error-rate alerts"
+    },
+    {
+      "source": "chaos-mesh/NetworkChaos/otel-demo-email-checkout-network-partition",
+      "target": "otel-demo/Service/checkout",
+      "condition": "Inbound traffic from email blocked",
+      "effect": "Checkout service sees missing requests and latency spikes"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/shipping",
+      "condition": "Checkout failures cause downstream calls to fail",
+      "effect": "Shipping service error-rate and latency alerts fire"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Frontend depends on checkout for order processing",
+      "effect": "Frontend experiences increased 5xx errors and latency"
+    },
+    {
+      "source": "otel-demo/Service/frontend",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Proxy forwards client traffic to failing frontend",
+      "effect": "Proxy reports high request error rate"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "Watchdog",
+      "explanation": "Baseline alert confirming Alertmanager pipeline is operational.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Elevated 5xx error rate on affected services (frontend, frontend-proxy, checkout, shipping, email).",
+      "explained": true
+    },
+    {
+      "alert": "PrometheusNotConnectedToAlertmanagers",
+      "explanation": "Prometheus failed to connect to Alertmanager, reducing alert delivery reliability.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Info-level alerts are suppressed; indicates no higher severity alerts in otel-demo.",
+      "explained": true
+    },
+    {
+      "alert": "KubeControllerManagerDown",
+      "explanation": "Kube controller manager not reporting; a cluster-wide control plane issue.",
+      "explained": true
+    },
+    {
+      "alert": "KubeSchedulerDown",
+      "explanation": "Kube scheduler not reporting; another control plane outage.",
+      "explained": true
+    },
+    {
+      "alert": "KubeClientCertificateExpiration",
+      "explanation": "Client certificate for API server is expiring soon, a security warning.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "High CPU throttling observed on kubelet, may affect pod performance.",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Measured request latency exceeds threshold on shipping, checkout, frontend, and proxy services.",
+      "explained": true
+    }
+  ]
+}

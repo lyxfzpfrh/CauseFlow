@@ -1,0 +1,59 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "ad pods produced 100% error rate in traces, spawning a new error path to flagd.",
+      "evidence": "critical trace path shows ad→flagd with 100% errors; RequestErrorRate alert firing"
+    },
+    {
+      "name": "otel-demo/Service/flagd",
+      "contributing_factor": false,
+      "reasoning": "flagd experienced errors downstream of ad, but its own health was not the cause.",
+      "evidence": "trace shows ad→flagd error path; flagd error rate rose only after ad errors"
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "frontend pods showed high CPU throttling, a symptom of load but not root cause of request errors.",
+      "evidence": "CPUThrottlingHigh alerts on frontend pod; no trace errors originate from frontend"
+    },
+    {
+      "name": "otel-demo/Pod/frontend-675fd7b5c5-chsmw",
+      "contributing_factor": false,
+      "reasoning": "frontend pod was throttled, contributing to latency but not primary error.",
+      "evidence": "CPUThrottlingHigh alert firing for this pod"
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/flagd",
+      "condition": "ad service returned 100% errors in calls",
+      "effect": "flagd observed error spikes and new error path in traces"
+    },
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "increased request error rate driven by ad failures",
+      "effect": "frontend experienced higher load and CPU throttling"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Overall request error rate crossed warning threshold, driven by ad service failures.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Frontend pod CPU throttling exceeded info threshold, likely due to load from failing ad calls.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Inhibits info alerts; always firing and not directly related to incident.",
+      "explained": true
+    }
+  ]
+}

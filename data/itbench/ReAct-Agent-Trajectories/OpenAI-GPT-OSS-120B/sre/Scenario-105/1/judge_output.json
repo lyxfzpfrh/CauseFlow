@@ -1,0 +1,253 @@
+{
+  "metadata": {
+    "scenario": "Scenario-105",
+    "run": 1,
+    "duration_seconds": 0,
+    "inference_count": 86,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "product-catalog-deployment"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "otel-demo/Deployment/product-catalog",
+            "matches_gt": true,
+            "matched_to": "product-catalog-deployment"
+          }
+        ],
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0,
+        "justification": "The Ground Truth has one root cause entity: 'product-catalog-deployment'. The model predicted one root cause entity, 'otel-demo/Deployment/product-catalog', which correctly normalizes to 'product-catalog-deployment'. This results in a perfect match."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0.5,
+        "justification": "The model correctly identified 'product-catalog-deployment' as the root cause. The model's reasoning is 'Pod product-catalog is CrashLoopBackOff...'. The Ground Truth condition for the deployment is 'Invalid command in deployment'. The model's reasoning describes the immediate effect on the pod rather than the configuration fault within the deployment itself. It is partially correct as it identifies the key symptom but misses the underlying cause, so it receives a score of 0.5.",
+        "details": {
+          "otel-demo/Deployment/product-catalog": {
+            "entity_i_reasoning_score": 0.5
+          }
+        }
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components. The GT path is ['Product Catalog Component', 'Checkout Component', 'Shipping Component', 'Quote Component'] and the model path is ['Product Catalog Component', 'Frontend Component', 'Checkout Component', 'Shipping Component']. The Longest Common Subsequence (LCS) is ['Product Catalog Component', 'Checkout Component', 'Shipping Component'], giving a TP of 3. With both paths having a length of 4, Precision and Recall are both 3/4.",
+        "details": {
+          "normalization_map": {
+            "otel-demo/Deployment/product-catalog": "product-catalog-deployment",
+            "otel-demo/Service/checkout": "checkout-service-1",
+            "otel-demo/Service/payment": "payment-service-1",
+            "otel-demo/Service/shipping": "shipping-service-1",
+            "otel-demo/Service/email": "email-service-1"
+          },
+          "semantic_components": {
+            "Product Catalog Component": [
+              "product-catalog-deployment",
+              "product-catalog-pod-1",
+              "product-catalog-service-1"
+            ],
+            "Checkout Component": [
+              "checkout-service-1",
+              "checkout-pod-1"
+            ],
+            "Payment Component": [
+              "payment-service-1",
+              "payment-pod-1"
+            ],
+            "Shipping Component": [
+              "shipping-service-1",
+              "shipping-pod-1"
+            ],
+            "Email Component": [
+              "email-service-1",
+              "email-pod-1"
+            ],
+            "Currency Component": [
+              "currency-service-1",
+              "currency-pod-1"
+            ],
+            "Accounting Component": [
+              "accounting-service-1",
+              "accounting-pod-1"
+            ],
+            "Fraud Detection Component": [
+              "fraud-detection-service-1",
+              "fraud-detection-pod-1"
+            ],
+            "Quote Component": [
+              "quote-service-1",
+              "quote-pod-1"
+            ],
+            "Frontend Component": [
+              "otel-demo/Service/frontend"
+            ],
+            "Recommendation Component": [
+              "otel-demo/Service/recommendation"
+            ]
+          },
+          "contracted_gt_path": [
+            "Product Catalog Component",
+            "Checkout Component",
+            "Shipping Component",
+            "Quote Component"
+          ],
+          "contracted_model_path": [
+            "Product Catalog Component",
+            "Frontend Component",
+            "Checkout Component",
+            "Shipping Component"
+          ],
+          "lcs_components": [
+            "Product Catalog Component",
+            "Checkout Component",
+            "Shipping Component"
+          ],
+          "true_positives_TP": 3,
+          "model_path_length": 4,
+          "gt_path_length": 4
+        },
+        "precision": 0.75,
+        "recall": 0.75,
+        "calculation": 0.75
+      },
+      "fault_localization_component_identification": {
+        "calculation": 1,
+        "justification": "The first performance failure in GT.propagations is: 'Product catalog service becomes unavailable'. Using the Priority 4 rule (Default to Target), the target entity 'product-catalog-service-1' is identified. This entity belongs to the 'Product Catalog Component'. This component was found in the model's contracted path.",
+        "details": {
+          "gt_first_impacted_component": "Product Catalog Component",
+          "effect_used": "Product catalog service becomes unavailable",
+          "priority_rule_applied": "Priority 4",
+          "found_in_model_path": true
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": null,
+        "justification": "The predicted root cause entity 'otel-demo/Deployment/product-catalog' was a correct match for the ground truth root cause. Therefore, this score is the same as the Root Cause Reasoning Accuracy score, which was 0.5.",
+        "details": [
+          {
+            "entity": "otel-demo/Deployment/product-catalog",
+            "metric1_is_correct": true,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 0.5
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0,
+        "justification": "The model predicted one root cause component, 'Product Catalog Component'. The ground truth has one root cause component, also 'Product Catalog Component'. For precision, the hop distance from the model's component to the GT component is 0, yielding a score of 1/(1+0) = 1. For recall, the hop distance from the GT component to the model's component is 0, also yielding a score of 1. The final F1 score is 1.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/product-catalog",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "product-catalog-deployment",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 4,
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0,
+        "justification": "The contracted GT path length is 4. The model correctly identified the root cause component, so the hop distance is 0. For precision, the score is 1/(1 + 0/4) = 1. For recall, the score is also 1/(1 + 0/4) = 1. The final F1 score is 1.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/product-catalog",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "product-catalog-deployment",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      }
+    },
+    "incident_id": "Scenario-105",
+    "trial_id": "1"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 1.0,
+    "root_cause_entity_recall": 1.0,
+    "root_cause_entity_f1": 1.0,
+    "root_cause_reasoning": 0.5,
+    "propagation_chain": 0.75,
+    "fault_localization_component_identification": 1,
+    "root_cause_reasoning_partial": null,
+    "root_cause_proximity_no_fp_precision": 1.0,
+    "root_cause_proximity_no_fp_recall": 1.0,
+    "root_cause_proximity_no_fp_f1": 1.0,
+    "root_cause_proximity_with_fp_precision": 1.0,
+    "root_cause_proximity_with_fp_recall": 1.0,
+    "root_cause_proximity_with_fp_f1": 1.0,
+    "root_cause_entity_k_precision": 1.0,
+    "root_cause_entity_k_recall": 1.0,
+    "root_cause_entity_k_f1": 1.0,
+    "root_cause_entity_k@1_precision": 1.0,
+    "root_cause_entity_k@1_recall": 1.0,
+    "root_cause_entity_k@1_f1": 1.0,
+    "root_cause_entity_k@2_precision": 1.0,
+    "root_cause_entity_k@2_recall": 1.0,
+    "root_cause_entity_k@2_f1": 1.0,
+    "root_cause_entity_k@3_precision": 1.0,
+    "root_cause_entity_k@3_recall": 1.0,
+    "root_cause_entity_k@3_f1": 1.0,
+    "root_cause_entity_k@4_precision": 1.0,
+    "root_cause_entity_k@4_recall": 1.0,
+    "root_cause_entity_k@4_f1": 1.0,
+    "root_cause_entity_k@5_precision": 1.0,
+    "root_cause_entity_k@5_recall": 1.0,
+    "root_cause_entity_k@5_f1": 1.0
+  }
+}

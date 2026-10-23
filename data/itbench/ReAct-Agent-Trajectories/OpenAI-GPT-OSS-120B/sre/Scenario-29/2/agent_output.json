@@ -1,0 +1,83 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "ad pods showed >50% CPU throttling, causing request failures.",
+      "evidence": "CPUThrottlingHigh alert (53% throttling) and RequestErrorRate alert for ad service."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": true,
+      "reasoning": "frontend pods experienced ~34% CPU throttling, degrading request handling.",
+      "evidence": "CPUThrottlingHigh alert (34% throttling) and RequestErrorRate alert for frontend service."
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "Service reported high error rate due to throttled ad pods.",
+      "evidence": "RequestErrorRate alert for ad (value 1.28)."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Service error rate rose because of own throttling and downstream ad failures.",
+      "evidence": "RequestErrorRate alert for frontend (value 4.62)."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Proxy saw errors propagated from frontend and ad services.",
+      "evidence": "RequestErrorRate alert for frontend-proxy (value 2.4)."
+    },
+    {
+      "name": "otel-demo/Service/recommendation",
+      "contributing_factor": false,
+      "reasoning": "Recommendation service error rate increased during incident.",
+      "evidence": "RequestErrorRate alert for recommendation (value 0.011)."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/ad",
+      "condition": "CPU throttling >50% limited pod capacity",
+      "effect": "Request error rate rose above zero"
+    },
+    {
+      "source": "otel-demo/Deployment/frontend",
+      "target": "otel-demo/Service/frontend",
+      "condition": "CPU throttling ~34% reduced processing",
+      "effect": "Request error rate spiked"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Service/frontend",
+      "condition": "frontend calls ad and receives errors",
+      "effect": "Frontend error rate increased"
+    },
+    {
+      "source": "otel-demo/Service/frontend",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "frontend returns error responses",
+      "effect": "Proxy error rate surged"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Fires when a service's request error rate exceeds zero (warning level).",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Fires when container CPU throttling exceeds a threshold (info level).",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Used to suppress noisy info alerts; not directly related to the incident.",
+      "explained": false
+    }
+  ]
+}

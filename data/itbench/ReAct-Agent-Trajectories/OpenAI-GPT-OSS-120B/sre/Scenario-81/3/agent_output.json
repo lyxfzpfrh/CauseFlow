@@ -1,0 +1,114 @@
+{
+  "entities": [
+    {
+      "name": "chaos-mesh/NetworkChaos/otel-demo-shipping-quote-network-partition-b7wl4",
+      "contributing_factor": true,
+      "reasoning": "NetworkChaos experiment partitioned shipping and quote services, cutting network traffic.",
+      "evidence": "Events show Applied and Started for NetworkChaos otel-demo-shipping-quote-network-partition-b7wl4 in chaos-mesh namespace."
+    },
+    {
+      "name": "otel-demo/Deployment/shipping",
+      "contributing_factor": false,
+      "reasoning": "Shipping pods could not communicate, causing downstream errors.",
+      "evidence": "NetworkChaos targets shipping pods; RequestErrorRate alerts fire for many services."
+    },
+    {
+      "name": "otel-demo/Deployment/quote",
+      "contributing_factor": false,
+      "reasoning": "Quote pods were blocked, increasing latency and error rates.",
+      "evidence": "NetworkChaos also targets quote pods; span metrics show errors for quote service."
+    },
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout calls shipping and quote; failures propagated to it.",
+      "evidence": "RequestErrorRate and RequestLatency alerts cover checkout; traces show checkout → shipping/quote calls failing."
+    },
+    {
+      "name": "otel-demo/Deployment/cart",
+      "contributing_factor": false,
+      "reasoning": "Cart depends on checkout and quote, observed increased error rate.",
+      "evidence": "Metrics for cart show increased error spans; alerts include cart service latency."
+    },
+    {
+      "name": "otel-demo/Deployment/recommendation",
+      "contributing_factor": false,
+      "reasoning": "Recommendation calls flagd which shows error spans, likely due to upstream issues.",
+      "evidence": "Span metrics for recommendation have STATUS_CODE_ERROR entries."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend forwards requests to checkout; errors surface to users.",
+      "evidence": "Frontend does not fire its own alert but downstream latency propagates to it."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Proxy routes traffic; impacted by upstream service failures.",
+      "evidence": "Proxy logs show increased error responses during incident."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "chaos-mesh/NetworkChaos/otel-demo-shipping-quote-network-partition-b7wl4",
+      "target": "otel-demo/Deployment/shipping",
+      "condition": "Network partition prevents shipping pods from receiving traffic",
+      "effect": "Shipping service returns errors and timeouts"
+    },
+    {
+      "source": "chaos-mesh/NetworkChaos/otel-demo-shipping-quote-network-partition-b7wl4",
+      "target": "otel-demo/Deployment/quote",
+      "condition": "Network partition blocks quote service communication",
+      "effect": "Quote service latency spikes and errors"
+    },
+    {
+      "source": "otel-demo/Deployment/shipping",
+      "target": "otel-demo/Deployment/checkout",
+      "condition": "Checkout calls shipping and receives failures",
+      "effect": "Checkout error rate and latency increase"
+    },
+    {
+      "source": "otel-demo/Deployment/quote",
+      "target": "otel-demo/Deployment/checkout",
+      "condition": "Checkout calls quote and encounters timeouts",
+      "effect": "Checkout latency spikes"
+    },
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Deployment/cart",
+      "condition": "Cart relies on checkout for order processing",
+      "effect": "Cart sees increased error responses"
+    },
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "Frontend forwards requests to checkout",
+      "effect": "Frontend returns 5xx to users"
+    },
+    {
+      "source": "otel-demo/Deployment/recommendation",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "Frontend calls recommendation which errors",
+      "effect": "Additional latency for frontend responses"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "High proportion of failed requests across otel-demo services, triggered by network partition.",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Median request latency exceeded threshold for many services, due to downstream timeouts.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Info-level alerts are being inhibited; not directly relevant to failure.",
+      "explained": true
+    }
+  ]
+}
+

@@ -1,0 +1,55 @@
+{
+  "entities": [
+    {
+      "name": "chaos-mesh/PodChaos/otel-demo-product-catalog-network-delay-q5s8b",
+      "contributing_factor": true,
+      "reasoning": "PodChaos injected network delay for product‑catalog calls from checkout pods.",
+      "evidence": "K8s events show Applied chaos for otel-demo/checkout‑... and Updated desiredPhase (event name otel-demo-product-catalog-network-delay-q5s8b)"
+    },
+    {
+      "name": "otel-demo/Service/product-catalog-service",
+      "contributing_factor": false,
+      "reasoning": "Service experienced artificial latency, causing downstream callers to see errors.",
+      "evidence": "Chaos event targeted product‑catalog network; increased error rate alerts on callers."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend observed request error rate >0 due to upstream product‑catalog delays.",
+      "evidence": "RequestErrorRate alert firing for frontend (value 3.5) at 17:54 UTC."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Proxy forwards traffic to frontend and reports elevated error rate.",
+      "evidence": "RequestErrorRate alert firing for frontend‑proxy (value 1.73) at 17:54 UTC."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "chaos-mesh/PodChaos/otel-demo-product-catalog-network-delay-q5s8b",
+      "target": "otel-demo/Service/product-catalog-service",
+      "condition": "Injected network delay on product‑catalog RPCs",
+      "effect": "Increased latency and request failures for callers"
+    },
+    {
+      "source": "otel-demo/Service/product-catalog-service",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Frontend calls product‑catalog and receives timeouts/errors",
+      "effect": "Frontend error rate exceeds threshold"
+    },
+    {
+      "source": "otel-demo/Service/product-catalog-service",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Proxy sees backend errors from product‑catalog",
+      "effect": "Proxy error rate exceeds threshold"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate in service exceeds zero; indicates downstream failures likely from product‑catalog latency.",
+      "explained": true
+    }
+  ]
+}

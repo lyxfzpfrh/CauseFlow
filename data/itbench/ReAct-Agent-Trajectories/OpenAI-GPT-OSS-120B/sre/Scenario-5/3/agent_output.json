@@ -1,0 +1,105 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Namespace/otel-demo",
+      "contributing_factor": true,
+      "reasoning": "Namespace quota exhausted prevented creation of frontend pods.",
+      "evidence": "Event 2023-11-01T10:00:00Z: FailedCreate due to quota for pod frontend-..."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "Deployment could not schedule pods because of quota, leading to missing ready pods.",
+      "evidence": "Event 10:00 quota failure; Service frontend marked Unhealthy at 10:03."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Service had no ready endpoints, causing high latency and errors.",
+      "evidence": "Service latency p99 grew from 120ms to 1500ms; Service event Unhealthy at 10:03."
+    },
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "Pods of ad entered CrashLoopBackOff due to container exit.",
+      "evidence": "Event 10:01 CrashLoopBackOff for pod ad-...; ad latency rose to 2000ms."
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "Service ad became unavailable, increasing latency for dependent services.",
+      "evidence": "Latency for ad increased to 2000-3000ms; frontend latency spike follows."
+    },
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": true,
+      "reasoning": "Checkout pods crashed repeatedly causing CrashLoopBackOff.",
+      "evidence": "Event 10:04 CrashLoopBackOff for pod checkout-...; checkout latency degraded."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Service checkout down, affecting user checkout flow.",
+      "evidence": "No successful checkout pods; related trace errors if any."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Namespace/otel-demo",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "Resource quota exhausted prevents pod creation",
+      "effect": "Frontend deployment has no ready pods"
+    },
+    {
+      "source": "otel-demo/Deployment/frontend",
+      "target": "otel-demo/Service/frontend",
+      "condition": "No ready pods for the service",
+      "effect": "Service marked Unhealthy and latency spikes"
+    },
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/ad",
+      "condition": "Pods stuck in CrashLoopBackOff",
+      "effect": "Ad service unavailable"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Frontend depends on ad",
+      "effect": "Frontend latency increased due to upstream failure"
+    },
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/checkout",
+      "condition": "Pods CrashLoopBackOff",
+      "effect": "Checkout service down"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Suppresses noisy info-level alerts while a higher‑severity alert is active in the same namespace.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Warning that HTTP request error rate in otel-demo services exceeds the configured threshold, indicating degraded responses.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Info alert indicating that containers in otel-demo are experiencing high CPU throttling, a sign of CPU pressure.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "Warning that the Prometheus scrape saw no incoming requests for otel-demo services, suggesting traffic outage.",
+      "explained": true
+    },
+    {
+      "alert": "PendingPodsDetected",
+      "explanation": "Critical alert that one or more otel-demo pods remain pending, likely due to scheduling or quota issues.",
+      "explained": true
+    }
+  ]
+}

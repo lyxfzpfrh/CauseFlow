@@ -1,0 +1,228 @@
+{
+  "metadata": {
+    "scenario": "Scenario-19",
+    "run": 3,
+    "duration_seconds": 0,
+    "inference_count": 90,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "otel-demo-email-checkout-network-partition-1"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "otel-demo/Deployment/frontend",
+            "matches_gt": false
+          }
+        ],
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The Ground Truth root cause is 'otel-demo-email-checkout-network-partition-1' (a NetworkChaos object). The model predicted 'otel-demo/Deployment/frontend' as the root cause, which normalizes to 'frontend-service-1'. This is an incorrect identification. Therefore, both precision and recall are 0."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0,
+        "justification": "The model did not correctly identify any of the ground truth root cause entities. Therefore, the reasoning accuracy score is 0.",
+        "details": {}
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components grouped by the specified rules. The GT path is [Chaos, Quote, Shipping, Checkout, Frontend]. The model path was linearized to [Frontend, Proxy, Checkout, Shipping, Quote]. The Longest Common Subsequence (LCS) between these two ordered paths has a length of 1 (e.g., 'Quote Service Component'). With a TP of 1 and path lengths of 5 (GT) and 5 (model), the precision and recall are both 1/5.",
+        "details": {
+          "normalization_map": {
+            "otel-demo/Deployment/frontend": "frontend-service-1",
+            "otel-demo/Service/checkout": "checkout-service-1",
+            "otel-demo/Service/shipping": "shipping-service-1",
+            "otel-demo/Service/quote": "quote-service-1",
+            "otel-demo/Service/frontend-proxy": "otel-demo/Service/frontend-proxy"
+          },
+          "semantic_components": {
+            "Chaos Component": [
+              "otel-demo-email-checkout-network-partition-1",
+              "otel-demo-email-checkout-network-partition"
+            ],
+            "Quote Service Component": [
+              "quote-service-1",
+              "quote-pod-1"
+            ],
+            "Shipping Service Component": [
+              "shipping-service-1",
+              "shipping-pod-1"
+            ],
+            "Checkout Service Component": [
+              "checkout-service-1",
+              "checkout-pod-1"
+            ],
+            "Frontend Service Component": [
+              "frontend-service-1",
+              "frontend-pod-1"
+            ],
+            "Frontend Proxy Component": [
+              "otel-demo/Service/frontend-proxy"
+            ]
+          },
+          "contracted_gt_path": [
+            "Chaos Component",
+            "Quote Service Component",
+            "Shipping Service Component",
+            "Checkout Service Component",
+            "Frontend Service Component"
+          ],
+          "contracted_model_path": [
+            "Frontend Service Component",
+            "Frontend Proxy Component",
+            "Checkout Service Component",
+            "Shipping Service Component",
+            "Quote Service Component"
+          ],
+          "lcs_components": [
+            "Quote Service Component"
+          ],
+          "true_positives_TP": 1,
+          "model_path_length": 5,
+          "gt_path_length": 5
+        },
+        "precision": 0.2,
+        "recall": 0.2,
+        "calculation": 0.20000000000000004
+      },
+      "fault_localization_component_identification": {
+        "calculation": 1,
+        "justification": "The first performance failure in GT.propagations is: 'quote service Error Rate is Above Threshold'. The source of this propagation is a Chaos entity. Using Priority 2 rule (Chaos Target), the first impacted component is the target, 'quote-service-1', which belongs to the 'Quote Service Component'. This component was found in the model's contracted path.",
+        "details": {
+          "gt_first_impacted_component": "Quote Service Component",
+          "effect_used": "quote service Error Rate is Above Threshold",
+          "priority_rule_applied": "Priority 2",
+          "found_in_model_path": true
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": null,
+        "justification": "The predicted root cause entity 'otel-demo/Deployment/frontend' was incorrect. Partial credit is calculated. The model's focus component ('Frontend Service Component') is on the contracted GT path. The hop_away from the true root cause component ('Chaos Component') to the 'Frontend Service Component' is 4. The model's reasoning for the symptom was 'CPU throttling', while the GT condition for the frontend component was 'checkout service Error Rate is Above Threshold'. The reasoning is completely different, so SymptomReasoningCorrectness is 0. The final score is (1/(1+4)) * 0 = 0.",
+        "details": [
+          {
+            "entity": "otel-demo/Deployment/frontend",
+            "metric1_is_correct": false,
+            "hop_away": 4,
+            "SymptomReasoningCorrectness": 0,
+            "entity_score": 0.0
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 0.2,
+        "calculation_recall": 0.2,
+        "calculation_f1": 0.20000000000000004,
+        "justification": "Precision: The model predicted one root cause component, 'Frontend Service Component'. Its minimum hop distance to a GT root cause component ('Chaos Component') is 4. The score is 1/(1+4) = 0.2. The average is 0.2. Recall: The single GT root cause component is 'Chaos Component'. Its minimum hop distance to a model-predicted root cause component ('Frontend Service Component') is 4. The score is 1/(1+4) = 0.2. The average is 0.2. The F1 score is calculated from these P and R values.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/frontend",
+            "is_on_path": true,
+            "hop_away": 4,
+            "entity_score": 0.2
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-email-checkout-network-partition-1",
+            "is_on_path": true,
+            "hop_away": 4,
+            "entity_score": 0.2
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 5,
+        "calculation_precision": 0.5555555555555556,
+        "calculation_recall": 0.5555555555555556,
+        "calculation_f1": 0.5555555555555556,
+        "justification": "The contracted GT path length is 5. Precision: The model's predicted component 'Frontend Service Component' is 4 hops away from the GT root cause component. The score is 1 / (1 + 4/5) = 5/9. The average is 5/9. Recall: The GT root cause component 'Chaos Component' is 4 hops away from the model's predicted component. The score is 1 / (1 + 4/5) = 5/9. The average is 5/9. The F1 score is calculated from these P and R values, resulting in 5/9.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/frontend",
+            "is_on_path": true,
+            "hop_away": 4,
+            "entity_score": 0.5555555555555556
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-email-checkout-network-partition-1",
+            "is_on_path": true,
+            "hop_away": 4,
+            "entity_score": 0.5555555555555556
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      }
+    },
+    "incident_id": "Scenario-19",
+    "trial_id": "3"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 0.0,
+    "root_cause_entity_recall": 0.0,
+    "root_cause_entity_f1": 0.0,
+    "root_cause_reasoning": 0,
+    "propagation_chain": 0.20000000000000004,
+    "fault_localization_component_identification": 1,
+    "root_cause_reasoning_partial": null,
+    "root_cause_proximity_no_fp_precision": 0.2,
+    "root_cause_proximity_no_fp_recall": 0.2,
+    "root_cause_proximity_no_fp_f1": 0.20000000000000004,
+    "root_cause_proximity_with_fp_precision": 0.5555555555555556,
+    "root_cause_proximity_with_fp_recall": 0.5555555555555556,
+    "root_cause_proximity_with_fp_f1": 0.5555555555555556,
+    "root_cause_entity_k_precision": 0.0,
+    "root_cause_entity_k_recall": 0.0,
+    "root_cause_entity_k_f1": 0.0,
+    "root_cause_entity_k@1_precision": 0.0,
+    "root_cause_entity_k@1_recall": 0.0,
+    "root_cause_entity_k@1_f1": 0.0,
+    "root_cause_entity_k@2_precision": 0.0,
+    "root_cause_entity_k@2_recall": 0.0,
+    "root_cause_entity_k@2_f1": 0.0,
+    "root_cause_entity_k@3_precision": 0.0,
+    "root_cause_entity_k@3_recall": 0.0,
+    "root_cause_entity_k@3_f1": 0.0,
+    "root_cause_entity_k@4_precision": 0.0,
+    "root_cause_entity_k@4_recall": 0.0,
+    "root_cause_entity_k@4_f1": 0.0,
+    "root_cause_entity_k@5_precision": 0.0,
+    "root_cause_entity_k@5_recall": 0.0,
+    "root_cause_entity_k@5_f1": 0.0
+  }
+}

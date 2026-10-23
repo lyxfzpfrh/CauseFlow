@@ -1,0 +1,138 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/postgresql",
+      "contributing_factor": true,
+      "reasoning": "PostgreSQL pods show high CPU throttling and events indicate scheduling but later metrics show >30% throttling, causing DB latency spikes.",
+      "evidence": "CPUThrottlingHigh alert (33-34% throttling) and pod events for postgresql deployment; downstream services report no requests and high error rates."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend experienced elevated request error rate due to inability to reach the database.",
+      "evidence": "RequestErrorRate warning for frontend; NoRequestsDetected for dependent services."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Proxy returned errors as backend services were failing to query the DB.",
+      "evidence": "RequestErrorRate warning for frontend-proxy and high error rates across many services."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout calls DB for cart/payment; DB throttling caused request errors.",
+      "evidence": "RequestErrorRate warning for checkout; NoRequestsDetected for payment service."
+    },
+    {
+      "name": "otel-demo/Service/shipping",
+      "contributing_factor": false,
+      "reasoning": "Shipping service could not access DB, leading to zero requests and high error rate.",
+      "evidence": "NoRequestsDetected and RequestErrorRate alerts for shipping."
+    },
+    {
+      "name": "otel-demo/Service/quote",
+      "contributing_factor": false,
+      "reasoning": "Quote service reported zero requests due to DB outage.",
+      "evidence": "NoRequestsDetected alert for quote."
+    },
+    {
+      "name": "otel-demo/Service/fraud-detection",
+      "contributing_factor": false,
+      "reasoning": "Fraud detection could not query DB, resulting in no traffic.",
+      "evidence": "NoRequestsDetected alert for fraud-detection."
+    },
+    {
+      "name": "otel-demo/Service/accounting",
+      "contributing_factor": false,
+      "reasoning": "Accounting service saw zero requests due to DB throttling.",
+      "evidence": "NoRequestsDetected alert for accounting."
+    },
+    {
+      "name": "otel-demo/Service/payment",
+      "contributing_factor": false,
+      "reasoning": "Payment service could not reach DB, causing request errors.",
+      "evidence": "NoRequestsDetected and RequestErrorRate alerts for payment."
+    },
+    {
+      "name": "otel-demo/Service/email",
+      "contributing_factor": false,
+      "reasoning": "Email service reported zero requests as DB was throttled.",
+      "evidence": "NoRequestsDetected alert for email."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/postgresql",
+      "target": "otel-demo/Service/frontend",
+      "condition": "PostgreSQL container experienced >30% CPU throttling, slowing DB responses",
+      "effect": "Frontend received 5xx errors and high error rate"
+    },
+    {
+      "source": "otel-demo/Deployment/postgresql",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "DB latency caused downstream calls to fail",
+      "effect": "Proxy returned errors, raising its RequestErrorRate"
+    },
+    {
+      "source": "otel-demo/Deployment/postgresql",
+      "target": "otel-demo/Service/checkout",
+      "condition": "Checkout could not read/write orders due to DB throttling",
+      "effect": "Checkout error rate spiked and downstream payment had zero requests"
+    },
+    {
+      "source": "otel-demo/Deployment/postgresql",
+      "target": "otel-demo/Service/shipping",
+      "condition": "Shipping service queries DB for shipment data but receives timeouts",
+      "effect": "Shipping generated NoRequestsDetected and high error rate"
+    },
+    {
+      "source": "otel-demo/Deployment/postgresql",
+      "target": "otel-demo/Service/quote",
+      "condition": "Quote service read operations blocked by DB",
+      "effect": "Zero requests observed for quote"
+    },
+    {
+      "source": "otel-demo/Deployment/postgresql",
+      "target": "otel-demo/Service/fraud-detection",
+      "condition": "Fraud detection relies on DB for rules lookup",
+      "effect": "No requests recorded for fraud-detection"
+    },
+    {
+      "source": "otel-demo/Deployment/postgresql",
+      "target": "otel-demo/Service/accounting",
+      "condition": "Accounting writes transaction records to DB",
+      "effect": "NoRequestsDetected alert for accounting"
+    },
+    {
+      "source": "otel-demo/Deployment/postgresql",
+      "target": "otel-demo/Service/payment",
+      "condition": "Payment service cannot access DB for payment confirmation",
+      "effect": "Payment generated error rate and zero requests"
+    },
+    {
+      "source": "otel-demo/Deployment/postgresql",
+      "target": "otel-demo/Service/email",
+      "condition": "Email service queues DB writes for notifications",
+      "effect": "Zero requests observed for email"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Container postgresql in namespace otel-demo is throttled >30%, indicating CPU pressure on the DB pod.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Warning for services where request error rate >0, caused by downstream DB latency.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "Warning that a service received zero requests, typical when upstream DB is unavailable.",
+      "explained": true
+    }
+  ]
+}
+

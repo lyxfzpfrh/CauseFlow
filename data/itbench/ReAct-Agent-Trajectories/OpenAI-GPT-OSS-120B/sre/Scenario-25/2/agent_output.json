@@ -1,0 +1,74 @@
+{
+  "entities": [
+    {
+      "name": "chaos-mesh/StressChaos/otel-demo-recommendation-cpu-stress-4jwl9",
+      "contributing_factor": true,
+      "reasoning": "Chaos experiment injected CPU stress into the recommendation pod, causing high throttling.",
+      "evidence": "K8s events show StressChaos otel-demo-recommendation-cpu-stress-4jwl9 created at 2025-12-15 16:33; CPUThrottlingHigh alerts for recommendation pod; NoRequestsDetected alerts for recommendation service."
+    },
+    {
+      "name": "otel-demo/Pod/recommendation-5f45f75855-htttv",
+      "contributing_factor": false,
+      "reasoning": "Pod experienced CPU throttling and stopped serving requests, leading to downstream errors.",
+      "evidence": "CPUThrottlingHigh alerts reference this pod; NoRequestsDetected alerts for recommendation service."
+    },
+    {
+      "name": "otel-demo/Deployment/recommendation",
+      "contributing_factor": false,
+      "reasoning": "Deployment's pods were impacted by the chaos experiment, reducing service availability.",
+      "evidence": "NoRequestsDetected alerts for service recommendation; pod level throttling observed."
+    },
+    {
+      "name": "otel-demo/Service/recommendation",
+      "contributing_factor": false,
+      "reasoning": "Service could not forward requests, causing upstream services to see latency and error spikes.",
+      "evidence": "NoRequestsDetected alerts for this service across multiple alert files."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Frontend‑proxy observed increased latency and error rate due to downstream recommendation failures.",
+      "evidence": "RequestLatency and RequestErrorRate alerts for frontend-proxy with warning severity."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend returned errors as its calls to recommendation (via proxy) timed out or failed.",
+      "evidence": "RequestLatency and RequestErrorRate alerts for frontend with warning severity."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "chaos-mesh/StressChaos/otel-demo-recommendation-cpu-stress-4jwl9",
+      "target": "otel-demo/Pod/recommendation-5f45f75855-htttv",
+      "condition": "CPU stress caused throttling above threshold",
+      "effect": "Pod entered high CPU throttling state"
+    },
+    {
+      "source": "otel-demo/Pod/recommendation-5f45f75855-htttv",
+      "target": "otel-demo/Service/recommendation",
+      "condition": "Pod could not handle requests",
+      "effect": "Service emitted NoRequestsDetected alerts"
+    },
+    {
+      "source": "otel-demo/Service/recommendation",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Downstream calls timed out",
+      "effect": "Frontend‑proxy latency and error rate increased"
+    },
+    {
+      "source": "otel-demo/Service/frontend-proxy",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Proxy returned delayed/error responses",
+      "effect": "Frontend observed higher latency and error rate"
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "CPUThrottlingHigh", "explanation": "Pod recommendation throttled CPU due to injected stress", "explained": true},
+    {"alert": "NoRequestsDetected", "explanation": "Recommendation service received no traffic because its pod was throttled", "explained": true},
+    {"alert": "RequestLatency", "explanation": "Upstream services observed increased latency from downstream failures", "explained": true},
+    {"alert": "RequestErrorRate", "explanation": "Error rate rose in frontend and proxy due to missing recommendation responses", "explained": true},
+    {"alert": "InfoInhibitor", "explanation": "Informational alerts from kubelet unrelated to incident", "explained": true}
+  ]
+}
+

@@ -1,0 +1,53 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/cart",
+      "contributing_factor": true,
+      "reasoning": "Cart deployment pods entered CrashLoopBackOff due to OOMKilled containers.",
+      "evidence": "Alert 'KubePodCrashLooping' fired for cart pods; events show OOMKilled; metrics show memory usage spikes."
+    },
+    {
+      "name": "otel-demo/Service/cart",
+      "contributing_factor": false,
+      "reasoning": "Cart service became unavailable because its pods were crashing.",
+      "evidence": "Service endpoint had no ready endpoints; alerts 'KubeServiceDown' for cart service."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend received 5xx errors due to downstream cart service failures.",
+      "evidence": "Trace analysis shows error propagation from frontend to cart; alerts 'HTTP5xxHigh' for frontend."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/cart",
+      "target": "otel-demo/Service/cart",
+      "condition": "Pods in CrashLoopBackOff stopped serving traffic",
+      "effect": "Service had zero ready endpoints"
+    },
+    {
+      "source": "otel-demo/Service/cart",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "Frontend calls cart and receives connection errors",
+      "effect": "Frontend returned HTTP 5xx to clients"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "KubePodCrashLooping",
+      "explanation": "Pods repeatedly failed to start, entering CrashLoopBackOff, indicating a runtime issue.",
+      "explained": true
+    },
+    {
+      "alert": "KubeServiceDown",
+      "explanation": "Service had no healthy endpoints because its backing pods were down.",
+      "explained": true
+    },
+    {
+      "alert": "HTTP5xxHigh",
+      "explanation": "Frontend observed a high rate of 5xx responses, caused by downstream failures.",
+      "explained": true
+    }
+  ]
+}

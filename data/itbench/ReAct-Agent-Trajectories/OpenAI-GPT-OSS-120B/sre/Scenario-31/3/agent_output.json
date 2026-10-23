@@ -1,0 +1,65 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "Deployment ad shows 92% CPU throttling, indicating its pods are hitting CPU limits and starving downstream services.",
+      "evidence": "CPUThrottlingHigh alert for ad (info) and metric throttle_pct 92% from metric analysis"
+    },
+    {
+      "name": "otel-demo/Deployment/cart",
+      "contributing_factor": true,
+      "reasoning": "Deployment cart shows 53% CPU throttling, contributing to request errors observed in the frontend chain.",
+      "evidence": "CPUThrottlingHigh alert for cart and metric throttle_pct 53%"
+    },
+    {
+      "name": "otel-demo/Deployment/fraud-detection",
+      "contributing_factor": true,
+      "reasoning": "Fraud‑detection deployment has 81% CPU throttling, adding pressure on the namespace CPU budget.",
+      "evidence": "CPUThrottlingHigh alert for fraud-detection and metric throttle_pct 81%"
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Frontend‑proxy receives increased error rate because upstream services are throttled and slow.",
+      "evidence": "RequestErrorRate alert firing (warning) for frontend-proxy, trace analysis shows vanished traffic"
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "ad pods are CPU throttled >90% causing latency spikes",
+      "effect": "frontend‑proxy sees higher error rate and reduced traffic"
+    },
+    {
+      "source": "otel-demo/Deployment/cart",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "cart pods throttled ~50% reducing response reliability",
+      "effect": "additional request errors observed in frontend‑proxy"
+    },
+    {
+      "source": "otel-demo/Deployment/fraud-detection",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "fraud‑detection throttling adds overall CPU pressure",
+      "effect": "contributes to the observed error rate increase"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Indicates a container's CPU time is being throttled heavily, leading to performance degradation.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Shows the HTTP request error rate for a service exceeds the threshold, often caused by upstream latency or failures.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Info‑level alerts are being inhibited; they are not critical but indicate that info alerts are present.",
+      "explained": true
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": true,
+      "reasoning": "CPU throttling alerts show ~28% throttle on the frontend pod, indicating resource contention that degrades its responsiveness.",
+      "evidence": "CPUThrottlingHigh firing info alerts; metric analysis shows throttle_pct 28% for pod_frontend"
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Proxy receives increased errors and latency downstream from the throttled frontend, triggering error rate and latency alerts.",
+      "evidence": "RequestErrorRate firing warning; RequestLatency firing warning for frontend-proxy"
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout service latency exceeds 1500 ms, likely caused by upstream proxy slowdown.",
+      "evidence": "RequestLatency firing warning for checkout"
+    },
+    {
+      "name": "otel-demo/Service/shipping",
+      "contributing_factor": false,
+      "reasoning": "Shipping latency spikes correlate with proxy degradation.",
+      "evidence": "RequestLatency firing warning for shipping"
+    },
+    {
+      "name": "otel-demo/Service/quote",
+      "contributing_factor": false,
+      "reasoning": "Quote service latency high, downstream of the affected proxy.",
+      "evidence": "RequestLatency firing warning for quote"
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/frontend",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "CPU throttling (~28%) reduces frontend response time",
+      "effect": "frontend-proxy sees higher error rate and latency"
+    },
+    {
+      "source": "otel-demo/Service/frontend-proxy",
+      "target": "otel-demo/Service/checkout",
+      "condition": "Elevated error rate and latency from proxy",
+      "effect": "checkout latency exceeds 1500 ms"
+    },
+    {
+      "source": "otel-demo/Service/frontend-proxy",
+      "target": "otel-demo/Service/shipping",
+      "condition": "Elevated error rate and latency from proxy",
+      "effect": "shipping latency exceeds 1500 ms"
+    },
+    {
+      "source": "otel-demo/Service/frontend-proxy",
+      "target": "otel-demo/Service/quote",
+      "condition": "Elevated error rate and latency from proxy",
+      "effect": "quote latency exceeds 1500 ms"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Container frontend throttling ~28% indicates CPU contention.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate >0 in frontend-proxy shows request failures caused by upstream slowdown.",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency >1500 ms in several services reflects downstream impact of proxy degradation.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Info-level inhibitor alerts fire because other alerts are active; they do not indicate a cause.",
+      "explained": true
+    }
+  ]
+}

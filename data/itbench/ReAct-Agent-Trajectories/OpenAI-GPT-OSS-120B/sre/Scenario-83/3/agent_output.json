@@ -1,0 +1,81 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": true,
+      "reasoning": "Checkout pod is in CrashLoopBackOff, causing service unavailability.",
+      "evidence": "Critical CrashLoopBackOffPodsDetected alert; RequestLatency and RequestErrorRate alerts for checkout service."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Service is downstream of the failing checkout deployment and reports high latency and error rate.",
+      "evidence": "RequestLatency and RequestErrorRate alerts reference service_name=checkout."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Frontend‑proxy calls checkout; its error‑rate alert spikes due to checkout failures.",
+      "evidence": "RequestErrorRate alert for service_name=frontend-proxy with non‑zero error rate."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend pods experience downstream errors from checkout, reflected in latency alerts.",
+      "evidence": "RequestLatency alert for service_name=checkout also impacts frontend response times."
+    },
+    {
+      "name": "otel-demo/Namespace/otel-demo",
+      "contributing_factor": false,
+      "reasoning": "Namespace‑wide CPU throttling info alert indicates resource pressure but not root cause.",
+      "evidence": "CPUThrottlingHigh alerts (info) across the namespace."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/checkout",
+      "condition": "Pods stuck in CrashLoopBackOff stop serving requests",
+      "effect": "Service reports high latency and error rate"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Frontend‑proxy forwards calls to checkout",
+      "effect": "Error‑rate spikes for frontend‑proxy"
+    },
+    {
+      "source": "otel-demo/Service/frontend-proxy",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "Frontend receives failed responses from proxy",
+      "effect": "Increased request latency for frontend"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "At least one pod in otel-demo namespace is repeatedly failing to start, marking the namespace as unhealthy.",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Observed 95th‑percentile latency exceeds 1500 ms for checkout service, indicating slow responses.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate > 0 for checkout and frontend‑proxy services, caused by failing checkout pods.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Namespace shows elevated CPU throttling (info level), a symptom of resource pressure.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Informational alert about pending pods; not directly related to the incident.",
+      "explained": false
+    }
+  ]
+}

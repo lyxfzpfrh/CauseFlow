@@ -1,0 +1,99 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "CPU throttling on ad pods caused high error rate and request failures.",
+      "evidence": "CPUThrottlingHigh alert on ad pod, RequestErrorRate alert for ad, trace shows ad→flagd 100% error rate"
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "Service exposed by the failing ad deployment, observed errors.",
+      "evidence": "RequestErrorRate alert for ad, trace error path"
+    },
+    {
+      "name": "otel-demo/Service/flagd",
+      "contributing_factor": false,
+      "reasoning": "Flagd received failing calls from ad, error rate rose to 50%.",
+      "evidence": "Trace critical path ad→flagd shows error rate jump, RequestErrorRate alert for flagd"
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Downstream of ad; traffic dropped and error rate increased.",
+      "evidence": "NoRequestsDetected alert, RequestErrorRate alert, trace shows traffic drop"
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend lost traffic due to upstream proxy failure.",
+      "evidence": "NoRequestsDetected alert, trace disappearance"
+    },
+    {
+      "name": "otel-demo/Service/recommendation",
+      "contributing_factor": false,
+      "reasoning": "Recommendation service observed 100% error rate in trace path.",
+      "evidence": "Trace path recommendation→flagd shows error, RequestErrorRate alert"
+    },
+    {
+      "name": "otel-demo/Service/fraud-detection",
+      "contributing_factor": false,
+      "reasoning": "Fraud‑detection calls flagd and shows new 100% error rate.",
+      "evidence": "Trace path fraud-detection→flagd new error, RequestErrorRate alert"
+    },
+    {
+      "name": "otel-demo/Service/cart",
+      "contributing_factor": false,
+      "reasoning": "Cart lost traffic as upstream services failed.",
+      "evidence": "NoRequestsDetected alert, trace disappearance"
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout lost traffic due to upstream failures.",
+      "evidence": "NoRequestsDetected alert, trace disappearance"
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/flagd",
+      "condition": "ad pods suffer CPU throttling causing request failures",
+      "effect": "flagd receives failing calls, error rate rises to 50%"
+    },
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "ad errors propagate upstream through proxy",
+      "effect": "frontend-proxy sees increased error rate and traffic drop"
+    },
+    {
+      "source": "otel-demo/Service/frontend-proxy",
+      "target": "otel-demo/Service/frontend",
+      "condition": "proxy returns errors/no responses",
+      "effect": "frontend receives no requests (NoRequestsDetected)"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Service/recommendation",
+      "condition": "ad failures affect shared flagd config",
+      "effect": "recommendation sees 100% error rate"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Service/fraud-detection",
+      "condition": "ad failures affect flagd usage",
+      "effect": "fraud-detection error rate spikes"
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "InfoInhibitor", "explanation": "Info‑level alerts are suppressed to reduce noise", "explained": true},
+    {"alert": "RequestErrorRate", "explanation": "Error rate >0 for several services, indicates failing requests", "explained": true},
+    {"alert": "PendingPodsDetected", "explanation": "Pods in Pending state, not ready to serve", "explained": true},
+    {"alert": "NoRequestsDetected", "explanation": "Service received zero requests, likely due to upstream failure", "explained": true},
+    {"alert": "KubePodNotReady", "explanation": "Pod not in Ready condition, may affect service availability", "explained": true},
+    {"alert": "KubeDeploymentReplicasMismatch", "explanation": "Deployment replica count differs from desired, possible scaling issue", "explained": true},
+    {"alert": "CPUThrottlingHigh", "explanation": "Pod CPU throttling > threshold, can cause latency and errors", "explained": true}
+  ]
+}

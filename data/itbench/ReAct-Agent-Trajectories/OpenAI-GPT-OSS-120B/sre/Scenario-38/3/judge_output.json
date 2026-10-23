@@ -1,0 +1,166 @@
+{
+  "metadata": {
+    "scenario": "Scenario-38",
+    "run": 3,
+    "duration_seconds": 0,
+    "inference_count": 0,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "otel-demo-horizontal-pod-autoscalers"
+        ],
+        "predicted_entities": [],
+        "calculation_precision": null,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The model did not predict any root cause entities. The ground truth has one root cause entity ('otel-demo-horizontal-pod-autoscalers'). Therefore, the number of correct predictions is 0. Recall is 0/1=0. Precision is 0/0, which is conventionally 0. F1 is 0."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0,
+        "justification": "The model did not correctly identify any root cause entities, so the reasoning accuracy score is 0.",
+        "details": {}
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components. The model produced an empty propagation path, while the ground truth path contains the root cause component. The Longest Common Subsequence (LCS) is empty (TP=0). Therefore, precision, recall, and F1 are all 0.",
+        "details": {
+          "normalization_map": {},
+          "semantic_components": {
+            "HPA Component": [
+              "otel-demo-horizontal-pod-autoscalers"
+            ],
+            "Namespace Component": [
+              "otel-demo-namespace-1"
+            ]
+          },
+          "contracted_gt_path": [
+            "HPA Component"
+          ],
+          "contracted_model_path": [],
+          "lcs_components": [],
+          "true_positives_TP": 0,
+          "model_path_length": 0,
+          "gt_path_length": 1
+        },
+        "precision": null,
+        "recall": 0.0,
+        "calculation": 0
+      },
+      "fault_localization_component_identification": {
+        "calculation": 0,
+        "justification": "The ground truth does not contain any propagation effects, so a 'first impacted component' with a performance failure cannot be identified. The fallback rule also does not apply as there is no component following the root cause in the contracted path. Therefore, the model cannot match a non-existent target, resulting in a score of 0.",
+        "details": {
+          "gt_first_impacted_component": "Not Applicable",
+          "effect_used": "N/A - GT.propagations is empty.",
+          "priority_rule_applied": "N/A - No propagations to apply rules to.",
+          "found_in_model_path": false
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": 0,
+        "justification": "The model did not identify any root cause entities, so no partial credit can be awarded. The score is 0.",
+        "details": []
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": null,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The model predicted no root cause entities (M=0), so Soft Precision is 0. The single GT root cause component ('HPA Component') has no corresponding component in the model's predictions, resulting in an infinite hop distance and a score of 0 for Soft Recall. Consequently, the F1 score is 0.",
+        "precision_details": [],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-horizontal-pod-autoscalers",
+            "is_on_path": true,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 1,
+        "calculation_precision": null,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The logic is the same as the No FP version. With no predicted root causes (M=0), Soft Precision is 0. The GT root cause has an infinite hop distance to any model prediction, so Soft Recall is 0. The F1 score is 0.",
+        "precision_details": [],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-horizontal-pod-autoscalers",
+            "is_on_path": true,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      }
+    },
+    "incident_id": "Scenario-38",
+    "trial_id": "3"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": null,
+    "root_cause_entity_recall": 0.0,
+    "root_cause_entity_f1": 0,
+    "root_cause_reasoning": 0,
+    "propagation_chain": 0,
+    "fault_localization_component_identification": 0,
+    "root_cause_reasoning_partial": 0,
+    "root_cause_proximity_no_fp_precision": null,
+    "root_cause_proximity_no_fp_recall": 0.0,
+    "root_cause_proximity_no_fp_f1": 0,
+    "root_cause_proximity_with_fp_precision": null,
+    "root_cause_proximity_with_fp_recall": 0.0,
+    "root_cause_proximity_with_fp_f1": 0,
+    "root_cause_entity_k_precision": 0.0,
+    "root_cause_entity_k_recall": 0.0,
+    "root_cause_entity_k_f1": 0.0,
+    "root_cause_entity_k@1_precision": 0.0,
+    "root_cause_entity_k@1_recall": 0.0,
+    "root_cause_entity_k@1_f1": 0.0,
+    "root_cause_entity_k@2_precision": 0.0,
+    "root_cause_entity_k@2_recall": 0.0,
+    "root_cause_entity_k@2_f1": 0.0,
+    "root_cause_entity_k@3_precision": 0.0,
+    "root_cause_entity_k@3_recall": 0.0,
+    "root_cause_entity_k@3_f1": 0.0,
+    "root_cause_entity_k@4_precision": 0.0,
+    "root_cause_entity_k@4_recall": 0.0,
+    "root_cause_entity_k@4_f1": 0.0,
+    "root_cause_entity_k@5_precision": 0.0,
+    "root_cause_entity_k@5_recall": 0.0,
+    "root_cause_entity_k@5_f1": 0.0
+  }
+}

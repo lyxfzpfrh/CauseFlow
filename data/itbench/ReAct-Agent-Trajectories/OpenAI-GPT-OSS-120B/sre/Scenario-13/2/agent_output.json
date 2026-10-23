@@ -1,0 +1,89 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Pod/frontend-675fd7b5c5-f44st",
+      "contributing_factor": true,
+      "reasoning": "The pod shows a persistent CPUThrottlingHigh alert, indicating it is being CPU‑throttled and cannot keep up with request load.",
+      "evidence": "CPUThrottlingHigh alert firing repeatedly (since 17:46) and concurrent RequestErrorRate warnings for the namespace."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": true,
+      "reasoning": "Deployment owns the throttled pod; its replica set is affected, making the deployment the upstream cause of service degradation.",
+      "evidence": "Deployment pods include the throttled pod; alerts reference the pod name and the deployment’s service shows error spikes."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Service routes traffic to the throttled pod, resulting in increased HTTP error rates observed by RequestErrorRate alerts.",
+      "evidence": "RequestErrorRate alerts (warning) fire continuously while the frontend pod is throttled."
+    },
+    {
+      "name": "otel-demo/Service/cart",
+      "contributing_factor": false,
+      "reasoning": "Cart service is downstream of frontend; frontend failures reduce successful calls to cart, contributing to overall error rate.",
+      "evidence": "InfoInhibitor alerts fire for cart pod indicating it is running, but overall RequestErrorRate persists, implying impact from upstream frontend."
+    },
+    {
+      "name": "otel-demo/Service/recommendation",
+      "contributing_factor": false,
+      "reasoning": "Recommendation service receives calls from frontend; degraded frontend leads to errors observed in the namespace.",
+      "evidence": "Same RequestErrorRate pattern across timestamps; no direct alerts on recommendation, so impact is downstream."
+    },
+    {
+      "name": "otel-demo/Service/product-catalog",
+      "contributing_factor": false,
+      "reasoning": "Product‑catalog is another downstream dependency of frontend, affected by the same upstream throttling.",
+      "evidence": "No specific alerts on product‑catalog; error rate alerts span the whole namespace during the incident."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Pod/frontend-675fd7b5c5-f44st",
+      "target": "otel-demo/Service/frontend",
+      "condition": "CPU throttling limits pod processing capacity",
+      "effect": "Service returns increased HTTP 5xx errors, triggering RequestErrorRate alerts"
+    },
+    {
+      "source": "otel-demo/Service/frontend",
+      "target": "otel-demo/Service/cart",
+      "condition": "Frontend fails to forward successful requests",
+      "effect": "Cart receives fewer successful calls, contributing to namespace‑wide error rate"
+    },
+    {
+      "source": "otel-demo/Service/frontend",
+      "target": "otel-demo/Service/recommendation",
+      "condition": "Frontend request failures",
+      "effect": "Downstream recommendation service sees degraded traffic"
+    },
+    {
+      "source": "otel-demo/Service/frontend",
+      "target": "otel-demo/Service/product-catalog",
+      "condition": "Frontend request failures",
+      "effect": "Product‑catalog experiences reduced successful calls"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Indicates a pod is being throttled by the CPU cgroup, causing latency and request failures.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Warns that the ratio of HTTP 5xx responses exceeds the threshold for the namespace.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Info‑level alert used to suppress noisy info alerts; its firing is normal and not a root cause.",
+      "explained": true
+    },
+    {
+      "alert": "Watchdog",
+      "explanation": "Always‑firing alert confirming Alertmanager is operational; not related to the incident.",
+      "explained": true
+    }
+  ]
+}
+

@@ -1,0 +1,93 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/recommendation",
+      "contributing_factor": true,
+      "reasoning": "FailedMount events prevented the recommendation pods from starting, causing no traffic and downstream errors.",
+      "evidence": "FailedMount events for deployment recommendation (20 occurrences) and NoRequestsDetected alert for service recommendation."
+    },
+    {
+      "name": "otel-demo/Deployment/product-catalog",
+      "contributing_factor": true,
+      "reasoning": "FailedMount events blocked product‑catalog pods, leading to missing requests and increased error rates upstream.",
+      "evidence": "FailedMount events for deployment product-catalog and NoRequestsDetected alert for service product-catalog."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Frontend‑proxy observed a sharp rise in error rate because its downstream services (recommendation, product‑catalog) were unavailable.",
+      "evidence": "Trace error tree shows error‑rate jump from 0% to 50% for frontend‑proxy; RequestErrorRate alert for frontend‑proxy."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend returned 5xx responses due to upstream recommendation and product‑catalog failures.",
+      "evidence": "RequestErrorRate and RequestLatency alerts for service frontend; traces show frontend calls to recommendation and product‑catalog."
+    },
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout experienced increased latency and error rate as it depended on product‑catalog which was down.",
+      "evidence": "RequestErrorRate and RequestLatency alerts for service checkout; trace paths include checkout → product‑catalog."
+    },
+    {
+      "name": "otel-demo/Deployment/otel-collector",
+      "contributing_factor": false,
+      "reasoning": "Unhealthy pod events for otel‑collector may have contributed to CPU throttling alerts but were not the primary cause of request failures.",
+      "evidence": "Unhealthy events for otel‑collector pod and CPUThrottlingHigh alert (2 occurrences)."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/recommendation",
+      "target": "otel-demo/Deployment/frontend-proxy",
+      "condition": "Recommendation pods failed to mount volumes and never became ready",
+      "effect": "Frontend‑proxy received 50% error responses from downstream calls"
+    },
+    {
+      "source": "otel-demo/Deployment/product-catalog",
+      "target": "otel-demo/Deployment/frontend-proxy",
+      "condition": "Product‑catalog pods failed to start due to FailedMount",
+      "effect": "Frontend‑proxy errors increased, triggering RequestErrorRate alert"
+    },
+    {
+      "source": "otel-demo/Deployment/frontend-proxy",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "Frontend‑proxy returned errors to callers",
+      "effect": "Frontend generated RequestErrorRate and RequestLatency alerts"
+    },
+    {
+      "source": "otel-demo/Deployment/product-catalog",
+      "target": "otel-demo/Deployment/checkout",
+      "condition": "Checkout could not retrieve product data because product‑catalog was down",
+      "effect": "Checkout showed increased latency and error rate alerts"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate >0 for services frontend‑proxy, checkout, and frontend indicates downstream failures.",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Latency spikes for the same services reflect waiting for unavailable downstream pods.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "No traffic observed for recommendation and product‑catalog because their pods never became ready.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Short‑lived CPU throttling on otel‑collector pod, not the primary cause of request failures.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Informational alert inhibiting other alerts; unrelated to the incident.",
+      "explained": true
+    }
+  ]
+}

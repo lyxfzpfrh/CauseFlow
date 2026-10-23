@@ -1,0 +1,72 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/cart",
+      "contributing_factor": true,
+      "reasoning": "Deployment's pods entered CrashLoopBackOff, preventing the cart service from responding.",
+      "evidence": "PodCrashLoopBackOff alert for pod cart-5c5c79c58f-8w2p; Warning BackOff event for same pod."
+    },
+    {
+      "name": "otel-demo/Service/cart",
+      "contributing_factor": false,
+      "reasoning": "Service had no ready endpoints because its pods were crashing.",
+      "evidence": "CrashLoopBackOff alert; no ready pods observed in k8s_objects_raw for cart service."
+    },
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout pods experienced high CPU due to increased retry load after cart failures.",
+      "evidence": "HighCPUUsage alert on checkout pod; CPU usage >0.9 in metric file; dependent on cart service."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Service degraded because its pods were overloaded and slow.",
+      "evidence": "HighCPUUsage alert and elevated cpu metric for checkout pod."
+    },
+    {
+      "name": "otel-demo/Pod/cart-5c5c79c58f-8w2p",
+      "contributing_factor": false,
+      "reasoning": "Pod failed to start and was in CrashLoopBackOff, causing cart service outage.",
+      "evidence": "PodCrashLoopBackOff alert; BackOff warning event."
+    },
+    {
+      "name": "otel-demo/Pod/checkout-6d8f8c9c9b-mk6m",
+      "contributing_factor": false,
+      "reasoning": "Pod showed sustained CPU >90% during incident, leading to warning alert.",
+      "evidence": "HighCPUUsage alert; CPU metric rows >0.85 at 09:00‑09:02."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/cart",
+      "target": "otel-demo/Service/cart",
+      "condition": "Pods are in CrashLoopBackOff and not ready",
+      "effect": "Cart service has no ready endpoints"
+    },
+    {
+      "source": "otel-demo/Service/cart",
+      "target": "otel-demo/Deployment/checkout",
+      "condition": "Cart service unavailable causing checkout retries",
+      "effect": "Checkout pods' CPU usage spikes"
+    },
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/checkout",
+      "condition": "Pods overloaded with CPU >90%",
+      "effect": "Checkout service response latency degrades"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "PodCrashLoopBackOff",
+      "explanation": "Cart pod repeatedly failed to start, entering CrashLoopBackOff, causing service outage.",
+      "explained": true
+    },
+    {
+      "alert": "HighCPUUsage",
+      "explanation": "Checkout pod CPU usage exceeded normal thresholds, likely due to extra load from cart failures.",
+      "explained": true
+    }
+  ]
+}

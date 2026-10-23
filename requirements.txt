@@ -1,0 +1,11 @@
+# --- core (pipeline + data + statistics; no GPU needed) ---
+numpy>=1.26
+pandas>=2.0
+pyarrow>=14.0
+zstandard>=0.22         # read the shipped tar.zst trajectory archives
+openpyxl>=3.1           # inspect experiment_data.xlsx
+
+# --- optional: live (non-mock) backends ---
+# torch>=2.2                      # HFAnalyzer (real model internals)
+# transformers>=4.44              # HFAnalyzer
+# openai>=1.30                    # LLMReasoner (DeepSeek-V4 endpoint)

@@ -1,0 +1,56 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "Deployment creates pods that were throttled >90% CPU, triggering RequestErrorRate and RequestLatency alerts.",
+      "evidence": "CPUThrottlingHigh alert on pod ad-554b849958-wpj2l with throttle_pct 91.7%; RequestErrorRate and RequestLatency alerts fire after 17:43."
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "Service downstream of the throttled pods, observed increased error rate and latency.",
+      "evidence": "RequestErrorRate and RequestLatency alerts include ad service traffic; NoRequestsDetected snapshot at 17:52 shows missing responses."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend depends on ad service; experienced errors due to ad failures.",
+      "evidence": "RequestErrorRate alert spans all services and peaks after ad throttling; frontend logs show 5xx responses (inferred from alerts)."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout orchestrates order processing and suffered latency spikes from upstream ad errors.",
+      "evidence": "RequestLatency alert active for entire stack after 17:50, coinciding with ad throttling period."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/ad",
+      "condition": "Pods throttled >90% CPU causing high error responses",
+      "effect": "Service ad returns errors and high latency"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Frontend calls ad for ads during page load",
+      "effect": "Frontend returns 5xx errors, contributing to overall error rate"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Service/checkout",
+      "condition": "Checkout queries ad for promotional content",
+      "effect": "Checkout latency increases, observed in RequestLatency alert"
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "CPUThrottlingHigh", "explanation": "Pods in otel-demo namespace exceed CPU throttling threshold, indicating resource contention.", "explained": true},
+    {"alert": "RequestErrorRate", "explanation": "Overall request error rate exceeds threshold across services, driven by ad service failures.", "explained": true},
+    {"alert": "RequestLatency", "explanation": "Request latency across services exceeds threshold, downstream of ad throttling.", "explained": true},
+    {"alert": "NoRequestsDetected", "explanation": "Snapshot shows no successful requests during peak, confirming outage.", "explained": true},
+    {"alert": "InfoInhibitor", "explanation": "Informational alert about alert inhibition; not directly related to failure.", "explained": true}
+  ]
+}
+

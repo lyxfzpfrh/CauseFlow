@@ -1,0 +1,65 @@
+{
+  "entities": [
+    {
+      "name": "kube-system/Deployment/kube-scheduler",
+      "contributing_factor": true,
+      "reasoning": "Scheduler was down, preventing pod scheduling and causing request timeouts.",
+      "evidence": "Alert KubeSchedulerDown firing during incident."
+    },
+    {
+      "name": "kube-system/Deployment/kube-controller-manager",
+      "contributing_factor": true,
+      "reasoning": "Controller manager down, halting replica management and causing pod restarts.",
+      "evidence": "Alert KubeControllerManagerDown firing during incident."
+    },
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend pods experienced high latency due to upstream failures.",
+      "evidence": "RequestErrorRate alert firing, traces show errors in frontend calls."
+    },
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout service errors increased as downstream services failed.",
+      "evidence": "Trace error tree shows increased error rate for checkout spans."
+    },
+    {
+      "name": "otel-demo/Deployment/cart",
+      "contributing_factor": false,
+      "reasoning": "Cart service impacted by CPU throttling and Kafka connection issues.",
+      "evidence": "CPUThrottlingHigh alert and KafkaConnectionClosureRate alert observed."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "kube-system/Deployment/kube-scheduler",
+      "target": "otel-demo/Deployment/frontend",
+      "condition": "Scheduler unavailable prevented new pod creation and caused scheduling delays",
+      "effect": "Frontend requests timed out, triggering RequestErrorRate"
+    },
+    {
+      "source": "kube-system/Deployment/kube-controller-manager",
+      "target": "otel-demo/Deployment/checkout",
+      "condition": "Controller manager down stopped replica set updates",
+      "effect": "Checkout pods could not recover, leading to increased errors"
+    },
+    {
+      "source": "otel-demo/Deployment/cart",
+      "target": "otel-demo/Deployment/checkout",
+      "condition": "High CPU throttling on cart pod reduced responsiveness",
+      "effect": "Checkout service saw downstream latency spikes and errors"
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "Watchdog", "explanation": "Ensures alerting pipeline is alive; always firing.", "explained": true},
+    {"alert": "InfoInhibitor", "explanation": "Suppresses lower‑severity alerts during incidents.", "explained": true},
+    {"alert": "KubeClientCertificateExpiration", "explanation": "Client cert for API server nearing expiry, not root cause.", "explained": true},
+    {"alert": "RequestErrorRate", "explanation": "High HTTP error rate from services, symptom of upstream failures.", "explained": true},
+    {"alert": "KubeControllerManagerDown", "explanation": "Controller manager stopped, causing replica management loss.", "explained": true},
+    {"alert": "KubeSchedulerDown", "explanation": "Scheduler stopped, preventing pod scheduling and causing timeouts.", "explained": true},
+    {"alert": "KafkaConnectionClosureRate", "explanation": "Kafka connections dropped frequently, affecting event‑driven services.", "explained": true},
+    {"alert": "CPUThrottlingHigh", "explanation": "Pods in otel-demo namespace hit CPU throttling >10%, degrading performance.", "explained": true}
+  ]
+}
+

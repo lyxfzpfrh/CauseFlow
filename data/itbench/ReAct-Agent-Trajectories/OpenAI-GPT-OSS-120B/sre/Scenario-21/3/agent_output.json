@@ -1,0 +1,68 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Pod/valkey-cart-58df56c79c-4cvft",
+      "contributing_factor": true,
+      "reasoning": "Pod entered CrashLoopBackOff with repeated BackOff events and triggered CrashLoopBackOffPodsDetected alert.",
+      "evidence": "BackOff events in k8s_events_raw.tsv and CrashLoopBackOffPodsDetected alert (critical) for this pod."
+    },
+    {
+      "name": "otel-demo/Deployment/valkey-cart",
+      "contributing_factor": true,
+      "reasoning": "Deployment creates the failing pod; its pods are repeatedly crashing, making it the upstream cause.",
+      "evidence": "Deployment spec observed in k8s_objects_raw.tsv and linked CrashLooping pod."
+    },
+    {
+      "name": "otel-demo/Service/valkey-cart",
+      "contributing_factor": false,
+      "reasoning": "Service cannot route traffic because its backing pod is down, impacting dependent services.",
+      "evidence": "Service definition present but backend pod in CrashLoopBackOff."
+    },
+    {
+      "name": "otel-demo/Pod/cart-755465879b-4p8d9",
+      "contributing_factor": false,
+      "reasoning": "Cart pod shows CPUThrottlingHigh and RequestErrorRate alerts, likely caused by retries to unavailable Redis.",
+      "evidence": "CPUThrottlingHigh alerts for this pod and RequestErrorRate warnings matching cart workload."
+    },
+    {
+      "name": "otel-demo/Pod/postgresql-c7fd45b87-n75gn",
+      "contributing_factor": false,
+      "reasoning": "PostgreSQL pod shows CPUThrottlingHigh and InfoInhibitor alerts, a downstream symptom of increased load.",
+      "evidence": "CPUThrottlingHigh alerts for this pod and InfoInhibitor alert in otel-demo namespace."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend experiences RequestErrorRate and latency alerts due to failures in downstream services.",
+      "evidence": "RequestErrorRate and RequestLatency warnings observed across the snapshot timeframe."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Pod/valkey-cart-58df56c79c-4cvft",
+      "target": "otel-demo/Service/valkey-cart",
+      "condition": "Pod is in CrashLoopBackOff and not ready",
+      "effect": "Service cannot serve Redis requests, returning errors to callers"
+    },
+    {
+      "source": "otel-demo/Service/valkey-cart",
+      "target": "otel-demo/Pod/cart-755465879b-4p8d9",
+      "condition": "Redis endpoint unavailable",
+      "effect": "Cart pod experiences CPU throttling and increased error rate"
+    },
+    {
+      "source": "otel-demo/Pod/cart-755465879b-4p8d9",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Cart service returns errors and latency spikes",
+      "effect": "Frontend reports high request error rate and latency"
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "CrashLoopBackOffPodsDetected", "explanation": "Critical alert when a pod repeatedly crashes and enters back‑off", "explained": true},
+    {"alert": "KubePodCrashLooping", "explanation": "Warning that a pod is crash looping", "explained": true},
+    {"alert": "CPUThrottlingHigh", "explanation": "Info alert indicating container CPU throttling exceeds threshold", "explained": true},
+    {"alert": "RequestErrorRate", "explanation": "Warning that request error percentage is high across services", "explained": true},
+    {"alert": "RequestLatency", "explanation": "Warning that request latency exceeds SLA", "explained": true},
+    {"alert": "InfoInhibitor", "explanation": "Inhibits noisy info alerts; not a direct failure", "explained": true}
+  ]
+}

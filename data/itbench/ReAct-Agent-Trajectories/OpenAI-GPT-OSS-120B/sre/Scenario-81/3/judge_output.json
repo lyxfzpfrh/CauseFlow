@@ -1,0 +1,243 @@
+{
+  "metadata": {
+    "scenario": "Scenario-81",
+    "run": 3,
+    "duration_seconds": 0,
+    "inference_count": 0,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "otel-demo-shipping-quote-network-partition"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "chaos-mesh/NetworkChaos/otel-demo-shipping-quote-network-partition-b7wl4",
+            "matches_gt": true,
+            "matched_to": "otel-demo-shipping-quote-network-partition"
+          }
+        ],
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0,
+        "justification": "The Ground Truth has one root cause entity: 'otel-demo-shipping-quote-network-partition'. The model predicted one root cause entity, 'chaos-mesh/NetworkChaos/otel-demo-shipping-quote-network-partition-b7wl4', which normalizes to the GT entity. Therefore, there is 1 true positive, 0 false positives, and 0 false negatives."
+      },
+      "root_cause_reasoning": {
+        "calculation": 1.0,
+        "justification": "The single correctly identified root cause entity was evaluated. The model's reasoning 'NetworkChaos experiment partitioned shipping and quote services, cutting network traffic.' is semantically equivalent to the GT condition 'Chaos Mesh network partition blocking shipping pods from reaching quote service'. Therefore, it receives a score of 1.0.",
+        "details": {
+          "entity_1_reasoning_score": 1
+        }
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components grouped by the specified rules. The GT path has 6 components and the model path has 8. The Longest Common Subsequence (LCS) has a length of 6. With a TP of 6, a model path length of 8, and a GT path length of 6, the precision and recall are calculated.",
+        "details": {
+          "normalization_map": {
+            "chaos-mesh/NetworkChaos/otel-demo-shipping-quote-network-partition-b7wl4": "otel-demo-shipping-quote-network-partition",
+            "otel-demo/Deployment/shipping": "shipping-service-1",
+            "otel-demo/Deployment/quote": "quote-service-1",
+            "otel-demo/Deployment/checkout": "checkout-service-1",
+            "otel-demo/Deployment/frontend": "frontend-service-1",
+            "otel-demo/Deployment/frontend-proxy": "frontend-proxy-service-1"
+          },
+          "semantic_components": {
+            "Chaos Injection Component": [
+              "otel-demo-shipping-quote-network-partition"
+            ],
+            "Shipping Service Component": [
+              "shipping-pod-1",
+              "shipping-service-1"
+            ],
+            "Quote Service Component": [
+              "quote-service-1"
+            ],
+            "Checkout Service Component": [
+              "checkout-service-1"
+            ],
+            "Frontend Service Component": [
+              "frontend-service-1"
+            ],
+            "Frontend Proxy Service Component": [
+              "frontend-proxy-service-1"
+            ],
+            "Cart Service Component": [
+              "otel-demo/Deployment/cart"
+            ],
+            "Recommendation Service Component": [
+              "otel-demo/Deployment/recommendation"
+            ]
+          },
+          "contracted_gt_path": [
+            "Chaos Injection Component",
+            "Shipping Service Component",
+            "Quote Service Component",
+            "Checkout Service Component",
+            "Frontend Service Component",
+            "Frontend Proxy Service Component"
+          ],
+          "contracted_model_path": [
+            "Chaos Injection Component",
+            "Shipping Service Component",
+            "Quote Service Component",
+            "Checkout Service Component",
+            "Cart Service Component",
+            "Recommendation Service Component",
+            "Frontend Service Component",
+            "Frontend Proxy Service Component"
+          ],
+          "lcs_components": [
+            "Chaos Injection Component",
+            "Shipping Service Component",
+            "Quote Service Component",
+            "Checkout Service Component",
+            "Frontend Service Component",
+            "Frontend Proxy Service Component"
+          ],
+          "true_positives_TP": 6,
+          "model_path_length": 8,
+          "gt_path_length": 6
+        },
+        "precision": 0.75,
+        "recall": 1.0,
+        "calculation": 0.8571428571428571
+      },
+      "fault_localization_component_identification": {
+        "calculation": 1,
+        "justification": "The first performance failure in GT.propagations is from the source 'otel-demo-shipping-quote-network-partition' which is a Chaos entity. Using Priority 2 rule (Chaos Target), the first impacted component is the target of that propagation, 'shipping-pod-1', which belongs to the 'Shipping Service Component'. This component was found in the model's contracted path.",
+        "details": {
+          "gt_first_impacted_component": "Shipping Service Component",
+          "effect_used": "Shipping pods cannot establish or maintain connections to quote service",
+          "priority_rule_applied": "Priority 2",
+          "found_in_model_path": true
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": null,
+        "justification": "The model predicted one root cause entity, 'chaos-mesh/NetworkChaos/otel-demo-shipping-quote-network-partition-b7wl4'. This entity was a correct match for a ground truth root cause. Therefore, its score is the same as its score from the 'root_cause_reasoning' metric, which was 1.0. The max score is 1.0.",
+        "details": [
+          {
+            "entity": "chaos-mesh/NetworkChaos/otel-demo-shipping-quote-network-partition-b7wl4",
+            "metric1_is_correct": true,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 1
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0,
+        "justification": "Precision: The model predicted 1 root cause component, 'Chaos Injection Component'. Its hop distance to the GT root cause component ('Chaos Injection Component') is 0. The score is 1/(1+0) = 1. The average is 1/1 = 1. Recall: The GT has 1 root cause component, 'Chaos Injection Component'. Its hop distance to the predicted root cause component is 0. The score is 1/(1+0) = 1. The average is 1/1 = 1.",
+        "precision_details": [
+          {
+            "entity": "chaos-mesh/NetworkChaos/otel-demo-shipping-quote-network-partition-b7wl4",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-shipping-quote-network-partition",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 6,
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0,
+        "justification": "The contracted GT path length is 6. Precision: The model predicted 1 root cause component, 'Chaos Injection Component'. Its hop distance to the GT root cause component is 0. The score is 1/(1 + 0/6) = 1. The average is 1/1 = 1. Recall: The GT has 1 root cause component, 'Chaos Injection Component'. Its hop distance to the predicted root cause component is 0. The score is 1/(1 + 0/6) = 1. The average is 1/1 = 1.",
+        "precision_details": [
+          {
+            "entity": "chaos-mesh/NetworkChaos/otel-demo-shipping-quote-network-partition-b7wl4",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-shipping-quote-network-partition",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      }
+    },
+    "incident_id": "Scenario-81",
+    "trial_id": "3"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 1.0,
+    "root_cause_entity_recall": 1.0,
+    "root_cause_entity_f1": 1.0,
+    "root_cause_reasoning": 1.0,
+    "propagation_chain": 0.8571428571428571,
+    "fault_localization_component_identification": 1,
+    "root_cause_reasoning_partial": null,
+    "root_cause_proximity_no_fp_precision": 1.0,
+    "root_cause_proximity_no_fp_recall": 1.0,
+    "root_cause_proximity_no_fp_f1": 1.0,
+    "root_cause_proximity_with_fp_precision": 1.0,
+    "root_cause_proximity_with_fp_recall": 1.0,
+    "root_cause_proximity_with_fp_f1": 1.0,
+    "root_cause_entity_k_precision": 1.0,
+    "root_cause_entity_k_recall": 1.0,
+    "root_cause_entity_k_f1": 1.0,
+    "root_cause_entity_k@1_precision": 1.0,
+    "root_cause_entity_k@1_recall": 1.0,
+    "root_cause_entity_k@1_f1": 1.0,
+    "root_cause_entity_k@2_precision": 1.0,
+    "root_cause_entity_k@2_recall": 1.0,
+    "root_cause_entity_k@2_f1": 1.0,
+    "root_cause_entity_k@3_precision": 1.0,
+    "root_cause_entity_k@3_recall": 1.0,
+    "root_cause_entity_k@3_f1": 1.0,
+    "root_cause_entity_k@4_precision": 1.0,
+    "root_cause_entity_k@4_recall": 1.0,
+    "root_cause_entity_k@4_f1": 1.0,
+    "root_cause_entity_k@5_precision": 1.0,
+    "root_cause_entity_k@5_recall": 1.0,
+    "root_cause_entity_k@5_f1": 1.0
+  }
+}

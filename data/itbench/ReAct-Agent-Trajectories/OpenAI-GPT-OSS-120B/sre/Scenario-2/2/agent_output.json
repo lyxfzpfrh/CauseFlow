@@ -1,0 +1,53 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/recommendation",
+      "contributing_factor": true,
+      "reasoning": "Recommendation service shows high error rate.",
+      "evidence": "RequestErrorRate alert firing for service recommendation."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend receives 5xx errors due to downstream recommendation failures.",
+      "evidence": "HTTPServerErrorRate alert firing for frontend and RequestErrorRate for recommendation."
+    },
+    {
+      "name": "otel-demo/Deployment/cart",
+      "contributing_factor": false,
+      "reasoning": "Cart experiences latency spikes because of retries to failing recommendation.",
+      "evidence": "LatencyHigh alert for cart and RequestErrorRate for recommendation."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/recommendation",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Recommendation service unavailable (CrashLoopBackOff)",
+      "effect": "Frontend returns HTTP 5xx to clients"
+    },
+    {
+      "source": "otel-demo/Deployment/recommendation",
+      "target": "otel-demo/Deployment/cart",
+      "condition": "Recommendation calls timeout",
+      "effect": "Cart latency increases and errors appear"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate in the service exceeds threshold.",
+      "explained": true
+    },
+    {
+      "alert": "HTTPServerErrorRate",
+      "explanation": "High 5xx response rate from frontend.",
+      "explained": true
+    },
+    {
+      "alert": "LatencyHigh",
+      "explanation": "Observed latency exceeds threshold.",
+      "explained": true
+    }
+  ]
+}

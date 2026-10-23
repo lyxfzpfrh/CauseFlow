@@ -1,0 +1,71 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": true,
+      "reasoning": "JVMChaos experiment on ad caused 100% CPU throttling leading to request failures.",
+      "evidence": "CPUThrottlingHigh alert firing; metric throttle_pct=100% for pod_ad; chaos event 'otel-demo-ad-jvm-chaos' started at 16:29Z."
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "Service became unavailable because its pods were throttled and returned errors.",
+      "evidence": "RequestErrorRate alert firing for ad; NoRequestsDetected alert for ad service."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend experienced 5xx errors due to downstream ad failures.",
+      "evidence": "RequestErrorRate alert firing; traces show failed calls from frontend to ad."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout depends on ad and reported errors during the incident.",
+      "evidence": "RequestErrorRate alert firing for checkout; trace spans show error propagation from ad."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/ad",
+      "condition": "Pods throttled 100% CPU, causing request timeouts",
+      "effect": "ad service returned 5xx and stopped serving traffic"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Frontend calls ad and receives error responses",
+      "effect": "frontend returned 5xx to users"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Service/checkout",
+      "condition": "Checkout invokes ad during order processing",
+      "effect": "checkout experienced increased error rate"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Pods in otel-demo namespace exceeded CPU throttling threshold, indicating cfs quota contention.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Observed request error rate above threshold for multiple services, driven by ad failures.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "No traffic observed for ad service during incident, confirming outage.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Info-level alerts were suppressed; not directly relevant to root cause.",
+      "explained": true
+    }
+  ]
+}
+

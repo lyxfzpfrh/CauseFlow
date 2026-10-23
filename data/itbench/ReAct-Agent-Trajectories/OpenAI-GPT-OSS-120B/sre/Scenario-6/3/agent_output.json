@@ -1,0 +1,48 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": true,
+      "reasoning": "Frontend pods experience 25% CPU throttling, degrading processing capacity.",
+      "evidence": "CPUThrottlingHigh alert (container frontend) active at 2025-12-15T17:25:02, metric shows high throttling percent."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Elevated request error rate follows frontend throttling, causing client errors.",
+      "evidence": "RequestErrorRate alert for frontend-proxy (value 0.011) firing from 2025-12-15T17:35:59, logs show normal traffic but occasional errors."
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "NoRequestsDetected alert indicates downstream service received no traffic, likely due to upstream failure.",
+      "evidence": "NoRequestsDetected alert for service ad firing during incident window."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/frontend",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "CPU throttling reduces request handling capacity",
+      "effect": "Request error rate in frontend-proxy rises above zero"
+    },
+    {
+      "source": "otel-demo/Service/frontend-proxy",
+      "target": "otel-demo/Service/ad",
+      "condition": "Frontend-proxy fails to forward ad requests",
+      "effect": "Ad service receives no requests, triggering NoRequestsDetected"
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "CPUThrottlingHigh", "explanation": "High CPU throttling on frontend pod limits processing", "explained": true},
+    {"alert": "RequestErrorRate", "explanation": "Frontend-proxy error rate >0 indicates request failures", "explained": true},
+    {"alert": "NoRequestsDetected", "explanation": "Ad service not receiving traffic, likely downstream symptom", "explained": true},
+    {"alert": "InfoInhibitor", "explanation": "Generic informational alert, not related to incident", "explained": false},
+    {"alert": "Watchdog", "explanation": "Alertmanager health check, unrelated", "explained": false},
+    {"alert": "KubeClientCertificateExpiration", "explanation": "Cluster certificate nearing expiry, not impacting service", "explained": false},
+    {"alert": "KubeControllerManagerDown", "explanation": "Controller manager missing from Prometheus, not directly causing service error", "explained": false},
+    {"alert": "KubeSchedulerDown", "explanation": "Scheduler missing from Prometheus, not directly causing service error", "explained": false},
+    {"alert": "PrometheusNotConnectedToAlertmanagers", "explanation": "Prometheus connectivity issue, unrelated to service traffic", "explained": false}
+  ]
+}
+

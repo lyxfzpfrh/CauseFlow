@@ -1,0 +1,68 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/checkout",
+      "contributing_factor": true,
+      "reasoning": "A pod of the checkout deployment was in CrashLoopBackOff, triggering a critical alert and preventing the service from handling requests.",
+      "evidence": "CrashLoopBackOffPodsDetected alert (1 pod) and pod checkout-5dccddf8bb-9cgqs showing failure in metrics."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend observed increased error rate and latency as downstream checkout failed.",
+      "evidence": "RequestErrorRate (36) and RequestLatency (25) alerts for service_name=frontend in otel-demo namespace."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Proxy forwarded failing requests to checkout, contributing to observed errors.",
+      "evidence": "RequestErrorRate alerts include service_name=frontend-proxy."
+    },
+    {
+      "name": "otel-demo/Service/accounting",
+      "contributing_factor": false,
+      "reasoning": "Accounting calls checkout during order processing; checkout failure caused error spikes.",
+      "evidence": "RequestErrorRate alerts for service_name=accounting."
+    },
+    {
+      "name": "otel-demo/Service/shipping",
+      "contributing_factor": false,
+      "reasoning": "Shipping service depends on checkout to retrieve order details; errors propagated.",
+      "evidence": "RequestErrorRate alerts for service_name=shipping."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/frontend",
+      "condition": "checkout pods failed (CrashLoopBackOff) and did not respond",
+      "effect": "frontend received error responses, raising RequestErrorRate and latency alerts"
+    },
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "proxy could not reach checkout backend",
+      "effect": "proxy returned 5xx errors, contributing to RequestErrorRate alerts"
+    },
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/accounting",
+      "condition": "checkout unavailable for order validation",
+      "effect": "accounting calls failed, increasing its error rate alerts"
+    },
+    {
+      "source": "otel-demo/Deployment/checkout",
+      "target": "otel-demo/Service/shipping",
+      "condition": "checkout could not provide order confirmation",
+      "effect": "shipping experienced errors, reflected in its RequestErrorRate alert"
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "CrashLoopBackOffPodsDetected", "explanation": "A pod in otel-demo namespace is stuck in CrashLoopBackOff, indicating a container start failure.", "explained": true},
+    {"alert": "RequestErrorRate", "explanation": "Error rate of calls exceeds zero for multiple services, caused by downstream checkout failure.", "explained": true},
+    {"alert": "RequestLatency", "explanation": "95th percentile latency >1500ms for services, result of retries and timeouts after checkout went down.", "explained": true},
+    {"alert": "CPUThrottlingHigh", "explanation": "High CPU throttling observed on pods, likely due to resource contention on the node hosting checkout.", "explained": true},
+    {"alert": "InfoInhibitor", "explanation": "Informational alerts that inhibit other alerts; not directly related to the incident.", "explained": false}
+  ]
+}
+

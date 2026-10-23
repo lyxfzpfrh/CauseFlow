@@ -1,0 +1,234 @@
+{
+  "metadata": {
+    "scenario": "Scenario-102",
+    "run": 3,
+    "duration_seconds": 0,
+    "inference_count": 0,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "otel-demo-namespace-1"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "otel-demo/Namespace/otel-demo",
+            "matches_gt": true,
+            "matched_to": "otel-demo-namespace-1"
+          }
+        ],
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0,
+        "justification": "The model correctly identified 'otel-demo/Namespace/otel-demo' as a contributing factor. This entity normalizes to the ground truth root cause entity 'otel-demo-namespace-1'. With 1 correct prediction out of 1 total prediction, precision is 1.0. With 1 correct prediction out of 1 total ground truth root cause, recall is 1.0."
+      },
+      "root_cause_reasoning": {
+        "calculation": 1.0,
+        "justification": "The single correctly identified root cause entity was 'otel-demo/Namespace/otel-demo'. The model's reasoning, 'Namespace exceeded its resource quota, preventing new pods from being scheduled,' is semantically equivalent to the ground truth condition, 'Memory quota imposed on namespace preventing pod scheduling'. Therefore, it receives a score of 1.0.",
+        "details": {
+          "otel-demo/Namespace/otel-demo": {
+            "model_reasoning": "Namespace exceeded its resource quota, preventing new pods from being scheduled.",
+            "gt_condition": "Memory quota imposed on namespace preventing pod scheduling",
+            "score": 1
+          }
+        }
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components. The model correctly identified the starting ('Namespace Quota') and ending ('Frontend-Proxy Service') components but hallucinated 'Cart' and 'Checkout' components in the middle, failing to identify the actual 'Ad Service' and 'Frontend Service' components. With a Longest Common Subsequence (TP) of 2, a model path length of 4, and a GT path length of 4, the precision and recall are both 0.5.",
+        "details": {
+          "normalization_map": {
+            "otel-demo/Namespace/otel-demo": "otel-demo-namespace-1",
+            "otel-demo/Service/frontend-proxy": "frontend-proxy-service-1"
+          },
+          "semantic_components": {
+            "Namespace Quota Component": [
+              "otel-demo-namespace-1",
+              "otel-demo-memory-quota-1"
+            ],
+            "Ad Service Component": [
+              "ad-pod-1",
+              "ad-service-1",
+              "ad-deployment-1",
+              "ad-replicaset-1"
+            ],
+            "Frontend Service Component": [
+              "frontend-service-1",
+              "frontend-pod-1"
+            ],
+            "Frontend-Proxy Service Component": [
+              "frontend-proxy-service-1",
+              "frontend-proxy-pod-1"
+            ],
+            "Cart Service Component": [
+              "otel-demo/Deployment/cart",
+              "otel-demo/Service/cart"
+            ],
+            "Checkout Service Component": [
+              "otel-demo/Deployment/checkout",
+              "otel-demo/Service/checkout"
+            ]
+          },
+          "contracted_gt_path": [
+            "Namespace Quota Component",
+            "Ad Service Component",
+            "Frontend Service Component",
+            "Frontend-Proxy Service Component"
+          ],
+          "contracted_model_path": [
+            "Namespace Quota Component",
+            "Cart Service Component",
+            "Checkout Service Component",
+            "Frontend-Proxy Service Component"
+          ],
+          "lcs_components": [
+            "Namespace Quota Component",
+            "Frontend-Proxy Service Component"
+          ],
+          "true_positives_TP": 2,
+          "model_path_length": 4,
+          "gt_path_length": 4
+        },
+        "precision": 0.5,
+        "recall": 0.5,
+        "calculation": 0.5
+      },
+      "fault_localization_component_identification": {
+        "calculation": 0,
+        "justification": "The first performance failure in GT.propagations is: 'Ad service becomes unavailable and receives no requests'. Using the Priority 1 rule (explicit component in effect), the first impacted component is 'Ad Service Component'. This component was not found in the model's contracted path.",
+        "details": {
+          "gt_first_impacted_component": "Ad Service Component",
+          "effect_used": "Ad service becomes unavailable and receives no requests",
+          "priority_rule_applied": "Priority 1",
+          "found_in_model_path": false
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": null,
+        "justification": "The model predicted one root cause entity, 'otel-demo/Namespace/otel-demo'. Since this entity was a correct match to a ground truth root cause, this score is the same as the score from the 'root_cause_reasoning' metric, which was 1.0.",
+        "details": [
+          {
+            "entity": "otel-demo/Namespace/otel-demo",
+            "metric1_is_correct": true,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 1.0
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0,
+        "justification": "The model predicted one root cause component ('Namespace Quota Component'), and the ground truth has one root cause component ('Namespace Quota Component'). For Precision, the model's component is 0 hops away from the GT component, yielding a score of 1/(1+0) = 1. The average is 1/1=1. For Recall, the GT component is 0 hops away from the model's component, yielding a score of 1/(1+0) = 1. The average is 1/1=1. The F1 score is 1.0.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Namespace/otel-demo",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-namespace-1",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 4,
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0,
+        "justification": "The contracted GT path length is 4. The model's predicted root cause component is the same as the GT root cause component, so the hop distance is 0. For Precision, the score is 1/(1 + 0/4) = 1. The average is 1/1=1. For Recall, the score is 1/(1 + 0/4) = 1. The average is 1/1=1. The F1 score is 1.0.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Namespace/otel-demo",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-namespace-1",
+            "is_on_path": true,
+            "hop_away": 0,
+            "entity_score": 1.0
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 1.0,
+        "calculation_recall": 1.0,
+        "calculation_f1": 1.0
+      }
+    },
+    "incident_id": "Scenario-102",
+    "trial_id": "3"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 1.0,
+    "root_cause_entity_recall": 1.0,
+    "root_cause_entity_f1": 1.0,
+    "root_cause_reasoning": 1.0,
+    "propagation_chain": 0.5,
+    "fault_localization_component_identification": 0,
+    "root_cause_reasoning_partial": null,
+    "root_cause_proximity_no_fp_precision": 1.0,
+    "root_cause_proximity_no_fp_recall": 1.0,
+    "root_cause_proximity_no_fp_f1": 1.0,
+    "root_cause_proximity_with_fp_precision": 1.0,
+    "root_cause_proximity_with_fp_recall": 1.0,
+    "root_cause_proximity_with_fp_f1": 1.0,
+    "root_cause_entity_k_precision": 1.0,
+    "root_cause_entity_k_recall": 1.0,
+    "root_cause_entity_k_f1": 1.0,
+    "root_cause_entity_k@1_precision": 1.0,
+    "root_cause_entity_k@1_recall": 1.0,
+    "root_cause_entity_k@1_f1": 1.0,
+    "root_cause_entity_k@2_precision": 1.0,
+    "root_cause_entity_k@2_recall": 1.0,
+    "root_cause_entity_k@2_f1": 1.0,
+    "root_cause_entity_k@3_precision": 1.0,
+    "root_cause_entity_k@3_recall": 1.0,
+    "root_cause_entity_k@3_f1": 1.0,
+    "root_cause_entity_k@4_precision": 1.0,
+    "root_cause_entity_k@4_recall": 1.0,
+    "root_cause_entity_k@4_f1": 1.0,
+    "root_cause_entity_k@5_precision": 1.0,
+    "root_cause_entity_k@5_recall": 1.0,
+    "root_cause_entity_k@5_f1": 1.0
+  }
+}

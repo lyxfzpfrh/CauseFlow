@@ -1,0 +1,64 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": true,
+      "reasoning": "Root cause service showing elevated request error rate.",
+      "evidence": "RequestErrorRate (warning) on ad, also critical client certificate expiration unrelated to workload."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Downstream service impacted by errors from ad service.",
+      "evidence": "RequestErrorRate (warning) on frontend-proxy coinciding with ad errors."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Service experiencing CPU throttling, likely symptom of load caused by upstream failures.",
+      "evidence": "CPUThrottlingHigh (info) on container frontend."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "ad service has high request error rate",
+      "effect": "frontend-proxy sees increased errors"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Service/frontend",
+      "condition": "ad failures increase load on frontend",
+      "effect": "frontend experiences CPU throttling"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate above 0 in the specified service.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Container experiences elevated CPU throttling percentage.",
+      "explained": true
+    },
+    {
+      "alert": "KubeClientCertificateExpiration",
+      "explanation": "Client certificate to the API server is expiring soon.",
+      "explained": true
+    },
+    {
+      "alert": "Watchdog",
+      "explanation": "Alerting pipeline health check always firing.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Inhibits info-level alerts when higher severity alerts fire.",
+      "explained": true
+    }
+  ]
+}
+

@@ -1,0 +1,42 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": true,
+      "reasoning": "Frontend pods show high CPU throttling, indicating they cannot keep up with workload.",
+      "evidence": "CPUThrottlingHigh alert firing for container frontend in pod frontend-675fd7b5c5-5vnt2 (otel-demo)"
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Proxy reports non‑zero request error rate, likely downstream of throttled frontend.",
+      "evidence": "RequestErrorRate warning alert for service frontend-proxy (otel-demo)"
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/frontend",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "High CPU throttling on frontend containers",
+      "effect": "Increased request error rate observed by frontend‑proxy"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Processes in frontend container experience elevated CPU throttling, reducing throughput.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Frontend‑proxy error rate >0, likely due to upstream frontend failures.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Info‑level alerts are inhibited; not directly related to incident.",
+      "explained": true
+    }
+  ]
+}
+

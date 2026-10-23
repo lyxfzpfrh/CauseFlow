@@ -1,0 +1,176 @@
+{
+  "metadata": {
+    "scenario": "Scenario-5",
+    "run": 2,
+    "duration_seconds": 0,
+    "inference_count": 0,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "flagd-config-1"
+        ],
+        "predicted_entities": [],
+        "calculation_precision": null,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The Ground Truth has one root cause entity: 'flagd-config-1'. The Generated Response did not identify any contributing factors. Therefore, no entities were matched. Precision is 0/0 (undefined, scored as 0), Recall is 0/1, and F1 is 0."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0,
+        "justification": "The model did not correctly identify any root cause entities, so the reasoning accuracy score is 0.",
+        "details": {}
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components. The model provided an empty propagation path, resulting in 0 True Positives. The GT path has a length of 3. This leads to a precision of 0/0 (scored as 0), a recall of 0/3, and an F1-score of 0.",
+        "details": {
+          "normalization_map": {},
+          "semantic_components": {
+            "Flagd Component": [
+              "flagd-config-1",
+              "flagd-pod-1",
+              "flagd-service-1"
+            ],
+            "Ad Service Component": [
+              "ad-service-1",
+              "ad-pod-1",
+              "getads-endpoint-1"
+            ],
+            "Frontend Service Component": [
+              "frontend-service-1",
+              "frontend-pod-1"
+            ]
+          },
+          "contracted_gt_path": [
+            "Flagd Component",
+            "Ad Service Component",
+            "Frontend Service Component"
+          ],
+          "contracted_model_path": [],
+          "lcs_components": [],
+          "true_positives_TP": 0,
+          "model_path_length": 0,
+          "gt_path_length": 3
+        },
+        "precision": null,
+        "recall": 0.0,
+        "calculation": 0
+      },
+      "fault_localization_component_identification": {
+        "calculation": 0,
+        "justification": "The first performance failure in GT.propagations is: 'getads endpoint Error Rate is Above Threshold'. Using the Priority 1 rule (explicit component in effect), the first impacted component is the 'Ad Service Component' (containing 'getads-endpoint-1'). This component was not found in the model's empty contracted path.",
+        "details": {
+          "gt_first_impacted_component": "Ad Service Component",
+          "effect_used": "getads endpoint Error Rate is Above Threshold",
+          "priority_rule_applied": "Priority 1",
+          "found_in_model_path": false
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": 0,
+        "justification": "The model did not identify any contributing factors, so there are no entities to score. The score is 0.",
+        "details": []
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": null,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "Precision: The model predicted M=0 root cause entities, so the average score is 0. Recall: The GT has N=1 root cause component ('Flagd Component'). Since the model's path is empty, there are no model components to measure distance from, so the hop_away is infinite and the score is 0. The average recall is 0. F1 is 0.",
+        "precision_details": [],
+        "recall_details": [
+          {
+            "gt_entity": "flagd-config-1",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 3,
+        "calculation_precision": null,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "Precision: The model predicted M=0 root cause entities, so the average score is 0. Recall: The GT has N=1 root cause component ('Flagd Component'). Since the model's path is empty, there are no model components to measure distance from, so the hop_away is infinite and the score is 0. The average recall is 0. F1 is 0.",
+        "precision_details": [],
+        "recall_details": [
+          {
+            "gt_entity": "flagd-config-1",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      }
+    },
+    "incident_id": "Scenario-5",
+    "trial_id": "2"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": null,
+    "root_cause_entity_recall": 0.0,
+    "root_cause_entity_f1": 0,
+    "root_cause_reasoning": 0,
+    "propagation_chain": 0,
+    "fault_localization_component_identification": 0,
+    "root_cause_reasoning_partial": 0,
+    "root_cause_proximity_no_fp_precision": null,
+    "root_cause_proximity_no_fp_recall": 0.0,
+    "root_cause_proximity_no_fp_f1": 0,
+    "root_cause_proximity_with_fp_precision": null,
+    "root_cause_proximity_with_fp_recall": 0.0,
+    "root_cause_proximity_with_fp_f1": 0,
+    "root_cause_entity_k_precision": 0.0,
+    "root_cause_entity_k_recall": 0.0,
+    "root_cause_entity_k_f1": 0.0,
+    "root_cause_entity_k@1_precision": 0.0,
+    "root_cause_entity_k@1_recall": 0.0,
+    "root_cause_entity_k@1_f1": 0.0,
+    "root_cause_entity_k@2_precision": 0.0,
+    "root_cause_entity_k@2_recall": 0.0,
+    "root_cause_entity_k@2_f1": 0.0,
+    "root_cause_entity_k@3_precision": 0.0,
+    "root_cause_entity_k@3_recall": 0.0,
+    "root_cause_entity_k@3_f1": 0.0,
+    "root_cause_entity_k@4_precision": 0.0,
+    "root_cause_entity_k@4_recall": 0.0,
+    "root_cause_entity_k@4_f1": 0.0,
+    "root_cause_entity_k@5_precision": 0.0,
+    "root_cause_entity_k@5_recall": 0.0,
+    "root_cause_entity_k@5_f1": 0.0
+  }
+}

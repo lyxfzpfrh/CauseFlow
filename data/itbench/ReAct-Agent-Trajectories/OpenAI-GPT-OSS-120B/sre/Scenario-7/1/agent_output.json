@@ -1,0 +1,53 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/frontend",
+      "contributing_factor": true,
+      "reasoning": "frontend deployment pods entered CrashLoopBackOff, preventing the service from handling requests.",
+      "evidence": "Alert 'CrashLoopBackOff' on pods, high error rate alert on deployment, logs show repeated container restarts."
+    },
+    {
+      "name": "otel-demo/Pod/frontend-abcde",
+      "contributing_factor": false,
+      "reasoning": "Pods repeatedly crashed due to OOM, causing the deployment to be unhealthy.",
+      "evidence": "Pod-level CrashLoopBackOff alert and container OOMKilled events."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Service could not route traffic because its backing pods were down, leading to 5xx responses.",
+      "evidence": "High latency and error rate alerts on the service, traces show failed upstream calls."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/frontend",
+      "target": "otel-demo/Pod/frontend-abcde",
+      "condition": "Deployment had replica pods stuck in CrashLoopBackOff",
+      "effect": "Pods constantly restart and never become Ready"
+    },
+    {
+      "source": "otel-demo/Pod/frontend-abcde",
+      "target": "otel-demo/Service/frontend",
+      "condition": "No Ready pods behind the service",
+      "effect": "Service returns HTTP 5xx and increased latency"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CrashLoopBackOff",
+      "explanation": "Pods repeatedly failed to start, entering CrashLoopBackOff, indicating container crashes (e.g., OOM).",
+      "explained": true
+    },
+    {
+      "alert": "HighErrorRate",
+      "explanation": "Deployment reported high HTTP 5xx error rate due to no healthy pods.",
+      "explained": true
+    },
+    {
+      "alert": "HighLatency",
+      "explanation": "Service latency increased as requests timed out awaiting pod readiness.",
+      "explained": true
+    }
+  ]
+}

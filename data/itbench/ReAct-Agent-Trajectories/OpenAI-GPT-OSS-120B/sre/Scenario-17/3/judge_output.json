@@ -1,0 +1,237 @@
+{
+  "metadata": {
+    "scenario": "Scenario-17",
+    "run": 3,
+    "duration_seconds": 0,
+    "inference_count": 0,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "delay-otel-demo-product-catalog-1"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "otel-demo/Service/product-catalog-service",
+            "matches_gt": false,
+            "matched_to": null
+          }
+        ],
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The Ground Truth root cause is the NetworkChaos resource 'delay-otel-demo-product-catalog-1'. The model predicted the downstream 'product-catalog-service' as the root cause. These are not the same entity and are not aliased, resulting in a score of 0."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0,
+        "justification": "The model did not correctly identify any ground truth root cause entities, so the reasoning accuracy score is 0.",
+        "details": {}
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components grouped by the specified rules. The GT and model propagation graphs were flattened into sequences. The Longest Common Subsequence (LCS) between the contracted GT path (length 7) and the contracted model path (length 8) is 4. This results in a precision of 4/8 and a recall of 4/7.",
+        "details": {
+          "normalization_map": {
+            "otel-demo/Service/product-catalog-service": "productcatalog-service-1",
+            "otel-demo/Service/recommendation-service": "recommendation-service-1",
+            "otel-demo/Service/frontend": "frontend-service-1",
+            "otel-demo/Service/frontend-proxy": "frontendproxy-service-1",
+            "otel-demo/Service/checkout-service": "checkout-service-1",
+            "otel-demo/Service/fraud-detection-service": "otel-demo/Service/fraud-detection-service"
+          },
+          "semantic_components": {
+            "Chaos Component": [
+              "delay-otel-demo-product-catalog-1"
+            ],
+            "ProductCatalog Service Component": [
+              "productcatalog-service-1",
+              "productcatalog-pod-1"
+            ],
+            "Checkout Service Component": [
+              "checkout-service-1",
+              "checkout-pod-1"
+            ],
+            "Recommendation Service Component": [
+              "recommendation-service-1",
+              "recommendation-pod-1"
+            ],
+            "Frontend Service Component": [
+              "frontend-service-1",
+              "frontend-pod-1"
+            ],
+            "FrontendProxy Service Component": [
+              "frontendproxy-service-1"
+            ]
+          },
+          "contracted_gt_path": [
+            "Chaos Component",
+            "ProductCatalog Service Component",
+            "Checkout Service Component",
+            "ProductCatalog Service Component",
+            "Recommendation Service Component",
+            "ProductCatalog Service Component",
+            "Frontend Service Component"
+          ],
+          "contracted_model_path": [
+            "ProductCatalog Service Component",
+            "Recommendation Service Component",
+            "ProductCatalog Service Component",
+            "Frontend Service Component",
+            "ProductCatalog Service Component",
+            "Checkout Service Component",
+            "Frontend Service Component",
+            "FrontendProxy Service Component"
+          ],
+          "lcs_components": [
+            "ProductCatalog Service Component",
+            "Checkout Service Component",
+            "ProductCatalog Service Component",
+            "Frontend Service Component"
+          ],
+          "true_positives_TP": 4,
+          "model_path_length": 8,
+          "gt_path_length": 7
+        },
+        "precision": 0.5,
+        "recall": 0.5714285714285714,
+        "calculation": 0.5333333333333333
+      },
+      "fault_localization_component_identification": {
+        "calculation": 1,
+        "justification": "The first performance failure in GT.propagations is: 'productcatalog service Error Rate is Above Threshold'. Using Priority 1 rule (explicit component in effect), the first impacted component is 'ProductCatalog Service Component'. This component was found in the model's contracted path.",
+        "details": {
+          "gt_first_impacted_component": "ProductCatalog Service Component",
+          "effect_used": "productcatalog service Error Rate is Above Threshold",
+          "priority_rule_applied": "Priority 1",
+          "found_in_model_path": true
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": 0.5,
+        "justification": "The predicted root cause entity 'otel-demo/Service/product-catalog-service' did not match the GT root cause. Partial credit is calculated. The model's focus component ('ProductCatalog Service Component') is on the GT path. It is 1 hop away from the true root cause component ('Chaos Component'). The model's reasoning ('NetworkChaos was applied to product\u2011catalog causing packet loss and latency.') is a semantically equivalent description of the GT condition ('networkchaos productcatalogservice network delay set to 20 seconds'), so SymptomReasoningCorrectness is 1. The final score is (1/(1+1))*1.",
+        "details": [
+          {
+            "entity": "otel-demo/Service/product-catalog-service",
+            "metric1_is_correct": false,
+            "hop_away": 1,
+            "SymptomReasoningCorrectness": 1,
+            "entity_score": 0.5
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 0.5,
+        "calculation_recall": 0.5,
+        "calculation_f1": 0.5,
+        "justification": "Precision: The model predicted 1 root cause component ('ProductCatalog Service Component'). Its hop distance to the nearest GT root cause component ('Chaos Component') is 1. The score is 1/(1+1) = 0.5. P = 0.5/1 = 0.5. Recall: There is 1 GT root cause component ('Chaos Component'). Its hop distance to the nearest model-predicted component ('ProductCatalog Service Component') is 1. The score is 1/(1+1) = 0.5. R = 0.5/1 = 0.5. The F1 score is calculated from these P and R values.",
+        "precision_details": [
+          {
+            "entity": "ProductCatalog Service Component",
+            "is_on_path": true,
+            "hop_away": 1,
+            "entity_score": 0.5
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "Chaos Component",
+            "is_on_path": true,
+            "hop_away": 1,
+            "entity_score": 0.5
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 7,
+        "calculation_precision": 0.875,
+        "calculation_recall": 0.875,
+        "calculation_f1": 0.875,
+        "justification": "The contracted GT path length is 7. Precision: The model's predicted component ('ProductCatalog Service Component') has a hop distance of 1. The score is 1 / (1 + 1/7). P = score/1. Recall: The GT component ('Chaos Component') has a hop distance of 1. The score is 1 / (1 + 1/7). R = score/1. Since P and R are equal, F1 is also equal to this value.",
+        "precision_details": [
+          {
+            "entity": "ProductCatalog Service Component",
+            "is_on_path": true,
+            "hop_away": 1,
+            "entity_score": 0.875
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "Chaos Component",
+            "is_on_path": true,
+            "hop_away": 1,
+            "entity_score": 0.875
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      }
+    },
+    "incident_id": "Scenario-17",
+    "trial_id": "3"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 0.0,
+    "root_cause_entity_recall": 0.0,
+    "root_cause_entity_f1": 0,
+    "root_cause_reasoning": 0,
+    "propagation_chain": 0.5333333333333333,
+    "fault_localization_component_identification": 1,
+    "root_cause_reasoning_partial": 0.5,
+    "root_cause_proximity_no_fp_precision": 0.5,
+    "root_cause_proximity_no_fp_recall": 0.5,
+    "root_cause_proximity_no_fp_f1": 0.5,
+    "root_cause_proximity_with_fp_precision": 0.875,
+    "root_cause_proximity_with_fp_recall": 0.875,
+    "root_cause_proximity_with_fp_f1": 0.875,
+    "root_cause_entity_k_precision": 0.0,
+    "root_cause_entity_k_recall": 0.0,
+    "root_cause_entity_k_f1": 0.0,
+    "root_cause_entity_k@1_precision": 0.0,
+    "root_cause_entity_k@1_recall": 0.0,
+    "root_cause_entity_k@1_f1": 0.0,
+    "root_cause_entity_k@2_precision": 0.0,
+    "root_cause_entity_k@2_recall": 0.0,
+    "root_cause_entity_k@2_f1": 0.0,
+    "root_cause_entity_k@3_precision": 0.0,
+    "root_cause_entity_k@3_recall": 0.0,
+    "root_cause_entity_k@3_f1": 0.0,
+    "root_cause_entity_k@4_precision": 0.0,
+    "root_cause_entity_k@4_recall": 0.0,
+    "root_cause_entity_k@4_f1": 0.0,
+    "root_cause_entity_k@5_precision": 0.0,
+    "root_cause_entity_k@5_recall": 0.0,
+    "root_cause_entity_k@5_f1": 0.0
+  }
+}

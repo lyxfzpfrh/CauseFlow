@@ -1,0 +1,88 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Pod/valkey-cart-58df56c79c-4cvft",
+      "contributing_factor": true,
+      "reasoning": "Pod was OOMKilled and entered CrashLoopBackOff, making the Valkey cache unavailable.",
+      "evidence": "CrashLoopBackOffPodsDetected alert; pod status shows lastState OOMKilled and state waiting CrashLoopBackOff."
+    },
+    {
+      "name": "otel-demo/Service/cart",
+      "contributing_factor": false,
+      "reasoning": "Cart service depends on the Valkey cache and exhibited high error rates and latency.",
+      "evidence": "RequestErrorRate and RequestLatency alerts for service_name cart."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout calls the cart service and inherited its errors and latency.",
+      "evidence": "RequestErrorRate alerts for service_name checkout."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend forwards user requests to checkout and observed degraded performance.",
+      "evidence": "RequestLatency alerts for service_name frontend."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Ingress proxy relays traffic to frontend and shows latency spikes.",
+      "evidence": "RequestLatency alerts for service_name frontend-proxy."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Pod/valkey-cart-58df56c79c-4cvft",
+      "target": "otel-demo/Service/cart",
+      "condition": "Cache pod unavailable due to CrashLoopBackOff",
+      "effect": "Cart service returns 5xx errors and high latency"
+    },
+    {
+      "source": "otel-demo/Service/cart",
+      "target": "otel-demo/Service/checkout",
+      "condition": "Checkout depends on cart API",
+      "effect": "Checkout experiences increased error rate"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Frontend calls checkout for order processing",
+      "effect": "Frontend shows latency spikes and errors"
+    },
+    {
+      "source": "otel-demo/Service/frontend",
+      "target": "otel-demo/Service/frontend-proxy",
+      "condition": "Proxy forwards frontend traffic",
+      "effect": "Proxy observes elevated request latency"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "Firing when any pod in the namespace is in CrashLoopBackOff state.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Triggers when error rate >0 for a service in the namespace.",
+      "explained": true
+    },
+    {
+      "alert": "RequestLatency",
+      "explanation": "Triggers when 95th percentile latency exceeds 1500 ms for a service.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Indicates elevated CPU throttling on nodes serving the namespace; not primary cause.",
+      "explained": true
+    },
+    {
+      "alert": "InfoInhibitor",
+      "explanation": "Info‑level inhibition alert, harmless placeholder.",
+      "explained": true
+    }
+  ]
+}
+

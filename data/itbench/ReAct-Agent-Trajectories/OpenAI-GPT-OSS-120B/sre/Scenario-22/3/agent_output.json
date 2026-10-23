@@ -1,0 +1,56 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Pod/ad-554b849958-l9ft5",
+      "contributing_factor": true,
+      "reasoning": "Pod repeatedly OOMKilled, causing CrashLoopBackOff and readiness loss.",
+      "evidence": "Pod status shows OOMKilled reason and ContainersNotReady; chaos event otel-demo-ad-memory-stress failed and forbid spawning."
+    },
+    {
+      "name": "otel-demo/Deployment/ad",
+      "contributing_factor": false,
+      "reasoning": "Deployment cannot reach minimum availability because its pod is unhealthy.",
+      "evidence": "Deployment status condition Available=False with reason MinimumReplicasUnavailable."
+    },
+    {
+      "name": "otel-demo/Service/ad",
+      "contributing_factor": false,
+      "reasoning": "Service has no ready endpoints, leading to request failures for callers.",
+      "evidence": "KubePodCrashLooping and NoRequestsDetected alerts target ad service."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend observed high request error rate due to downstream ad failures.",
+      "evidence": "RequestErrorRate alert firing for frontend; traces show error spans when calling ad."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Pod/ad-554b849958-l9ft5",
+      "target": "otel-demo/Deployment/ad",
+      "condition": "Pod OOMKilled and not ready",
+      "effect": "Deployment reports unavailable replicas"
+    },
+    {
+      "source": "otel-demo/Deployment/ad",
+      "target": "otel-demo/Service/ad",
+      "condition": "No ready pods for the service",
+      "effect": "Service has zero endpoints, causing request failures"
+    },
+    {
+      "source": "otel-demo/Service/ad",
+      "target": "otel-demo/Service/frontend",
+      "condition": "Frontend calls ad and receives errors",
+      "effect": "Frontend error rate spikes, triggering RequestErrorRate alert"
+    }
+  ],
+  "alerts_explained": [
+    {"alert": "InfoInhibitor", "explanation": "Inhibits lower severity alerts while higher severity ones fire; active due to ongoing CrashLoopBackOff.", "explained": true},
+    {"alert": "CPUThrottlingHigh", "explanation": "Detected high CPU throttling on pods, likely side effect of memory stress on ad pod.", "explained": true},
+    {"alert": "CrashLoopBackOffPodsDetected", "explanation": "Ad pod repeatedly crashes (OOMKilled), entering CrashLoopBackOff.", "explained": true},
+    {"alert": "NoRequestsDetected", "explanation": "Ad service reports no incoming requests because its pod is down.", "explained": true},
+    {"alert": "RequestErrorRate", "explanation": "Frontend error rate exceeds threshold due to downstream ad failures.", "explained": true},
+    {"alert": "KubePodCrashLooping", "explanation": "Kubernetes reports pod ad in CrashLoopBackOff state.", "explained": true}
+  ]
+}

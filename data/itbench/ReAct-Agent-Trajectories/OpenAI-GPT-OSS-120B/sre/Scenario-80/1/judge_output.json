@@ -1,0 +1,217 @@
+{
+  "metadata": {
+    "scenario": "Scenario-80",
+    "run": 1,
+    "duration_seconds": 0,
+    "inference_count": 0,
+    "judge_model": "GCP/gemini-2.5-pro",
+    "judge_provider": "ete"
+  },
+  "eval_result": {
+    "scenario_index": 0,
+    "scores": {
+      "root_cause_entity": {
+        "gt_entities": [
+          "otel-demo-checkout-kafka-network-partition"
+        ],
+        "predicted_entities": [
+          {
+            "entity": "otel-demo/Deployment/cart",
+            "matches_gt": false
+          }
+        ],
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The Ground Truth root cause is 'otel-demo-checkout-kafka-network-partition'. The model predicted 'otel-demo/Deployment/cart' as the root cause, which does not match the GT entity. Therefore, there are no correct matches."
+      },
+      "root_cause_reasoning": {
+        "calculation": 0,
+        "justification": "The model did not correctly identify any root cause entities, so the reasoning accuracy score is 0.",
+        "details": {}
+      },
+      "propagation_chain": {
+        "justification": "The F1-score is based on semantic components. The GT path is ['Chaos Injection Component', 'Checkout Service Component', 'Kafka Service Component'] and the model path is ['Cart Deployment Component', 'Cart Service Component', 'Checkout Service Component', 'Frontend Service Component']. The Longest Common Subsequence is ['Checkout Service Component'], resulting in a TP of 1. With a model path length of 4 and a GT path length of 3, the precision and recall are calculated accordingly.",
+        "details": {
+          "normalization_map": {
+            "otel-demo/Deployment/checkout": "checkout-service-1"
+          },
+          "semantic_components": {
+            "Chaos Injection Component": [
+              "otel-demo-checkout-kafka-network-partition"
+            ],
+            "Checkout Service Component": [
+              "checkout-pod-1",
+              "checkout-service-1"
+            ],
+            "Kafka Service Component": [
+              "kafka-service-1"
+            ],
+            "Cart Deployment Component": [
+              "otel-demo/Deployment/cart"
+            ],
+            "Cart Service Component": [
+              "otel-demo/Service/cart"
+            ],
+            "Frontend Service Component": [
+              "otel-demo/Service/frontend"
+            ]
+          },
+          "contracted_gt_path": [
+            "Chaos Injection Component",
+            "Checkout Service Component",
+            "Kafka Service Component"
+          ],
+          "contracted_model_path": [
+            "Cart Deployment Component",
+            "Cart Service Component",
+            "Checkout Service Component",
+            "Frontend Service Component"
+          ],
+          "lcs_components": [
+            "Checkout Service Component"
+          ],
+          "true_positives_TP": 1,
+          "model_path_length": 4,
+          "gt_path_length": 3
+        },
+        "precision": 0.25,
+        "recall": 0.3333333333333333,
+        "calculation": 0.28571428571428575
+      },
+      "fault_localization_component_identification": {
+        "calculation": 1,
+        "justification": "The first performance failure in GT.propagations is: 'Checkout pods cannot establish or maintain connections to Kafka'. Using the Priority 2 rule (Chaos Target), the source is a 'NetworkChaos' entity, so the target 'checkout-pod-1' is the first impacted entity. Its semantic component is 'Checkout Service Component'. This component was found in the model's contracted path.",
+        "details": {
+          "gt_first_impacted_component": "Checkout Service Component",
+          "effect_used": "Checkout pods cannot establish or maintain connections to Kafka",
+          "priority_rule_applied": "Priority 2",
+          "found_in_model_path": true
+        }
+      },
+      "root_cause_reasoning_partial": {
+        "calculation": 0,
+        "justification": "The model's predicted root cause was 'otel-demo/Deployment/cart'. Its semantic component, 'Cart Deployment Component', is not present on the contracted GT path. Therefore, no partial credit can be awarded, and the score is 0.",
+        "details": [
+          {
+            "entity": "otel-demo/Deployment/cart",
+            "metric1_is_correct": false,
+            "hop_away": null,
+            "SymptomReasoningCorrectness": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_no_fp": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "For Precision, the model's predicted root cause component ('Cart Deployment Component') is not on the contracted GT path, so its score is 0. For Recall, the GT root cause component ('Chaos Injection Component') is not on the model's contracted path, so its score is 0. This results in P=0, R=0, and F1=0.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/cart",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-checkout-kafka-network-partition",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_proximity_with_fp": {
+        "gt_path_length": 3,
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0,
+        "justification": "The gt_path_length is 3. For Precision, the model's predicted root cause component ('Cart Deployment Component') is not on the contracted GT path, so its score is 0. For Recall, the GT root cause component ('Chaos Injection Component') is not on the model's contracted path, so its score is 0. The normalization by path length does not change the outcome. This results in P=0, R=0, and F1=0.",
+        "precision_details": [
+          {
+            "entity": "otel-demo/Deployment/cart",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ],
+        "recall_details": [
+          {
+            "gt_entity": "otel-demo-checkout-kafka-network-partition",
+            "is_on_path": false,
+            "hop_away": null,
+            "entity_score": 0
+          }
+        ]
+      },
+      "root_cause_entity_k": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@1": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@2": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@3": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@4": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      },
+      "root_cause_entity_k@5": {
+        "calculation_precision": 0.0,
+        "calculation_recall": 0.0,
+        "calculation_f1": 0.0
+      }
+    },
+    "incident_id": "Scenario-80",
+    "trial_id": "1"
+  },
+  "flat_scores": {
+    "root_cause_entity_precision": 0.0,
+    "root_cause_entity_recall": 0.0,
+    "root_cause_entity_f1": 0,
+    "root_cause_reasoning": 0,
+    "propagation_chain": 0.28571428571428575,
+    "fault_localization_component_identification": 1,
+    "root_cause_reasoning_partial": 0,
+    "root_cause_proximity_no_fp_precision": 0.0,
+    "root_cause_proximity_no_fp_recall": 0.0,
+    "root_cause_proximity_no_fp_f1": 0,
+    "root_cause_proximity_with_fp_precision": 0.0,
+    "root_cause_proximity_with_fp_recall": 0.0,
+    "root_cause_proximity_with_fp_f1": 0,
+    "root_cause_entity_k_precision": 0.0,
+    "root_cause_entity_k_recall": 0.0,
+    "root_cause_entity_k_f1": 0.0,
+    "root_cause_entity_k@1_precision": 0.0,
+    "root_cause_entity_k@1_recall": 0.0,
+    "root_cause_entity_k@1_f1": 0.0,
+    "root_cause_entity_k@2_precision": 0.0,
+    "root_cause_entity_k@2_recall": 0.0,
+    "root_cause_entity_k@2_f1": 0.0,
+    "root_cause_entity_k@3_precision": 0.0,
+    "root_cause_entity_k@3_recall": 0.0,
+    "root_cause_entity_k@3_f1": 0.0,
+    "root_cause_entity_k@4_precision": 0.0,
+    "root_cause_entity_k@4_recall": 0.0,
+    "root_cause_entity_k@4_f1": 0.0,
+    "root_cause_entity_k@5_precision": 0.0,
+    "root_cause_entity_k@5_recall": 0.0,
+    "root_cause_entity_k@5_f1": 0.0
+  }
+}

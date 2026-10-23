@@ -1,0 +1,104 @@
+{
+  "entities": [
+    {
+      "name": "otel-demo/Deployment/product-catalog",
+      "contributing_factor": true,
+      "reasoning": "Pod product-catalog is CrashLoopBackOff, preventing it from serving requests.",
+      "evidence": "CrashLoopBackOffPodsDetected alert, pod spec shows state waiting CrashLoopBackOff, startError message."
+    },
+    {
+      "name": "otel-demo/Service/frontend",
+      "contributing_factor": false,
+      "reasoning": "Frontend receives high error rate because upstream product-catalog is unavailable.",
+      "evidence": "RequestErrorRate alert for frontend, NoRequestsDetected for product-catalog, dependency chain in topology."
+    },
+    {
+      "name": "otel-demo/Service/frontend-proxy",
+      "contributing_factor": false,
+      "reasoning": "Proxy propagates errors from downstream services, shown by high error rate.",
+      "evidence": "RequestErrorRate alert for frontend-proxy, NoRequestsDetected for many services."
+    },
+    {
+      "name": "otel-demo/Service/recommendation",
+      "contributing_factor": false,
+      "reasoning": "Recommendation service reports error rate due to failed calls to product-catalog.",
+      "evidence": "RequestErrorRate alert for recommendation, product-catalog CrashLoopBackOff."
+    },
+    {
+      "name": "otel-demo/Service/checkout",
+      "contributing_factor": false,
+      "reasoning": "Checkout shows error rate and triggers NoRequests for payment, shipping, email because it cannot complete orders.",
+      "evidence": "RequestErrorRate alert for checkout, NoRequestsDetected alerts for payment, shipping, email."
+    }
+  ],
+  "propagations": [
+    {
+      "source": "otel-demo/Deployment/product-catalog",
+      "target": "otel-demo/Service/frontend",
+      "condition": "product-catalog CrashLoopBackOff prevents successful calls",
+      "effect": "frontend returns HTTP 5xx, raising RequestErrorRate"
+    },
+    {
+      "source": "otel-demo/Service/frontend",
+      "target": "otel-demo/Service/recommendation",
+      "condition": "frontend cannot retrieve product data",
+      "effect": "recommendation errors increase, raising its RequestErrorRate"
+    },
+    {
+      "source": "otel-demo/Service/frontend",
+      "target": "otel-demo/Service/checkout",
+      "condition": "frontend request handling fails",
+      "effect": "checkout receives malformed or no requests, raising its RequestErrorRate"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/payment",
+      "condition": "checkout cannot invoke payment due to upstream error",
+      "effect": "payment sees zero requests (NoRequestsDetected)"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/shipping",
+      "condition": "checkout cannot invoke shipping",
+      "effect": "shipping sees zero requests"
+    },
+    {
+      "source": "otel-demo/Service/checkout",
+      "target": "otel-demo/Service/email",
+      "condition": "checkout cannot invoke email",
+      "effect": "email sees zero requests"
+    }
+  ],
+  "alerts_explained": [
+    {
+      "alert": "CrashLoopBackOffPodsDetected",
+      "explanation": "One pod in otel-demo namespace is CrashLoopBackOff, indicating a container start failure.",
+      "explained": true
+    },
+    {
+      "alert": "NoRequestsDetected",
+      "explanation": "Services reporting zero request volume over 5m, likely downstream of failing upstream.",
+      "explained": true
+    },
+    {
+      "alert": "RequestErrorRate",
+      "explanation": "Error rate >0 for listed services, caused by upstream failures.",
+      "explained": true
+    },
+    {
+      "alert": "CPUThrottlingHigh",
+      "explanation": "Elevated CPU throttling observed but not primary cause of outage.",
+      "explained": true
+    },
+    {
+      "alert": "KubeSchedulerDown",
+      "explanation": "Scheduler target missing; unrelated to service outage.",
+      "explained": true
+    },
+    {
+      "alert": "PrometheusNotConnectedToAlertmanagers",
+      "explanation": "Prometheus connectivity issue, not directly affecting services.",
+      "explained": true
+    }
+  ]
+}
